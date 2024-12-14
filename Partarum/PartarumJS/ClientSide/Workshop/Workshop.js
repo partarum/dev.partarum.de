@@ -39,13 +39,15 @@ class Workshop {
 
     loadStyle(){
 
-        let link = document.createElement("link");
+        console.dir("System_Style_Loader");
+
+        /*let link = document.createElement("link");
 
         link.setAttribute("rel", "stylesheet");
         link.setAttribute("type", "text/css");
         link.setAttribute("href", "https://partarum.download/module/css/partarum");
 
-        document.getElementsByTagName("head")[0].appendChild(link);
+        document.getElementsByTagName("head")[0].appendChild(link);*/
     }
 }
 
