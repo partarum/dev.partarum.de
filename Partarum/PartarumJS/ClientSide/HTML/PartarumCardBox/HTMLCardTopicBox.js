@@ -111,7 +111,7 @@ class HTMLCardTopicBox extends HTMLPartarumElement {
 
         let title = card.title;
 
-        let id = "productCard_" + title.replace(" ", "_") ?? cardKey + "_of_" + this.id;
+        let id = title ? "productCard_" + title.replace(" ", "_") : cardKey + "_of_" + this.id;
 
         card.id = id;
 
