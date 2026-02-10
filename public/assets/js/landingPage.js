@@ -1,5 +1,5 @@
-import {Partarum} from  "/PartarumJS";
-import surface from "/surface/import";
+import {Partarum} from  "../../../Partarum/PartarumJS/ClientSide/Partarum.js";
+import surface from "../../surface/surface-import.js";
 
 let app = new Partarum();
 app.themes = [

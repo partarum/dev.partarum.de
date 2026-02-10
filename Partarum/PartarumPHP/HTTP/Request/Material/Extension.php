@@ -18,6 +18,8 @@ namespace Partarum\HTTP\Request\Material {
 
             $this->realURL = $realUrl;
 
+            // print_r("function constructor: realURL: " . $this->realURL);
+
             $this->cacheTime = $cacheTime;
 
             $this->headers = Headers::setHeader($ext);
@@ -38,6 +40,8 @@ namespace Partarum\HTTP\Request\Material {
             $this->headers->setCacheControl("public", $this->cacheTime["js"] ?? null);
 
             $this->headers->setContentDisposition($this->realURL);
+
+            // print_r("function js: realURL: " . $this->realURL);
 
             readfile($this->realURL);
         }

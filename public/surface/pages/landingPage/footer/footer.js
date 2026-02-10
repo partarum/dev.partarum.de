@@ -8,7 +8,7 @@
  *           representing the domain "cordes-software.de"
  *           and also modified for their use.
  */
-import {globalConfig} from "/surface/config";
+//import {globalConfig} from "/surface/config";
 
 export default {
 

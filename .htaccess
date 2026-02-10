@@ -1,14 +1,21 @@
 DirectoryIndex index.php
 RewriteEngine on
 
+RewriteRule (^|/).git(/|$) - [F]
+RewriteRule (^|/).partarumGhost(/|$) - [F]
+RewriteRule (^|/).ghost(/|$) - [F]
+RewriteRule (^|/).ghost/.partarum(/|$) - [F]
+RewriteRule (^|/).ghost/.user(/|$) - [F]
+
 RewriteRule (^|/)app/src(/|$) - [F]
+RewriteRule (^|/)app/log(/|$) - [F]
 RewriteRule (^|/)Partarum/PartarumCLI(/|$) - [F]
 RewriteRule (^|/)Partarum/PartarumConfig(/|$) - [F]
 RewriteRule (^|/)Partarum/PartarumIntern(/|$) - [F]
 RewriteRule (^|/)Partarum/PartarumLorem(/|$) - [F]
 RewriteRule (^|/)Partarum/PartarumPHP(/|$) - [F]
 RewriteRule (^|/)Partarum/PartarumSecura(/|$) - [F]
-#RewriteRule (^|/)config/assets-manifest.json(/|$) - [F]
+RewriteRule (^|/)config(/|$) - [F]
 
 RewriteBase /
 
@@ -25,6 +32,29 @@ AddType application/x-font-woff        woff2
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{HTTP_HOST} ^(final.)?partarum.download$
+
+# Produktivserver
+RewriteCond %{HTTP_HOST} ^(.+)?partarum.de$
+
 RewriteCond %{REQUEST_URI} !^/public/
+RewriteCond %{REQUEST_URI} !^/app/
+RewriteCond %{REQUEST_URI} !^/Partarum/PartarumCSS/
+RewriteCond %{REQUEST_URI} !^/Partarum/PartarumJS/
+RewriteRule  ^(.*)?$ index.php [QSA]
+
+# Testserver
+
+RewriteCond %{REQUEST_URI} !^/public/
+RewriteCond %{REQUEST_URI} !^/app/
+RewriteCond %{REQUEST_URI} !^/Partarum/PartarumCSS/
+RewriteCond %{REQUEST_URI} !^/Partarum/PartarumJS/
+RewriteRule  ^(.*)?$ index.php [QSA]
+
+# Devserver
+RewriteCond %{HTTP_HOST} ^(.+)?localhost$
+
+RewriteCond %{REQUEST_URI} !^/public/
+RewriteCond %{REQUEST_URI} !^/app/
+RewriteCond %{REQUEST_URI} !^/Partarum/PartarumCSS/
+RewriteCond %{REQUEST_URI} !^/Partarum/PartarumJS/
 RewriteRule  ^(.*)?$ index.php [QSA]
