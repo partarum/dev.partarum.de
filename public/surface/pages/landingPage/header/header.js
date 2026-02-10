@@ -11,5 +11,9 @@
 //import {globalConfig} from "/surface/config";
 
 export default {
-
+    h1: {
+        _attributes: {
+            text: "Header"
+        }
+    }
 }

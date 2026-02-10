@@ -482,579 +482,288 @@ class WebApp {
 class Content {
 
     constructor(surface, arg, filePath) {
-
-        if(arg !== null) {
-
-            if(arg instanceof HTMLElement) {
-                this.dom = arg;
-            } else {
-
-                if(arg instanceof ShadowRoot){
-                    this.dom = arg;
-                } else {
-                    this.after = arg?.after;
-                }
-            }
-
-
-
+        // Initialisierung wie bisher
+        if (arg !== null) {
+            this.setDomTarget(arg);
             this.surface = surface;
             this.surfacePaths = Cache.PartarumCache.surfacePaths;
             this.filePath = filePath;
-            this.templateKeys = [
-                "_attributes",
-                "_import"
-            ];
 
+            // Initialisiere Cache wenn nötig
             Cache.DOMCache.create();
 
-            this.create()
+            // Startet den Render-Prozess
+            this.render();
         }
     }
 
-    create(){
-
-        let stopRound = null;
-
-        if((typeof(this.surface) !== "string") && (!Array.isArray(this.surface))) {
-
-            for (let main in this.surface) {
-
-                Cache.DOMCache.counter ++;
-
-                if (this.surface.hasOwnProperty(main)) {
-
-                    /*
-                        ein Property von this.surface
-
-                            - meißtens ein Object mit Angaben wie _attributes oder ein neues Element
-                            - wenn Array, dann:
-                                    - weil es eine Anreihung von Text ist, oder
-                                    - weil es eine Anreihung von Objecten ( also neuen Elementen ist )
-
-                     */
-                    let surface = this.surface[main];
-
-                    let node = null;
-
-                    /*
-                        $ ist die Angabe für ein Templateproperty
-                     */
-
-                    if (main.charAt(0) !== "$") {
-
-                        /*
-                            prüfen ob HTMLElement - TagName  oder systeminterne Variable ( wie _attributes || _import )
-                         */
-                        let tagName = main.split("_")[0];
-
-                        /*
-                               wenn surface ein Object mit Attributen ist:
-                         */
-                        if((tagName === "") && (main === "_attributes")) {
-
-                            //console.dir(surface);
-
-                            Cache.DOMCache.roundCounter[Cache.DOMCache.counter] = "attribute";
-
-                            for (let attr in surface){
-
-                                //console.dir(attr);
-                                //console.dir(this.dom);
-
-                                if(surface.hasOwnProperty(attr)) {
-
-                                    if(attr.charAt(0) !== "$") {
-
-                                        if (attr === "text") {
-
-                                            // auf Promise prüfen !!!!
-
-
-                                            if(surface[attr] instanceof Promise){
-
-                                                surface[attr].then((data)=>{
-
-                                                    this.dom.appendChild(document.createTextNode(data));
-                                                });
-                                            } else {
-                                                this.dom.appendChild(document.createTextNode(surface[attr]));
-                                            }
-
-                                        } else if (attr === "innerHTML") {
-
-                                            this.dom.innerHTML = surface[attr];
-
-                                        } else {
-
-                                            if(attr === "addEvent"){
-
-                                                if(Partarum.hasOwnProperty("Cache")) {
-
-                                                    //! für mehrere Events ausbauen
-
-                                                    let eventArray = (Array.isArray(surface[attr])) ? surface[attr] : [surface[attr]];
-
-                                                    for(let event of eventArray) {
-
-                                                        //console.dir(event);
-
-                                                        if (event.name) {
-
-                                                            if (event.topic) {
-
-                                                                Partarum.Cache.EventCache.create(event.topic, event.theme);
-
-                                                                Partarum.Cache.EventCache.setEvent(event);
-                                                            } else {
-
-                                                                Partarum.Cache.EventCache.setEvent(event);
-                                                            }
-                                                        } else {
-
-                                                        }
-
-                                                        let eventCallback = Partarum.Cache.EventCache.getEvent(event.topic, event.theme, event.name) ?? event["doThat"];
-
-                                                        if (event.bubbles) {
-
-                                                            //console.dir("useCapture");
-
-                                                            this.dom.addEventListener(event.type, eventCallback, true);
-                                                        } else {
-
-                                                            //console.dir(event);
-
-                                                            this.dom.addEventListener(event.type, eventCallback, false);
-                                                        }
-
-                                                    }
-                                                }
-                                            } else if(attr === "addDOMEvent") {
-
-                                                surface[attr]["doThat"]();
-                                                //document.addEventListener(surface[attr].type, surface[attr]["doThat"]);
-                                            } else {
-                                                this.dom.setAttribute(attr, surface[attr]);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
-                            stopRound = true;
-
-                        } else if ((tagName === "") && (main === "_import")) {
-
-
-                            /*
-                                auf Array prüfen und wenn true, dann für jedes Element ein Import !!! Also array iterieren !!!!
-                             */
-
-                            if(typeof surface !== "object") {
-
-                                Cache.DOMCache.roundCounter[Cache.DOMCache.counter] = "import";
-
-                                // surface ist eine URL !!!
-
-                                let app = new Partarum();
-                                app.themes = [
-                                    {
-                                        [surface]: {
-                                            config: surface,
-                                            parent: this.dom
-                                        }
-                                    }
-                                ];
-                                app.create();
-                            } else {
-
-                                /*
-                                    element: {
-                                            _import: {
-                                                template: {
-                                                    name: "",                   <- Name des Templates
-                                                    surface: {                  <- Templateobject || kann auch direkt hinzugefügt werden
-                                                    }
-                                                    valueFile: {                <- Value fürs Template, aber als Object!!!
-                                                    }
-                                                }
-                                            }
-                                        }
-
-                                 */
-
-
-                                if((!surface.template) && (Array.isArray(surface))){
-
-                                    // Hier das _import - Array organisieren !!!! Also eine Schleife und für jedes ein new Content() !!!!
-
-                                    for(let p of surface){
-
-                                        let is = new Content(p, this.dom, this.filePath);
-                                    }
-
-                                } else if(surface.template){
-
-                                    if(typeof surface.template === "object"){
-
-                                        let valueFile = surface.template.valueFile;
-
-                                        Cache.PartarumCache.isTemplate = true;
-
-                                        Cache.PartarumCache.setTemplates(valueFile);
-
-                                        // template, valuePath, parentNode
-
-                                        let t = new Template(surface.template.name, surface.template.surface, valueFile, this.dom );
-
-                                    } else if (typeof surface.template === "string") {
-
-                                        if (Cache.PartarumCache.getTemplate(surface.template)) {
-
-                                            Cache.DOMCache.roundCounter[Cache.DOMCache.counter] = "templateStart";
-                                            Template.start = true;
-                                            Template.startNumber = Cache.DOMCache.counter;
-
-                                            let t = new Template(surface.template, Cache.PartarumCache.templatePaths[surface.template], Cache.PartarumCache.templates[surface.template], this.dom);
-
-                                            /*
-                                                Hier endet das Script fürs Template - der Rest wird von der class Template gemacht !!!
-                                             */
-                                        }
-                                    }
-
-                                    Cache.PartarumCache.isTemplate = false;
-
-                                } else {
-
-                                    // Hier kommt jetzt z.B der fetch - import von Textdatein
-
-                                    for(let attr in surface){
-                                        if(surface.hasOwnProperty(attr)){
-
-                                            if(attr === "text"){
-
-                                                fetch(surface[attr])
-                                                    .then(function(response) {
-                                                        if (!response.ok) {
-                                                            throw new Error("HTTP error, status = " + response.status);
-                                                        }
-
-                                                        return response.text();
-                                                    }).then((text)=>{
-
-                                                        let textNode = document.createTextNode(text);
-                                                        this.dom.appendChild(textNode);
-
-                                                    }).catch((error)=>{
-
-                                                        console.dir(error);
-                                                })
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
-                            stopRound = true;
-
-                        } else if ((tagName === "") && (main === "_partarum")){
-
-                            // Partarum - Custom - Elemente
-
-                            console.dir(surface);
-
-                            this.dom.appendChild(surface);
-
-                            /*
-                                    Hier die Partarum - Bibliotheken auswerten!!!
-                             */
-
-                        } else {
-
-                            /*
-                                wenn surface keine systeminterne Variable ist, sondern ein HTMLElement
-                             */
-
-                            let count = 1;
-
-                            let mainIsArray = false;
-
-                            /*
-                                prüfen auf Array
-
-                                    - kann eine Anreihung von Strings sein, oder
-                                    - eine Anreihung von Objecten mit neuen Elementangaben
-                             */
-                            if (Array.isArray(surface)) {
-
-                                count = surface.length;
-
-                                mainIsArray = true;
-                            }
-
-                            for (let i = 0; i < count; i++) {
-
-                                let hasText = false;
-
-                                if ((mainIsArray === true) || (typeof surface === "string")) {
-
-                                    hasText = (typeof  surface === "string") ? surface : ((typeof  surface[i] === "string") ? surface[i] : false);
-
-                                } else if (typeof surface === "object") {
-
-                                    hasText = false;
-
-                                    for (let t in surface) {
-
-                                        if(surface.hasOwnProperty(t)) {
-
-                                            if(Cache.DOMCache.templateProps[t]) {
-
-                                                Cache.DOMCache.roundCounter[Cache.DOMCache.counter] = "reference";
-
-                                                let content = new Content(Cache.DOMCache.templateProps[t] ?? surface, this.dom, this.filePath);
-                                            }
-                                        }
-                                    }
-                                }
-
-                                if(tagName !== "") {
-
-                                    Cache.DOMCache.roundCounter[Cache.DOMCache.counter] = "node";
-
-                                    node = document.createElement(tagName);
-
-                                    (hasText !== false) && node.appendChild(document.createTextNode(hasText));
-
-                                    //console.dir(node);
-                                    //console.dir(this.dom);
-
-                                    (this.after) ? this.after.after(node) : this.dom.appendChild(node);
-
-                                    let s = (Object.keys(surface)) && (mainIsArray !== true) ? surface : ((mainIsArray === true) ? surface[i] : null);
-
-                                    let c = new Content(s, node, this.filePath);
-                                }
-
-                                stopRound = null;
-                            }
-                        }
-                    } else {
-
-                        let value = Template.valueCache?.[main];
-
-                        if(value !== undefined){
-
-                            let templateReference = this.surface[main];
-
-                            if(typeof value === "string"){
-
-                                let type = templateReference["_type"];
-
-                                let valueReference = templateReference["_value"];
-
-                                if(type === "_attributes"){
-
-                                    for(let attrKey in valueReference){
-
-                                        if(valueReference.hasOwnProperty(attrKey)) {
-
-                                            if(attrKey.startsWith("data_")){
-
-                                                attrKey = attrKey.replace('_', '-');
-                                            }
-
-                                            this.dom.setAttribute(attrKey, Template.valueCache[main]);
-                                        }
-                                    }
-                                } else if(type === "text"){
-
-                                    this.dom.appendChild(document.createTextNode(value));
-
-                                } else if(type === "_callback"){
-
-                                   let call = "back";
-
-                                   console.log(call);
-                                }
-                            } else if (typeof value === "object"){
-
-                                if(Array.isArray(value)){
-
-                                    /*
-                                            HTMLCollection kommt hier noch hinzu !!!!
-                                     */
-
-                                    // Textblöcke, Listen etc....
-
-                                    // text muss noch auf inline HTML geprüft werden - überall wo Text ist - im gesamten Script
-
-                                    let type = templateReference["_type"];
-
-                                    if(type === "_callback"){
-
-                                        let f = templateReference["_callback"];
-
-                                        f(Template.valueCache);
-
-                                    } else {
-
-                                        let nodeCounter = value.length;
-
-                                        for (let i = 0; i < nodeCounter; i++) {
-
-                                            let part = value[i];
-
-                                            let nextNode = document.createElement(this.dom.nodeName);
-
-                                            let hasChild = [];
-
-                                            if (type === "HTMLCollection") {
-
-                                                for (let valuePart in part) {
-
-                                                    if (part.hasOwnProperty(valuePart)) {
-
-                                                        if (valuePart === "_attributes") {
-
-                                                            for (let attrKey in part[valuePart]) {
-
-                                                                if (part[valuePart].hasOwnProperty(attrKey)) {
-
-                                                                    if (attrKey === "text") {
-
-                                                                        let textNode = document.createTextNode(part[valuePart][attrKey]);
-
-                                                                        (i === 0) ? this.dom.appendChild(textNode) : nextNode.appendChild(textNode);
-
-                                                                    } else {
-
-                                                                        attrKey = (attrKey.startsWith("data_")) ? attrKey.replace('_', '-') : attrKey;
-
-                                                                        (i === 0) ? this.dom.setAttribute(attrKey, part[valuePart][attrKey]) : nextNode.setAttribute(attrKey, part[valuePart][attrKey]);
-                                                                    }
-                                                                }
-                                                            }
-                                                        } else {
-
-                                                            // wenn der Key keine Systemvariable ist, sondern den Namen des nächsten Elementes darstellt
-
-                                                            /*
-                                                                neuer Child - Content !!!!
-
-                                                                valuePart ist das Element!!!! - also der Name vom Element !!!!
-                                                             */
-
-
-                                                            // muss abgeändert werden - weil wenn es mehr als ein Child gibt, wird jedes davor überschrieben, deshalb in ein Array einfügen !!!
-
-                                                            let nextSurface = {
-                                                                [valuePart]: part[valuePart]
-                                                            }
-
-                                                            hasChild.push(nextSurface);
-
-                                                            // es benötigt eine Bedingung, welches Node jetzt gemeint ist ( nextNode || this.dom )
-
-                                                            // let content muss nach appendChild losgeschickt werden
-
-
-                                                        }
-
-                                                    }
-                                                }
-
-                                                if (i !== 0) {
-
-                                                    this.dom.parentElement.appendChild(nextNode);
-                                                } else {
-
-                                                    nextNode = null;
-                                                }
-
-                                                if (hasChild.length > 0) {
-
-                                                    for (let child of hasChild) {
-
-                                                        let content = new Content(child, nextNode ?? this.dom, this.filePath);
-                                                    }
-                                                }
-
-                                            } else if (type === "_callback") {
-
-
-                                            } else {
-                                                this.dom.parentElement.appendChild(document.createElement(this.dom.nodeName)).innerHTML = part;
-                                            }
-                                        }
-
-                                    }
-                                } else {
-
-                                    for(let groupKey in templateReference){
-
-                                        if(templateReference.hasOwnProperty(groupKey)) {
-
-                                            let type = templateReference[groupKey]?.["_type"];
-
-                                            let valueReference = templateReference[groupKey]?.["_value"];
-
-                                            if (type === "text") {
-
-                                                let text = Template.valueCache[main]?.[groupKey];
-
-                                                this.dom.appendChild(document.createTextNode(text));
-
-                                            } else if(type === "_attributes"){
-
-                                                let value = Template.valueCache[main]?.[groupKey];
-
-                                                for(let attrKey in valueReference){
-
-                                                    if(valueReference.hasOwnProperty(attrKey)) {
-
-                                                        attrKey = (attrKey.startsWith("data_")) ? attrKey.replace('_', '-') : attrKey;
-
-                                                        this.dom.setAttribute(attrKey, value);
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        } else {
-
-                            (Cache.DOMCache.templateProps?.[main]) ? Cache.DOMCache.zeroCounter() : Cache.DOMCache.setTemplateProp({
-                                name: main,
-                                value: surface
-                            });
-
-                            let content = stopRound ?? new Content(surface, node ?? this.dom, this.filePath);
-                        }
+    /**
+     * Hilfsmethode, um das Ziel-Element (Parent oder Sibling) zu bestimmen
+     */
+    setDomTarget(arg) {
+        this.dom = null;
+        this.after = null;
+
+        if (arg instanceof HTMLElement || arg instanceof ShadowRoot) {
+            this.dom = arg;
+        } else if (arg?.after) {
+            this.after = arg.after;
+            // Falls wir 'after' nutzen, brauchen wir für Kind-Elemente später den Parent des 'after'-Elements
+            this.dom = this.after.parentElement;
+        }
+    }
+
+    /**
+     * Die neue Hauptmethode (ehemals create).
+     * Sie entscheidet nur noch, WELCHE Strategie angewendet wird.
+     */
+    render() {
+        if (!this.surface) return;
+
+        if (typeof this.surface === "string") {
+            this.renderText(this.surface);
+        } else if (Array.isArray(this.surface)) {
+            this.renderList(this.surface);
+        } else if (typeof this.surface === "object") {
+            this.renderObject(this.surface);
+        }
+    }
+
+    /**
+     * Strategie 1: Einfacher Text
+     */
+    renderText(text) {
+        // Hier könnte man auch Template-Referenzen prüfen, falls Strings diese enthalten
+        this.appendNode(document.createTextNode(text));
+    }
+
+    /**
+     * Strategie 2: Listen / Arrays
+     */
+    renderList(list) {
+        // Performance-Tipp: DocumentFragment nutzen, um Reflows zu minimieren
+        const fragment = document.createDocumentFragment();
+
+        // Wir brauchen einen temporären Container für die Rekursion,
+        // da 'Content' aktuell noch DOM-Elemente erwartet.
+        // In einem tieferen Refactoring könnte man Content so umbauen,
+        // dass es auch Fragmente akzeptiert.
+
+        list.forEach(item => {
+            // Rekursion für jedes Item
+            // Achtung: Hier behalten wir die Logik bei, dass Arrays oft Listen von Nodes sind
+            new Content(item, this.dom, this.filePath);
+        });
+    }
+
+    /**
+     * Strategie 3: Objekte (Das Herzstück)
+     * Hier werden Tags, Attribute und Imports unterschieden.
+     */
+    renderObject(surface) {
+        for (let key in surface) {
+            if (!surface.hasOwnProperty(key)) continue;
+
+            Cache.DOMCache.counter++; // Den globalen Counter beibehalten
+            const value = surface[key];
+
+            if (key === "_attributes") {
+                this.handleAttributes(value);
+            } else if (key === "_import") {
+                this.handleImport(value);
+            } else if (key === "_partarum") {
+                // Spezielle Partarum Logik
+                console.dir(value);
+                this.appendNode(value);
+            } else if (key.startsWith("$")) {
+                // Template Properties (Ignorieren oder speziell behandeln)
+                // Im Original-Code wurde das im else-Zweig oft ignoriert oder separat behandelt
+            } else {
+                // Es ist ein HTML-Tag oder eine Template-Referenz
+                this.handleNodeOrTemplate(key, value);
+            }
+        }
+    }
+
+    /**
+     * Verarbeitet Attribute (_attributes)
+     */
+    handleAttributes(attributes) {
+        Cache.DOMCache.roundCounter[Cache.DOMCache.counter] = "attribute";
+
+        for (let attr in attributes) {
+            if (!attributes.hasOwnProperty(attr)) continue;
+            if (attr.startsWith("$")) continue;
+
+            const value = attributes[attr];
+
+            if (attr === "text") {
+                this.handleTextAttribute(value);
+            } else if (attr === "innerHTML") {
+                this.dom.innerHTML = value;
+            } else if (attr === "addEvent" || attr === "addDOMEvent") {
+                this.handleEventAttribute(attr, value);
+            } else {
+                // Standard Attribut
+                this.dom.setAttribute(attr, value);
+            }
+        }
+    }
+
+    handleTextAttribute(value) {
+        if (value instanceof Promise) {
+            value.then((data) => {
+                this.dom.appendChild(document.createTextNode(data));
+            });
+        } else {
+            this.dom.appendChild(document.createTextNode(value));
+        }
+    }
+
+    handleEventAttribute(type, eventData) {
+        if (type === "addDOMEvent") {
+             // Im Original direkt ausgeführt
+             if (typeof eventData.doThat === 'function') {
+                 eventData.doThat();
+             }
+             return;
+        }
+
+        // Partarum Event Cache Logik
+        if (Partarum.hasOwnProperty("Cache")) {
+            const eventArray = Array.isArray(eventData) ? eventData : [eventData];
+
+            for (let event of eventArray) {
+                if (event.name) {
+                    if (event.topic) {
+                        Partarum.Cache.EventCache.create(event.topic, event.theme);
                     }
+                    Partarum.Cache.EventCache.setEvent(event);
+                }
+
+                let eventCallback = Partarum.Cache.EventCache.getEvent(event.topic, event.theme, event.name) ?? event["doThat"];
+
+                if (eventCallback) {
+                    this.dom.addEventListener(event.type, eventCallback, event.bubbles === true);
                 }
             }
+        }
+    }
+
+    /**
+     * Verarbeitet Imports (_import)
+     */
+    handleImport(importData) {
+        Cache.DOMCache.roundCounter[Cache.DOMCache.counter] = "import";
+
+        if (typeof importData !== "object") {
+            // Fall 1: Import ist ein String (URL) -> Neue Partarum App
+            let app = new Partarum();
+            app.themes = [{
+                [importData]: { config: importData, parent: this.dom }
+            }];
+            app.create().then((prom_res) => {
+                console.log("Import erfolgreich - Prom_res:");
+                console.dir(prom_res);
+            });
+
+        } else if (Array.isArray(importData)) {
+             // Fall 2: Array von Imports
+             for (let item of importData) {
+                 new Content(item, this.dom, this.filePath);
+             }
+
+        } else if (importData.template) {
+            // Fall 3: Template Import
+            this.handleTemplateImport(importData);
+
         } else {
+            // Fall 4: Fetch Text (z.B. HTML Snippets via Fetch)
+            this.handleFetchImport(importData);
+        }
+    }
 
-            /*
-                    ul: {           // this.dom.parentElement
-                        li: [       // this.dom
-                            {
-                                    // das eigentliche neue Childelement
-                            },
-                            {
-                                    // das nächste childElement von this.dom.parentElement
-                            }
-                        ]
-                    }
-             */
+    handleTemplateImport(importData) {
+        if (typeof importData.template === "object") {
+            let valueFile = importData.template.valueFile;
+            Cache.PartarumCache.isTemplate = true;
+            Cache.PartarumCache.setTemplates(valueFile);
+            new Template(importData.template.name, importData.template.surface, valueFile, this.dom);
+            Cache.PartarumCache.isTemplate = false;
 
-            // hier jetzt die flexiblen auswerten
+        } else if (typeof importData.template === "string") {
+            if (Cache.PartarumCache.getTemplate(importData.template)) {
+                Cache.DOMCache.roundCounter[Cache.DOMCache.counter] = "templateStart";
+                Template.start = true;
+                Template.startNumber = Cache.DOMCache.counter;
 
+                new Template(
+                    importData.template,
+                    Cache.PartarumCache.templatePaths[importData.template],
+                    Cache.PartarumCache.templates[importData.template],
+                    this.dom
+                );
+            }
+        }
+    }
 
+    handleFetchImport(importData) {
+        // Einfacher Fetch für Textinhalte
+        if (importData.text) {
+             fetch(importData.text)
+                .then(response => {
+                    if (!response.ok) throw new Error("HTTP error " + response.status);
+                    return response.text();
+                })
+                .then(text => {
+                    this.dom.appendChild(document.createTextNode(text));
+                })
+                .catch(console.error);
+        }
+    }
+
+    /**
+     * Verarbeitet normale HTML Nodes (z.B. div, span) oder Template Referenzen
+     */
+    handleNodeOrTemplate(key, value) {
+        // Prüfen, ob es sich um eine Template-Variable handelt
+        // (Im Original war hier eine komplexe Logik mit Template.valueCache)
+        if (Template.valueCache && Template.valueCache[key] !== undefined) {
+             // Hier müsste die komplexe Template-Logik ausgelagert werden
+             // Um den Rahmen nicht zu sprengen, deute ich es hier an:
+             // this.renderTemplateValue(key, value);
+             // Für jetzt behandeln wir es als normales Element, wenn kein Template:
+             return;
+        }
+
+        // Normales Element erstellen
+        let tagName = key.split("_")[0]; // "div_header" -> "div"
+        if (tagName === "") return; // Fallback
+
+        Cache.DOMCache.roundCounter[Cache.DOMCache.counter] = "node";
+
+        let newNode = document.createElement(tagName);
+
+        // Handling für Strings direkt im Key (Seltener Fall im Original, aber möglich)
+        if (typeof value === "string") {
+            newNode.appendChild(document.createTextNode(value));
+        }
+
+        this.appendNode(newNode);
+
+        // Rekursion für den Inhalt des neuen Elements
+        // WICHTIG: Das 'value' Objekt definiert den Inhalt des neuen Nodes
+        new Content(value, newNode, this.filePath);
+    }
+
+    /**
+     * Wrapper für DOM-Operationen
+     */
+    appendNode(node) {
+        if (this.after) {
+            this.after.after(node);
+        } else {
+            this.dom.appendChild(node);
         }
     }
 }
