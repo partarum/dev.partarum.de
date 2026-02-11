@@ -11,5 +11,9 @@
 //import {globalConfig} from "/surface/config";
 
 export default {
-
+    h2: {
+        _attributes: {
+            text: "Footer"
+        }
+    }
 }
