@@ -1,107 +1,68 @@
- /*
- *           Copyright 2020 © Alexander Bombis. All rights reserved.
- *           Developed by Alexander Bombis.
- *           Email: email@alexander-bombis.de
- *
- *           The following code was created based on the template for the website http://cordes-software.de.
- *           This may also be used in full by the person or business
- *           representing the domain "cordes-software.de"
- *           and also modified for their use.
- */
-//import surface from "/surface/import";
+/* Dies ist ein Modul, das von Partarum dynamisch geladen wird.
+   Es exportiert standardmäßig (default) das Surface-Objekt.
+*/
 
 export default {
-    // 1. Container für alles
-    div_wrapper: {
-        _attributes: {
-            id: "partarum-test-wrapper",
-            style: "font-family: sans-serif; max-width: 800px; margin: 2rem auto; padding: 20px; border: 1px solid #ccc; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);"
-        },
+    // 1. Einfache Elemente
+    h2_title: {
+        _attributes: { style: "border-bottom: 2px solid #007bff; padding-bottom: 0.5rem;" },
+        text: "Willkommen im Partarum 2.0"
+    },
+    
+    p_info: "Wenn du diesen Text siehst, hat die Klasse 'Station' dieses File erfolgreich importiert und 'Content' hat es gerendert.",
 
-        // 2. Einfacher Header (Testet handleNode & TextNode)
-        h1_title: {
-            _attributes: {
-                style: "color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px;"
-            },
-            text: "Partarum Content Test 🚀" // Alternativer Weg für Text
-        },
+    // 2. Test: Verschachtelung & Attribute
+    div_statusBox: {
+        _attributes: { style: "background: #e8f5e9; padding: 15px; margin: 20px 0; border-radius: 4px;" },
+        h3: "Status Report",
+        ul: [
+            { li: "Station Loader: ✅ OK" },
+            { li: "Content Renderer: ✅ OK" },
+            { li: "Attributes (_attributes): ✅ OK" },
+            { li: { span: { _attributes: { class: "success" }, text: "Verschachtelung: ✅ OK" } } }
+        ]
+    },
 
-        // 3. Einführungstext
-        p_intro: "Dies ist ein Test für die refactored Content-Klasse. Wenn du das siehst, funktioniert das einfache Rendering.",
-
-        // 4. Testbereich: Attribute & Styling
-        div_styling: {
-            _attributes: {
-                style: "background-color: #f0f0f0; padding: 15px; margin: 20px 0; border-radius: 4px;"
-            },
-            h3: "1. Attribute & Styles",
-            p: {
-                _attributes: {
-                    class: "text-muted", // Setzt voraus, dass CSS vorhanden ist, oder einfach als Attribut-Test
-                    "data-test": "success"
-                },
-                text: "Dieses Element hat eine Hintergrundfarbe, Padding und Data-Attribute."
-            }
-        },
-
-        // 5. Testbereich: Listen / Arrays (Testet renderList)
-        div_lists: {
-            h3: "2. Listen (Array Rendering)",
-            ul: [
-                { li: "Listenpunkt 1 (String)" },
-                { li: "Listenpunkt 2 (String)" },
-                {
-                    li: {
-                        b: "Listenpunkt 3 (Objekt mit Fett-Tag)"
+    // 3. Test: Interaktivität (Events)
+    div_interactive: {
+        h3: "Interaktivität",
+        button_test: {
+            _attributes: { 
+                class: "btn",
+                addDOMEvent: {
+                    type: "click",
+                    doThat: () => {
+                        alert("🎉 Klick Event erfolgreich! Die Event-Logik in Content funktioniert.");
                     }
                 }
-            ]
-        },
+            },
+            text: "Klick mich für Event-Test"
+        }
+    },
 
-        // 6. Testbereich: Events (Testet handleAttributes -> addDOMEvent)
-        div_events: {
-            h3: "3. Interaktivität (Events)",
-            button_clickme: {
-                _attributes: {
-                    style: "background-color: #27ae60; color: white; border: none; padding: 10px 20px; cursor: pointer; font-size: 16px; border-radius: 4px;",
-                    addDOMEvent: {
-                        type: "click",
-                        doThat: () => {
-                            alert("Event funktioniert! Partarum lebt.");
-                        }
-                    }
+    // 4. Test: Templates (Das schwierigste Feature)
+    div_templates: {
+        _attributes: { style: "margin-top: 2rem;" },
+        h3: "Template Rendering (aus Cache)",
+        
+        // Hier referenzieren wir den Key 'userList', den wir in main_test.js in den Cache gelegt haben
+        userList: {
+            _type: "HTMLCollection", // Wir sagen: Es ist eine Liste
+            
+            // Das Blueprint für EINE Karte:
+            div_card: {
+                _attributes: { class: "card" },
+                // Name (wird aus Daten gefüllt)
+                strong_name: {
+                    // Placeholder Struktur, Content füllt 'text' Attribut aus Daten
+                    name: {} 
                 },
-                text: "Klick mich!"
-            }
-        },
-
-        // 7. Testbereich: Templates (Testet handleTemplate & Cache-Zugriff)
-        div_templates: {
-            h3: "4. Template Rendering (Daten aus Cache)",
-
-            /* ACHTUNG: Damit das funktioniert, müssen wir im Test-Setup
-               Daten in Cache.TemplateCache.currentValues['mockUserList'] injizieren!
-            */
-            mockUserList: {
-                _type: "HTMLCollection", // Signalisiert, dass es eine Liste ist
-
-                // Definition, wie EIN Item aussehen soll
-                // Im Refactoring iterieren wir über die Daten und erstellen Klone dieses Elements
-                div_userCard: {
-                    _attributes: {
-                        style: "border: 1px solid #ddd; padding: 10px; margin-bottom: 5px; display: flex; justify-content: space-between;"
-                    },
-                    span_name: {
-                        // Hier nehmen wir an, dass die Daten im Cache bereits 'text' Attribute haben
-                        // Oder wir nutzen simple Strings, je nach Struktur der Testdaten
-                    },
-                    span_role: {
-                        _attributes: {
-                            style: "font-weight: bold; color: #888;"
-                        }
-                    }
+                // Rolle
+                span_role: {
+                    _attributes: { style: "color: #666; font-size: 0.9em;" },
+                    role: {}
                 }
             }
         }
     }
-}
+};
