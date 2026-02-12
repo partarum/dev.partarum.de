@@ -1,11 +1,12 @@
 {
   "surface/import": "public/surface/surface-import.js",
-  "surface/landingPage/header": "public/surface/pages/landingPage/header/header.js",
-  "surface/landingPage/main": "public/surface/pages/landingPage/main/main.js",
-  "surface/landingPage/footer": "public/surface/pages/landingPage/footer/footer.js",
+  "surface/dashboardPage/header": "public/surface/pages/dashboardPage/header/header.js",
+  "surface/dashboardPage/main": "public/surface/pages/dashboardPage/main/main.js",
+  "surface/dashboardPage/footer": "public/surface/pages/dashboardPage/footer/footer.js",
   "surface/global/header": "public/surface/global/header/header.js",
   "surface/global/footer": "public/surface/global/footer/footer.js",
-  "surface/config": "public/surface/config/config.js",
+  "info": "Array - Werte erlauben um Pfadunterschiede auszugleichen - siehe globalConfig.js und config.js",
+  "surface/globalConfig": "public/surface/config/globalConfig.js",
   "surface/templates/orderStatus": "public/surface/templates/orderStatus.js",
   "surface/templates/condition/navigation": "public/surface/templates/condition/navigation.js",
   "surface/templates/featureBox": "public/surface/templates/featureBox.js"

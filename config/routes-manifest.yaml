@@ -1,0 +1,33 @@
+variables:
+  my_variable: &my_variable "hello world"
+
+# Verwendung des Alias
+message: *my_variable
+routes:
+  /index:
+   server: http://localhost:50201
+   worker: index.js
+  /landingPage:
+    server: http://localhost:50202
+    worker: landingPage.js
+  /dashboard:
+    server: http://localhost:50203
+    worker: dashboard.js
+  /Befragung:
+    server: http://localhost:50204
+    worker: Befragung.js
+  /Befragung/NSH:
+    server: http://localhost:50205
+    worker: NSH.js
+  /Befragung/LSH:
+    server: http://localhost:50206
+    worker: LSH.js
+  /Befragung/RHB:
+    server: http://localhost:50207
+    worker: RHB.js
+  /Befragung/RHD:
+    server: http://localhost:50208
+    worker: RHD.js
+  /Befragung/KVH:
+    server: http://localhost:50209
+    worker: KVH.js

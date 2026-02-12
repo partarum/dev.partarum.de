@@ -1,0 +1,106 @@
+---
+port-range:
+  start: 50201
+  end: 50299
+procedure:
+- landingPage
+- dashboard
+- befragung:
+    - NSH
+    - LSH
+    - RHB
+    - RHD
+    - KVH
+pages:
+    landingPage:
+      route:
+      surface:
+      - header:
+        id: header
+        class: app-header nav-box headroom
+      - main:
+        id: content
+      - footer:
+        id: footer
+        class: box box-column footer-box footer-dark
+      load:
+        css:
+        - Partarum/CSS
+        - assets/css/font-awesome.min.css
+        js: []
+        media: []
+      meta: {}
+      nextStep: ''
+    dashboard:
+      route:
+      surface:
+        - header:
+        - main:
+        - footer:
+      load:
+        css:
+        js: []
+        media: []
+      meta: {}
+      nextStep: ''
+    befragung:
+      - KVH:
+          route:
+          surface:
+            - header:
+            - main:
+            - footer:
+          load:
+            css:
+            js: [ ]
+            media: [ ]
+          meta: { }
+          nextStep: ''
+      - LSH:
+          route:
+          surface:
+            - header:
+            - main:
+            - footer:
+          load:
+            css:
+            js: [ ]
+            media: [ ]
+          meta: { }
+          nextStep: '',
+      - RHB:
+          route:
+          surface:
+            - header:
+            - main:
+            - footer:
+          load:
+            css:
+            js: [ ]
+            media: [ ]
+          meta: { }
+          nextStep: ''
+      - RHD:
+          route:
+          surface:
+            - header:
+            - main:
+            - footer:
+          load:
+            css:
+            js: [ ]
+            media: [ ]
+          meta: { }
+          nextStep: ''
+      - KVH:
+          route:
+          surface:
+            - header:
+            - main:
+            - footer:
+          load:
+            css:
+            js: [ ]
+            media: [ ]
+          meta: { }
+          nextStep: ''
