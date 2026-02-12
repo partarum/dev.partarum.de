@@ -1,0 +1,387 @@
+/*
+    landingPage.css
+ */
+
+@import url("dashboard.css");
+
+:root {
+    --prt-area-rows: 4em auto 4em;
+
+    --prt-area:
+        "prt-area-header"
+        "prt-area-main"
+        "prt-area-footer";
+
+    /*
+    --prt-area-width: 100vw;
+
+     */
+    --prt-area-height: 100vh;
+
+    /*--prt-area-margin: 0;*/
+
+
+    height: 100vh;
+}
+
+/*
+    body
+ */
+
+@container prt-area (width < 700px) {
+}
+
+@container prt-area (width > 0) {
+
+    /*
+        header
+     */
+    .prt-area-header {
+
+    }
+
+    /*
+        main
+     */
+    .prt-area__main {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        grid-template-areas: "section_1 section_2";
+
+        /*width: 100vw;*/
+        /*height: 100vh;*/
+
+        /*min-height: 100vh !important;*/
+
+        background-image: linear-gradient(0deg, #FAEDCD, #FEF9E1, #FAEDCD);
+    }
+
+    /*
+        footer
+     */
+    .prt-area-footer {
+
+    }
+
+    @container prt-area-header (width > 0) {
+
+    }
+
+    @container prt-area-main (width < 700px) {
+
+    }
+
+    @container prt-area-main (width > 700px) {
+
+    }
+
+    @container prt-area-main (width > 0) {
+
+        .prt-header, .prt-tlb0, .prt-tlb1 {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+        }
+
+        .prt-header {
+            /*background: #380F38;*/
+            color: #00D0FD;
+        }
+
+        .prt-tlb1, .prt-tlb2 {
+            /*background: #380F38;*/
+        }
+
+        .prt-sec1 {
+            grid-template-columns: 4em 1fr 4em;
+            grid-template-rows: 1fr;
+            grid-template-areas:
+                "toolbox_1 section toolbox_2";
+
+            /*background-color: #380F38;*/
+        }
+
+        .prt-sec2 {
+            /*align-items: center;*/
+            grid-template-rows: 1fr 1fr;
+            grid-template-areas:
+                "section_1"
+                "section_2";
+        }
+
+        @container prt-sec1 (width > 0) {
+
+            .prt-section {
+                grid-template-columns: repeat(3, 1fr);
+                grid-template-rows: repeat(4, 1fr);
+                gap: 1em;
+
+                /*background: inherit;*/
+            }
+
+
+
+            @container prt-section (width > 0) {
+
+                .prt-article {
+                    /* grid-template-row führt zu unerwarteten Ergebnis mit 1fr*/
+                    grid-template-rows: 1fr 1fr;
+                    /*
+                    Vorsicht - im Folgenden steckt wahnsinnig viel Fehler-Potenzial,
+                    da die Klasse .prt-head0 schonmal vergeben wurde.
+                    ! Das Konzept muss erweitert werden !
+                    */
+                    grid-template-areas:
+                        "header"
+                        "toolbox";
+
+                    padding: 0.5em;
+                }
+
+                .card {
+                    backdrop-filter: blur(10px);
+                    border-radius: 0.5em;
+                    padding: 1em;
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                    border: 1px outset #130013;
+                    color: #ffffff;
+
+                }
+
+                .prt-article > .prt-header {
+
+                    display: grid;
+                    grid-template-rows: 0.5fr auto;
+                    grid-template-columns: 1fr;
+                    grid-template-areas:
+                        "toolbox"
+                        "h2";
+
+                    align-items: center;
+                    text-align: center;
+                    color: #F8ECD3;
+                }
+
+                .prt-article > .prt-header > .prt-toolbox {
+                    display: flex;
+                    justify-content: end;
+                }
+
+                .prt-article > .prt-header > .prt-toolbox button {
+                    font-size: 2em;
+                    background: transparent;
+                    color: #6CBCD9;
+
+                    border: none;
+                }
+
+
+                .prt-article > .prt-toolbox {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr 1fr;
+                    grid-template-rows: 1fr;
+                    cursor: pointer;
+                    gap: 0.5em;
+                    color: #ffffff;
+                    height: auto;
+                }
+
+                .prt-article > .prt-toolbox button {
+                    border: 1px outset #613261;
+                    border-radius: 0.2em;
+
+                    background: transparent;
+                }
+
+                .prt-article > .prt-toolbox button:active {
+                    border: 1px inset #613261;
+                }
+
+                .prt-article > .prt-toolbox .fa-minus {
+                    color: red;
+                }
+
+                .prt-article > .prt-toolbox .fa-plus {
+                    color: green;
+                }
+
+                .prt-article > .prt-toolbox .fa-magnifying-glass-chart {
+                    color: #9EC4DB
+                }
+
+                .prt-article > .prt-toolbox button > i {
+
+                    color: #1983F8;
+
+                    font-size: 3em;
+                }
+
+                .prt-art1 {
+                    grid-row: 1;
+                    grid-column: 1;
+
+                    /*background-color: hsl(300, 100%, 45%);*/
+                }
+
+                .prt-art2 {
+                    grid-row: 1;
+                    grid-column: 2;
+
+                    /*background-color: hsl(300, 100%, 42%);*/
+                }
+
+                .prt-art3 {
+                    grid-row: 1;
+                    grid-column: 3;
+
+                    /*background-color: hsl(300, 100%, 45%);*/
+                }
+
+                .prt-art4 {
+                    grid-row: 2;
+                    grid-column: 1;
+
+                    /*background-color: hsl(300, 100%, 42%);*/
+                }
+
+                .prt-art5 {
+                    grid-row: 2;
+                    grid-column: 2;
+
+                    /*background-color: hsl(300, 100%, 48%);*/
+                }
+
+                .prt-art6 {
+                    grid-row: 2;
+                    grid-column: 3;
+
+                    /*background-color: hsl(300, 100%, 42%);*/
+                }
+
+                .prt-art7 {
+                    grid-row: 3;
+                    grid-column: 1;
+
+                    /*background-color: hsl(300, 100%, 45%);*/
+                }
+
+                .prt-art8 {
+                    grid-row: 3;
+                    grid-column: 2;
+
+                    /*background-color: hsl(300, 100%, 42%);*/
+                }
+
+                .prt-art9 {
+                    grid-row: 3;
+                    grid-column: 3;
+
+                    /*background-color: hsl(300, 100%, 45%);*/
+                }
+
+                .prt-art10 {
+                    grid-row: 4;
+                    grid-column: 1;
+
+                    /*background-color: hsl(300, 100%, 45%);*/
+                }
+
+                .prt-art11 {
+                    grid-row: 4;
+                    grid-column: 2;
+
+                    /*background-color: hsl(300, 100%, 45%);*/
+                }
+
+                .prt-art12 {
+                    grid-row: 4;
+                    grid-column: 3;
+
+                    /*background-color: hsl(300, 100%, 45%);*/
+                }
+
+            }
+        }
+
+        @container prt-sec2 (width > 0) {
+            .prt-sec1 {
+
+            }
+
+            .prt-sec2 {
+
+            }
+
+            .prt-sec1, .prt-sec2 {
+                grid-template-rows: 2em 1fr 2em;
+                grid-template-columns: 1fr;
+                grid-template-areas:
+                    "header"
+                    "article"
+                    "toolbox";
+            }
+
+            .prt-sec1 > .prt-header, .prt-sec2 > .prt-header {
+                color: #EEB937;
+            }
+
+            .prt-sec1 > .prt-article, .prt-sec2 > .prt-article {
+                background: #380F38;
+                opacity: 0.2;
+                border: 4px inset #130013;
+                border-radius: 1em;
+            }
+
+            @container prt-sec1 (width > 0) {
+
+
+
+            }
+
+            @container prt-sec2 (width > 0) {
+
+
+
+            }
+        }
+    }
+
+    @container prt-area-footer (width > 0) {
+
+    }
+}
+
+/*
+    Animationen | keyframes
+ */
+
+
+
+@media (min-width: 0px) and (max-width: 700px) {
+
+    main {
+        grid-template-rows: 100vh;
+    }
+
+}
+
+@media (min-width: 701px) and (max-width: 1200px) {
+
+}
+
+@media (min-width: 701px) and (max-width: 845px) {
+
+}
+
+@media (min-width: 846px) and (max-width: 1000px) {
+
+}
+
+@media (min-width: 1201px) and (max-width: 2000px) {
+
+}
+
+@media (min-width: 2001px) {
+
+}

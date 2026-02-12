@@ -1,0 +1,48 @@
+@import url("/Partarum/PartarumCSS/Design/singleBoxCenter_small.css");
+/*
+@import url("dashboard.css");
+*/
+
+body {
+    display: grid;
+    grid-template-rows: 10vh 80vh 10vh;
+    grid-template-areas:
+        "header"
+        "content"
+        "footer";
+}
+
+#header {
+    grid-area: header;
+}
+
+main#content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    grid-area: content;
+
+    & .login-form {
+        height: 50%;
+    
+        & .login-form__container {
+            height: 100%;
+            display: grid;
+            grid-template-rows: 1fr 1fr 1fr;
+            grid-template-columns: 50%;
+            justify-content: center;
+    
+            & .login-form__field, .login-form__actions {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                gap: 1rem;
+            }
+        }
+    }
+}
+
+#footer {
+    grid-area: footer;
+}

@@ -1,0 +1,141 @@
+---
+mail-forward:
+  name: share
+sort-alpha-desc:
+  name: arrow-down-z-a
+arrow-circle-o-left:
+  name: circle-left
+  prefix: far
+bar-chart:
+  name: chart-column
+level-up:
+  name: turn-up
+sort-amount-asc:
+  name: arrow-down-short-wide
+bar-chart-o:
+  name: chart-column
+arrow-circle-o-up:
+  name: circle-up
+  prefix: far
+mail-reply-all:
+  name: reply-all
+long-arrow-left:
+  name: left-long
+arrows:
+  name: up-down-left-right
+expand:
+  name: up-right-and-down-left-from-center
+long-arrow-up:
+  name: up-long
+files-o:
+  name: copy
+  prefix: far
+mail-reply:
+  name: reply
+minus-square-o:
+  name: square-minus
+  prefix: far
+toggle-down:
+  name: square-caret-down
+  prefix: far
+reorder:
+  name: bars
+caret-square-o-up:
+  name: square-caret-up
+  prefix: far
+rotate-right:
+  name: arrow-rotate-right
+sort-asc:
+  name: sort-up
+arrows-alt:
+  name: maximize
+arrow-circle-o-right:
+  name: circle-right
+  prefix: far
+trash-o:
+  name: trash-can
+  prefix: far
+cloud-upload:
+  name: cloud-arrow-up
+arrow-circle-o-down:
+  name: circle-down
+  prefix: far
+trash:
+  name: trash-can
+sign-out:
+  name: right-from-bracket
+check-square-o:
+  name: square-check
+  prefix: far
+caret-square-o-left:
+  name: square-caret-left
+  prefix: far
+sort-amount-desc:
+  name: arrow-down-wide-short
+caret-square-o-down:
+  name: square-caret-down
+  prefix: far
+line-chart:
+  name: chart-line
+toggle-left:
+  name: square-caret-left
+  prefix: far
+share-square-o:
+  name: share-from-square
+caret-square-o-right:
+  name: square-caret-right
+  prefix: far
+list-alt:
+  name: rectangle-list
+  prefix: far
+sort-numeric-asc:
+  name: arrow-down-1-9
+sort-desc:
+  name: sort-down
+long-arrow-right:
+  name: right-long
+rotate-left:
+  name: arrow-rotate-left
+arrows-v:
+  name: up-down
+clipboard:
+  name: paste
+cloud-download:
+  name: cloud-arrow-down
+level-down:
+  name: turn-down
+external-link:
+  name: up-right-from-square
+toggle-up:
+  name: square-caret-up
+  prefix: far
+repeat:
+  name: arrow-rotate-right
+toggle-right:
+  name: square-caret-right
+  prefix: far
+unsorted:
+  name: sort
+sort-alpha-asc:
+  name: arrow-down-a-z
+refresh:
+  name: arrows-rotate
+exchange:
+  name: right-left
+check-circle-o:
+  name: circle-check
+  prefix: far
+compress:
+  name: down-left-and-up-right-to-center
+sign-in:
+  name: right-to-bracket
+arrows-h:
+  name: left-right
+long-arrow-down:
+  name: down-long
+navicon:
+  name: bars
+external-link-square:
+  name: square-up-right
+sort-numeric-desc:
+  name: arrow-down-9-1

@@ -1,1 +1,1 @@
-# public/assets/media
+#public/assets/shared

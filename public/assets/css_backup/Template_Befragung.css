@@ -1,0 +1,63 @@
+@import url("holzmarkterhebung.css");
+@import url("/Partarum/PartarumCSS/partarumForm.css");
+
+:root {
+
+    /*
+           ! IE 11 kennt keine Variablen - also dennoch alles vor Ort definieren
+     */
+
+    --header-height: 20vh;
+    --main-height: auto;
+    --footer-height: 20vh;
+
+}
+
+@media (max-width: 800px) {
+
+}
+
+@media (max-width: 900px) {
+
+}
+
+
+@media (max-width: 999px) {
+
+}
+
+@media (min-width: 1000px){
+
+}
+
+@media (min-width: 1100px){
+
+}
+
+@media (min-width: 1200px){
+
+}
+
+@media (min-width: 1300px){
+
+}
+
+@media (min-width: 1400px){
+
+}
+
+@media (min-width: 1500px){
+
+}
+
+@media (min-width: 1600px){
+
+}
+
+@media (min-width: 1700px){
+
+}
+
+@media (min-width: 1800px){
+
+}

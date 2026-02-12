@@ -1,0 +1,79 @@
+---
+bryntum:
+  icons:
+    - diagram-subtask
+  label: Bryntum
+  url: https://bryntum.com
+clicdata:
+  icons:
+    - chart-column
+    - chart-gantt
+    - chart-line
+    - chart-waterfall
+    - input-numeric
+    - input-pipe
+    - input-text
+    - list-tree
+    - table-tree
+  label: ClicData
+  url: https://www.clicdata.com
+icis:
+  icons:
+    - arrow-progress
+    - chart-line-up-down
+    - chart-mixed-up-circle-dollar
+    - display-chart-up-circle-dollar
+    - right-left-large
+  label: ICIS
+  url: https://www.icis.com/
+libeo:
+  icons:
+    - arrow-right-from-arc
+    - arrow-right-to-arc
+  label: Libeo
+  url: https://libeo.io
+rocket-chat:
+  icons:
+    - comment-check
+    - message
+    - message-check
+  label: Rocket.Chat
+  url: https://rocket.chat
+stay-linked:
+  icons:
+    - clipboard-check
+    - clipboard-list
+  label: StayLinked
+  url: https://www.staylinked.com
+supple:
+  icons:
+    - badge-check
+  label: Supple
+  url: https://supple.com.au
+un-ocha:
+  icons:
+    - arrow-down-up-across-line
+    - arrow-down-up-lock
+    - arrow-up-right-dots
+    - arrow-up-right-from-square
+    - arrows-down-to-line
+    - arrows-left-right-to-line
+    - arrows-spin
+    - arrows-split-up-and-left
+    - arrows-to-circle
+    - arrows-to-dot
+    - arrows-to-eye
+    - arrows-turn-right
+    - arrows-turn-to-dots
+    - arrows-up-to-line
+    - chart-simple
+    - clipboard-question
+    - envelope-circle-check
+    - tree-city
+  label: United Nations OCHA
+  url: https://www.unocha.org
+uptick:
+  icons:
+    - shutters
+  label: Uptick
+  url: https://www.uptickhq.com

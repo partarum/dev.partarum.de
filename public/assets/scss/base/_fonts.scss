@@ -1,0 +1,22 @@
+@font-face {
+  font-family: 'Narrenschiff';
+  src: url('/public/assets/shared/fonts/narrenschiff/Narrenschiff-Regular.otf') format('opentype');
+  /* Optional: Definieren Sie weitere Attribute für die Schriftart */
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'DelightSnowy';
+  src: url('/public/assets/shared/fonts/delight_snowy/DelightSnowy.otf') format('opentype');
+  /* Optional: Definieren Sie weitere Attribute für die Schriftart */
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'JetBrainsMono-Regular';
+  src: url('/public/assets/shared/fonts/JetBrainsMono-2.304/fonts/webfonts/JetBrainsMono-Regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}

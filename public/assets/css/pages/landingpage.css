@@ -1,0 +1,108 @@
+@import url("/Partarum/PartarumCSS/partarumForm.css");
+body {
+  -ms-grid-rows: 10vh 50vh 40vh;
+}
+
+.pfm-commission h2 {
+  font-size: 1rem;
+  font-weight: normal;
+}
+
+.pfm-commission ul {
+  font-size: 0.8rem;
+}
+
+.pfm-onboarding-footer * {
+  font-size: 0.8rem;
+  font-weight: normal;
+}
+
+.pfm-onboarding-footer h3 {
+  font-size: 1rem;
+}
+
+.pfm-onboarding-footer ul {
+  font-size: 0.8rem;
+}
+
+.pfm-contact-box > .pfm-col-2 {
+  display: flex;
+}
+
+body {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: var(--header-height) var(--main-height) var(--footer-height);
+  grid-template-areas: "header" "content" "footer";
+  height: 100vh;
+  width: 100vw;
+  padding: 0;
+  margin: 0;
+  background: var(--primeColor_1);
+}
+
+@media (max-width: 999px) {
+  :root {
+    --ratio: 2;
+  }
+}
+@media (min-width: 1000px) {
+  :root {
+    --ratio: 3;
+  }
+}
+@media (min-width: 1700px) {
+  :root {
+    --ratio: 4;
+  }
+}
+#content picture {
+  grid-area: picture;
+  height: var(--picture-height);
+}
+
+#content img {
+  height: var(--picture-height);
+}
+
+/*
+        WebKit
+ */
+/*
+        Internet Explorer
+ */
+@media (min-width: 1000px) {
+  .ie-body {
+    -ms-grid-rows: calc((100vh - 33.3333333333vw) / 2) 33.3333333333vw calc((100vh - 33.3333333333vw) / 2);
+  }
+  .ie-picture {
+    height: 33.3333333333vw;
+  }
+  .ie-picture-img {
+    height: 33.3333333333vw;
+  }
+}
+@media (min-width: 1700px) {
+  .ie-body {
+    -ms-grid-rows: calc((100vh - 25vw) / 2) 25vw calc((100vh - 25vw) / 2);
+  }
+  .ie-picture {
+    height: 25vw;
+  }
+  .ie-picture-img {
+    height: 25vw;
+  }
+}
+@media (max-width: 999px) {
+  .ie-body {
+    -ms-grid-rows: calc((100vh - 50vw) / 2) 50vw calc((100vh - 50vw) / 2);
+  }
+  .ie-picture {
+    height: 50vw;
+  }
+  .ie-picture-img {
+    height: 50vw;
+  }
+}
+
+/*# sourceMappingURL=landingpage.css.map */

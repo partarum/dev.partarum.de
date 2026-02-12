@@ -1,0 +1,105 @@
+@charset "UTF-8";
+@font-face {
+  font-family: "Narrenschiff";
+  src: url("/public/assets/shared/fonts/narrenschiff/Narrenschiff-Regular.otf") format("opentype");
+  /* Optional: Definieren Sie weitere Attribute für die Schriftart */
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "DelightSnowy";
+  src: url("/public/assets/shared/fonts/delight_snowy/DelightSnowy.otf") format("opentype");
+  /* Optional: Definieren Sie weitere Attribute für die Schriftart */
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "JetBrainsMono-Regular";
+  src: url("/public/assets/shared/fonts/JetBrainsMono-2.304/fonts/webfonts/JetBrainsMono-Regular.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+:root {
+  /*
+        ! IE 11 kennt keine Variablen - also dennoch alles vor Ort definieren
+  */
+  --primeColor_1: #FFFFFF;
+  --primeColor_2: #FCFEFC;
+  --ratio: 1;
+  --picture-height: calc(100vw / var(--ratio));
+  --footer-height: calc(calc(100vh - calc(100vw / var(--ratio))) / 2);
+  --main-height: var(--picture-height);
+  --header-height: calc(calc(100vh - calc(100vw / var(--ratio))) / 2);
+}
+
+html {
+  padding: 0;
+  margin: 0;
+}
+
+.ie-body {
+  display: -ms-grid;
+  -ms-grid-columns: 1fr;
+  background: #FCFEFC;
+}
+
+.grid {
+  display: grid;
+}
+
+.grid_1_2_1 {
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 2fr 1fr;
+}
+
+.ie-header {
+  -ms-grid-row: 1;
+}
+
+.ie-main {
+  -ms-grid-row: 2;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.ie-footer {
+  -ms-grid-row: 3;
+}
+
+#startButton {
+  display: inline-flex;
+  background: #e7d2af;
+  text-align: center;
+  color: #030161;
+  background: linear-gradient(#FFE9C5, #F5D39B);
+  border: 1px solid #CDA461;
+  border-radius: 0.2rem;
+  box-shadow: inset 0 0 10px 1px #FFF5E3;
+}
+#startButton :hover {
+  background: linear-gradient(#F5D39B, #FFE9C5);
+}
+#startButton :active {
+  position: relative;
+  top: 1px;
+}
+
+.pre-flex-gap-box {
+  /*
+  margin-bottom: -1rem;
+  margin-left: -1rem;
+
+   */
+}
+
+.pre-flex-gap-item {
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+}
+
+/*# sourceMappingURL=common.css.map */

@@ -1,0 +1,658 @@
+---
+hands:
+  icons:
+    - hand-pointer
+  label: Hands
+communication:
+  icons:
+    - comment-arrow-down
+    - comment-arrow-up
+    - comment-arrow-up-right
+    - comment-check
+    - envelope-circle-check
+    - inbox-in
+    - inbox-out
+    - message
+    - message-arrow-down
+    - message-arrow-up
+    - message-arrow-up-right
+    - message-check
+    - right-left-large
+    - symbols
+  label: Communication
+buildings:
+  icons:
+    - tree-city
+  label: Buildings
+punctuation-symbols:
+  icons:
+    - check
+    - check-double
+    - minus
+    - pipe
+  label: Punctuation + Symbols
+time:
+  icons:
+    - calendar-arrow-down
+    - calendar-arrow-up
+    - calendar-check
+    - calendar-circle-exclamation
+    - calendar-circle-minus
+    - calendar-circle-plus
+    - calendar-clock
+    - calendar-day
+    - calendar-lines
+    - calendar-lines-pen
+    - calendar-minus
+    - calendar-pen
+    - calendar-plus
+    - trash-can-clock
+    - trash-clock
+  label: Time
+arrows:
+  icons:
+    - angle-down
+    - angle-left
+    - angle-right
+    - angle-up
+    - angles-down
+    - angles-left
+    - angles-right
+    - angles-up
+    - arrow-down
+    - arrow-down-1-9
+    - arrow-down-9-1
+    - arrow-down-a-z
+    - arrow-down-arrow-up
+    - arrow-down-big-small
+    - arrow-down-from-dotted-line
+    - arrow-down-from-line
+    - arrow-down-left
+    - arrow-down-left-and-arrow-up-right-to-center
+    - arrow-down-long
+    - arrow-down-right
+    - arrow-down-short-wide
+    - arrow-down-small-big
+    - arrow-down-square-triangle
+    - arrow-down-to-arc
+    - arrow-down-to-bracket
+    - arrow-down-to-dotted-line
+    - arrow-down-to-line
+    - arrow-down-to-square
+    - arrow-down-triangle-square
+    - arrow-down-up-across-line
+    - arrow-down-up-lock
+    - arrow-down-wide-short
+    - arrow-down-z-a
+    - arrow-left
+    - arrow-left-from-line
+    - arrow-left-long
+    - arrow-left-long-to-line
+    - arrow-left-to-line
+    - arrow-pointer
+    - arrow-progress
+    - arrow-right
+    - arrow-right-arrow-left
+    - arrow-right-from-arc
+    - arrow-right-from-bracket
+    - arrow-right-from-line
+    - arrow-right-long
+    - arrow-right-long-to-line
+    - arrow-right-to-arc
+    - arrow-right-to-bracket
+    - arrow-right-to-line
+    - arrow-rotate-left
+    - arrow-rotate-right
+    - arrow-trend-down
+    - arrow-trend-up
+    - arrow-turn-down
+    - arrow-turn-down-left
+    - arrow-turn-down-right
+    - arrow-turn-up
+    - arrow-up
+    - arrow-up-1-9
+    - arrow-up-9-1
+    - arrow-up-a-z
+    - arrow-up-arrow-down
+    - arrow-up-big-small
+    - arrow-up-from-arc
+    - arrow-up-from-bracket
+    - arrow-up-from-dotted-line
+    - arrow-up-from-line
+    - arrow-up-from-square
+    - arrow-up-left
+    - arrow-up-left-from-circle
+    - arrow-up-long
+    - arrow-up-right
+    - arrow-up-right-and-arrow-down-left-from-center
+    - arrow-up-right-dots
+    - arrow-up-right-from-square
+    - arrow-up-short-wide
+    - arrow-up-small-big
+    - arrow-up-square-triangle
+    - arrow-up-to-dotted-line
+    - arrow-up-to-line
+    - arrow-up-triangle-square
+    - arrow-up-wide-short
+    - arrow-up-z-a
+    - arrows-cross
+    - arrows-down-to-line
+    - arrows-from-dotted-line
+    - arrows-from-line
+    - arrows-left-right
+    - arrows-left-right-to-line
+    - arrows-maximize
+    - arrows-minimize
+    - arrows-repeat
+    - arrows-repeat-1
+    - arrows-retweet
+    - arrows-rotate
+    - arrows-spin
+    - arrows-split-up-and-left
+    - arrows-to-circle
+    - arrows-to-dot
+    - arrows-to-dotted-line
+    - arrows-to-eye
+    - arrows-to-line
+    - arrows-turn-right
+    - arrows-turn-to-dots
+    - arrows-up-down
+    - arrows-up-down-left-right
+    - arrows-up-to-line
+    - caret-down
+    - caret-left
+    - caret-right
+    - caret-up
+    - chevron-down
+    - chevron-left
+    - chevron-right
+    - chevron-up
+    - chevrons-down
+    - chevrons-left
+    - chevrons-right
+    - chevrons-up
+    - circle-arrow-down
+    - circle-arrow-down-left
+    - circle-arrow-down-right
+    - circle-arrow-left
+    - circle-arrow-right
+    - circle-arrow-up
+    - circle-arrow-up-left
+    - circle-arrow-up-right
+    - circle-caret-down
+    - circle-caret-left
+    - circle-caret-right
+    - circle-caret-up
+    - circle-chevron-down
+    - circle-chevron-left
+    - circle-chevron-right
+    - circle-chevron-up
+    - circle-down
+    - circle-down-left
+    - circle-down-right
+    - circle-left
+    - circle-right
+    - circle-up
+    - circle-up-left
+    - circle-up-right
+    - clock-rotate-left
+    - cloud-arrow-down
+    - cloud-arrow-up
+    - down
+    - down-from-dotted-line
+    - down-from-line
+    - down-left
+    - down-left-and-up-right-to-center
+    - down-long
+    - down-right
+    - down-to-bracket
+    - down-to-dotted-line
+    - down-to-line
+    - inbox-in
+    - inbox-out
+    - left
+    - left-from-line
+    - left-long
+    - left-long-to-line
+    - left-right
+    - left-to-line
+    - location-arrow
+    - maximize
+    - merge
+    - recycle
+    - repeat
+    - repeat-1
+    - reply
+    - reply-all
+    - retweet
+    - right
+    - right-from-bracket
+    - right-from-line
+    - right-left
+    - right-left-large
+    - right-long
+    - right-long-to-line
+    - right-to-bracket
+    - right-to-line
+    - rotate
+    - rotate-left
+    - rotate-right
+    - share
+    - share-all
+    - share-from-square
+    - shuffle
+    - sort
+    - sort-down
+    - sort-up
+    - split
+    - square-arrow-down
+    - square-arrow-down-left
+    - square-arrow-down-right
+    - square-arrow-left
+    - square-arrow-right
+    - square-arrow-up
+    - square-arrow-up-left
+    - square-arrow-up-right
+    - square-caret-down
+    - square-caret-left
+    - square-caret-right
+    - square-caret-up
+    - square-chevron-down
+    - square-chevron-left
+    - square-chevron-right
+    - square-chevron-up
+    - square-down
+    - square-down-left
+    - square-down-right
+    - square-left
+    - square-right
+    - square-up
+    - square-up-left
+    - square-up-right
+    - turn-down
+    - turn-down-left
+    - turn-down-right
+    - turn-up
+    - up
+    - up-down
+    - up-down-left-right
+    - up-from-bracket
+    - up-from-dotted-line
+    - up-from-line
+    - up-left
+    - up-long
+    - up-right
+    - up-right-and-down-left-from-center
+    - up-right-from-square
+    - up-to-dotted-line
+    - up-to-line
+    - upload
+  label: Arrows
+editing:
+  icons:
+    - arrows-rotate
+    - bars
+    - chart-simple
+    - check
+    - check-double
+    - circle-check
+    - delete-left
+    - delete-right
+    - hexagon-check
+    - minus
+    - pen-field
+    - rotate
+    - square-check
+    - trash
+    - trash-arrow-up
+    - trash-can
+    - trash-can-arrow-up
+    - trash-can-check
+    - trash-can-clock
+    - trash-can-list
+    - trash-can-plus
+    - trash-can-slash
+    - trash-can-undo
+    - trash-can-xmark
+    - trash-check
+    - trash-clock
+    - trash-list
+    - trash-plus
+    - trash-slash
+    - trash-undo
+    - trash-xmark
+  label: Editing
+logistics:
+  icons:
+    - chart-simple
+    - chart-simple-horizontal
+    - clipboard-check
+    - clipboard-list
+    - clipboard-question
+  label: Logistics
+medical-health:
+  icons:
+    - clock-rotate-left
+  label: Medical + Health
+money:
+  icons:
+    - chart-line
+    - chart-line-down
+    - chart-mixed-up-circle-dollar
+    - display-chart-up
+    - display-chart-up-circle-dollar
+    - file-chart-column
+  label: Money
+spinners:
+  icons:
+    - arrow-rotate-left
+    - arrow-rotate-right
+    - arrows-rotate
+    - arrows-spin
+    - rotate
+    - rotate-left
+    - rotate-right
+  label: Spinners
+security:
+  icons:
+    - door-closed
+    - door-open
+    - lock-keyhole
+    - lock-keyhole-open
+    - shield-check
+    - shield-keyhole
+    - unlock-keyhole
+  label: Security
+business:
+  icons:
+    - arrow-progress
+    - arrows-spin
+    - arrows-to-dot
+    - arrows-to-eye
+    - badge-check
+    - briefcase-arrow-right
+    - chart-line
+    - chart-line-down
+    - chart-line-up
+    - chart-line-up-down
+    - chart-simple
+    - chart-simple-horizontal
+    - clipboard
+    - clipboard-question
+    - copy
+    - envelope-circle-check
+    - eraser
+    - file
+    - file-chart-column
+    - file-spreadsheet
+    - folder-arrow-down
+    - folder-arrow-up
+    - folder-tree
+    - laptop-file
+    - list-check
+    - list-tree
+    - paste
+    - print
+    - table
+    - table-tree
+    - timeline-arrow
+  label: Business
+mathematics:
+  icons:
+    - minus
+    - square-minus
+  label: Mathematics
+text-formatting:
+  icons:
+    - check
+    - check-double
+    - circle-check
+    - list
+    - list-check
+    - list-ol
+    - list-ul
+    - rectangle-list
+    - square-check
+    - square-list
+    - symbols
+    - table
+    - table-list
+  label: Text Formatting
+shopping:
+  icons:
+    - badge-check
+  label: Shopping
+toggle:
+  icons:
+    - circle-check
+  label: Toggle
+media-playback:
+  icons:
+    - arrow-rotate-left
+    - arrow-rotate-right
+    - arrows-maximize
+    - arrows-repeat
+    - arrows-repeat-1
+    - arrows-rotate
+    - backward
+    - backward-fast
+    - down-left-and-up-right-to-center
+    - forward
+    - forward-fast
+    - maximize
+    - minimize
+    - play
+    - play-pause
+    - repeat
+    - repeat-1
+    - rotate
+    - rotate-left
+    - rotate-right
+    - shuffle
+    - up-right-and-down-left-from-center
+  label: Media Playback
+holidays:
+  icons:
+    - carrot
+  label: Holidays
+photos-images:
+  icons:
+    - clone
+    - minimize
+  label: Photos + Images
+design:
+  icons:
+    - clone
+    - copy
+    - eraser
+    - paste
+    - symbols
+  label: Design
+connectivity:
+  icons:
+    - cloud-arrow-down
+    - cloud-arrow-up
+  label: Connectivity
+social:
+  icons:
+    - arrows-retweet
+    - message
+    - retweet
+    - share
+    - share-from-square
+    - symbols
+  label: Social
+education:
+  icons:
+    - laptop-file
+  label: Education
+devices-hardware:
+  icons:
+    - computer-mouse
+    - computer-mouse-scrollwheel
+    - database
+    - desktop-arrow-down
+    - display-arrow-down
+    - keyboard
+    - laptop-arrow-down
+    - laptop-file
+    - print
+    - server
+    - upload
+  label: Devices + Hardware
+files:
+  icons:
+    - clone
+    - copy
+    - file
+    - file-arrow-down
+    - file-arrow-up
+    - file-check
+    - file-circle-check
+    - file-csv
+    - file-excel
+    - file-export
+    - file-import
+    - file-minus
+    - file-plus
+    - file-plus-minus
+    - files
+    - page
+    - paste
+  label: Files
+food-beverage:
+  icons:
+    - carrot
+  label: Food + Beverage
+nature:
+  icons:
+    - tree
+    - tree-deciduous
+    - tree-large
+    - trees
+  label: Nature
+coding:
+  icons:
+    - bars
+    - file
+    - keyboard
+    - merge
+    - shield-check
+    - split
+  label: Coding
+marketing:
+  icons:
+    - arrows-spin
+    - arrows-to-dot
+    - arrows-to-eye
+    - badge-check
+    - chart-mixed-up-circle-dollar
+    - chart-simple
+    - chart-simple-horizontal
+    - display-chart-up
+    - display-chart-up-circle-dollar
+    - timeline-arrow
+  label: Marketing
+maps:
+  icons:
+    - circle-location-arrow
+    - flag-checkered
+    - location-arrow
+    - print
+    - recycle
+    - tree
+    - tree-deciduous
+  label: Maps
+political:
+  icons:
+    - ballot
+    - ballot-check
+    - check-double
+    - clipboard-list-check
+  label: Political
+charts-diagrams:
+  icons:
+    - chart-bar
+    - chart-column
+    - chart-gantt
+    - chart-line
+    - chart-line-down
+    - chart-line-up
+    - chart-line-up-down
+    - chart-mixed-up-circle-dollar
+    - chart-simple
+    - chart-simple-horizontal
+    - chart-waterfall
+    - diagram-nested
+    - diagram-subtask
+    - display-chart-up
+    - display-chart-up-circle-dollar
+    - file-chart-column
+  label: Charts + Diagrams
+shapes:
+  icons:
+    - file
+    - play
+  label: Shapes
+travel-hotel:
+  icons:
+    - door-closed
+    - door-open
+    - tree-city
+  label: Travel + Hotel
+fruits-vegetables:
+  icons:
+    - carrot
+  label: Fruits + Vegetables
+writing:
+  icons:
+    - eraser
+    - file
+    - input-numeric
+    - input-pipe
+    - input-text
+    - keyboard
+    - pen-field
+  label: Writing
+science:
+  icons:
+    - clipboard-check
+  label: Science
+household:
+  icons:
+    - door-closed
+    - door-open
+    - shutters
+  label: Household
+camping:
+  icons:
+    - tree
+    - tree-deciduous
+    - tree-large
+    - trees
+  label: Camping
+humanitarian:
+  icons:
+    - arrow-down-up-across-line
+    - arrow-down-up-lock
+    - arrow-up-right-dots
+    - arrow-up-right-from-square
+    - arrows-down-to-line
+    - arrows-left-right-to-line
+    - arrows-spin
+    - arrows-split-up-and-left
+    - arrows-to-circle
+    - arrows-to-dot
+    - arrows-to-eye
+    - arrows-turn-right
+    - arrows-turn-to-dots
+    - arrows-up-to-line
+    - clipboard-question
+    - envelope-circle-check
+    - file
+    - file-circle-check
+    - file-csv
+    - laptop-file
+    - trash-can
+    - tree-city
+  label: Humanitarian

@@ -21,6 +21,17 @@ export default {
             container: "/surface/landingPage/footer"
         }
     },
+    dashboardPage: {
+        header: {
+            container: "/surface/dashboardPage/header"
+        },
+        main: {
+            container: "/surface/dashboardPage/main"
+        },
+        footer: {
+            container: "/surface/dashboardPage/footer"
+        },
+    },
     global: {
         header: {
             container: "/surface/global/header"

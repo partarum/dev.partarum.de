@@ -1,0 +1,32 @@
+@import url("/Partarum/PartarumCSS/partarumForm.css");
+body {
+  -ms-grid-rows: 10vh 50vh 40vh;
+}
+
+.pfm-commission h2 {
+  font-size: 1rem;
+  font-weight: normal;
+}
+
+.pfm-commission ul {
+  font-size: 0.8rem;
+}
+
+.pfm-onboarding-footer * {
+  font-size: 0.8rem;
+  font-weight: normal;
+}
+
+.pfm-onboarding-footer h3 {
+  font-size: 1rem;
+}
+
+.pfm-onboarding-footer ul {
+  font-size: 0.8rem;
+}
+
+.pfm-contact-box > .pfm-col-2 {
+  display: flex;
+}
+
+/*# sourceMappingURL=initial-stage.css.map */

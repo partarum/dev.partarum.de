@@ -1,0 +1,1243 @@
+// variables
+// --------------------------
+
+$fa-css-prefix            : fa !default;
+$fa-style                 : 900 !default;
+$fa-style-family          : "Font Awesome 6 Pro" !default;
+
+$fa-icon-property         : --fa;
+$fa-duotone-icon-property : --fa--fa;
+
+$fa-display               : inline-block !default;
+
+$fa-fw-width              : fa-divide(20em, 16) !default;
+$fa-inverse               : #fff !default;
+
+$fa-border-color          : #eee !default;
+$fa-border-padding        : .2em .25em .15em !default;
+$fa-border-radius         : .1em !default;
+$fa-border-style          : solid !default;
+$fa-border-width          : .08em !default;
+
+$fa-size-scale-2xs        : 10 !default;
+$fa-size-scale-xs         : 12 !default;
+$fa-size-scale-sm         : 14 !default;
+$fa-size-scale-base       : 16 !default;
+$fa-size-scale-lg         : 20 !default;
+$fa-size-scale-xl         : 24 !default;
+$fa-size-scale-2xl        : 32 !default;
+
+$fa-sizes: (
+  "2xs"                   : $fa-size-scale-2xs,
+  "xs"                    : $fa-size-scale-xs,
+  "sm"                    : $fa-size-scale-sm,
+  "lg"                    : $fa-size-scale-lg,
+  "xl"                    : $fa-size-scale-xl,
+  "2xl"                   : $fa-size-scale-2xl
+) !default;
+
+$fa-li-width              : 2em !default;
+$fa-li-margin             : $fa-li-width * fa-divide(5, 4) !default;
+
+$fa-pull-margin           : .3em !default;
+
+$fa-primary-opacity       : 1 !default;
+$fa-secondary-opacity     : .4 !default;
+
+$fa-stack-vertical-align  : middle !default;
+$fa-stack-width           : ($fa-fw-width * 2) !default;
+$fa-stack-z-index         : auto !default;
+
+$fa-font-display          : block !default;
+$fa-font-path             : "../webfonts" !default;
+
+$fa-var-angle-down: \f107;
+$fa-var-angle-left: \f104;
+$fa-var-angle-right: \f105;
+$fa-var-angle-up: \f106;
+$fa-var-angles-down: \f103;
+$fa-var-angle-double-down: \f103;
+$fa-var-angles-left: \f100;
+$fa-var-angle-double-left: \f100;
+$fa-var-angles-right: \f101;
+$fa-var-angle-double-right: \f101;
+$fa-var-angles-up: \f102;
+$fa-var-angle-double-up: \f102;
+$fa-var-arrow-down: \f063;
+$fa-var-arrow-down-1-9: \f162;
+$fa-var-sort-numeric-asc: \f162;
+$fa-var-sort-numeric-down: \f162;
+$fa-var-arrow-down-9-1: \f886;
+$fa-var-sort-numeric-desc: \f886;
+$fa-var-sort-numeric-down-alt: \f886;
+$fa-var-arrow-down-a-z: \f15d;
+$fa-var-sort-alpha-asc: \f15d;
+$fa-var-sort-alpha-down: \f15d;
+$fa-var-arrow-down-arrow-up: \f883;
+$fa-var-sort-alt: \f883;
+$fa-var-arrow-down-big-small: \f88c;
+$fa-var-sort-size-down: \f88c;
+$fa-var-arrow-down-from-dotted-line: \e090;
+$fa-var-arrow-down-from-line: \f345;
+$fa-var-arrow-from-top: \f345;
+$fa-var-arrow-down-left: \e091;
+$fa-var-arrow-down-left-and-arrow-up-right-to-center: \e092;
+$fa-var-arrow-down-long: \f175;
+$fa-var-long-arrow-down: \f175;
+$fa-var-arrow-down-right: \e093;
+$fa-var-arrow-down-short-wide: \f884;
+$fa-var-sort-amount-desc: \f884;
+$fa-var-sort-amount-down-alt: \f884;
+$fa-var-arrow-down-small-big: \f88d;
+$fa-var-sort-size-down-alt: \f88d;
+$fa-var-arrow-down-square-triangle: \f889;
+$fa-var-sort-shapes-down-alt: \f889;
+$fa-var-arrow-down-to-arc: \e4ae;
+$fa-var-arrow-down-to-bracket: \e094;
+$fa-var-arrow-down-to-dotted-line: \e095;
+$fa-var-arrow-down-to-line: \f33d;
+$fa-var-arrow-to-bottom: \f33d;
+$fa-var-arrow-down-to-square: \e096;
+$fa-var-arrow-down-triangle-square: \f888;
+$fa-var-sort-shapes-down: \f888;
+$fa-var-arrow-down-up-across-line: \e4af;
+$fa-var-arrow-down-up-lock: \e4b0;
+$fa-var-arrow-down-wide-short: \f160;
+$fa-var-sort-amount-asc: \f160;
+$fa-var-sort-amount-down: \f160;
+$fa-var-arrow-down-z-a: \f881;
+$fa-var-sort-alpha-desc: \f881;
+$fa-var-sort-alpha-down-alt: \f881;
+$fa-var-arrow-left: \f060;
+$fa-var-arrow-left-from-line: \f344;
+$fa-var-arrow-from-right: \f344;
+$fa-var-arrow-left-long: \f177;
+$fa-var-long-arrow-left: \f177;
+$fa-var-arrow-left-long-to-line: \e3d4;
+$fa-var-arrow-left-to-line: \f33e;
+$fa-var-arrow-to-left: \f33e;
+$fa-var-arrow-pointer: \f245;
+$fa-var-mouse-pointer: \f245;
+$fa-var-arrow-progress: \e5df;
+$fa-var-arrow-right: \f061;
+$fa-var-arrow-right-arrow-left: \f0ec;
+$fa-var-exchange: \f0ec;
+$fa-var-arrow-right-from-arc: \e4b1;
+$fa-var-arrow-right-from-bracket: \f08b;
+$fa-var-sign-out: \f08b;
+$fa-var-arrow-right-from-line: \f343;
+$fa-var-arrow-from-left: \f343;
+$fa-var-arrow-right-long: \f178;
+$fa-var-long-arrow-right: \f178;
+$fa-var-arrow-right-long-to-line: \e3d5;
+$fa-var-arrow-right-to-arc: \e4b2;
+$fa-var-arrow-right-to-bracket: \f090;
+$fa-var-sign-in: \f090;
+$fa-var-arrow-right-to-line: \f340;
+$fa-var-arrow-to-right: \f340;
+$fa-var-arrow-rotate-left: \f0e2;
+$fa-var-arrow-left-rotate: \f0e2;
+$fa-var-arrow-rotate-back: \f0e2;
+$fa-var-arrow-rotate-backward: \f0e2;
+$fa-var-undo: \f0e2;
+$fa-var-arrow-rotate-right: \f01e;
+$fa-var-arrow-right-rotate: \f01e;
+$fa-var-arrow-rotate-forward: \f01e;
+$fa-var-redo: \f01e;
+$fa-var-arrow-trend-down: \e097;
+$fa-var-arrow-trend-up: \e098;
+$fa-var-arrow-turn-down: \f149;
+$fa-var-level-down: \f149;
+$fa-var-arrow-turn-down-left: \e2e1;
+$fa-var-arrow-turn-down-right: \e3d6;
+$fa-var-arrow-turn-up: \f148;
+$fa-var-level-up: \f148;
+$fa-var-arrow-up: \f062;
+$fa-var-arrow-up-1-9: \f163;
+$fa-var-sort-numeric-up: \f163;
+$fa-var-arrow-up-9-1: \f887;
+$fa-var-sort-numeric-up-alt: \f887;
+$fa-var-arrow-up-a-z: \f15e;
+$fa-var-sort-alpha-up: \f15e;
+$fa-var-arrow-up-arrow-down: \e099;
+$fa-var-sort-up-down: \e099;
+$fa-var-arrow-up-big-small: \f88e;
+$fa-var-sort-size-up: \f88e;
+$fa-var-arrow-up-from-arc: \e4b4;
+$fa-var-arrow-up-from-bracket: \e09a;
+$fa-var-arrow-up-from-dotted-line: \e09b;
+$fa-var-arrow-up-from-line: \f342;
+$fa-var-arrow-from-bottom: \f342;
+$fa-var-arrow-up-from-square: \e09c;
+$fa-var-arrow-up-left: \e09d;
+$fa-var-arrow-up-left-from-circle: \e09e;
+$fa-var-arrow-up-long: \f176;
+$fa-var-long-arrow-up: \f176;
+$fa-var-arrow-up-right: \e09f;
+$fa-var-arrow-up-right-and-arrow-down-left-from-center: \e0a0;
+$fa-var-arrow-up-right-dots: \e4b7;
+$fa-var-arrow-up-right-from-square: \f08e;
+$fa-var-external-link: \f08e;
+$fa-var-arrow-up-short-wide: \f885;
+$fa-var-sort-amount-up-alt: \f885;
+$fa-var-arrow-up-small-big: \f88f;
+$fa-var-sort-size-up-alt: \f88f;
+$fa-var-arrow-up-square-triangle: \f88b;
+$fa-var-sort-shapes-up-alt: \f88b;
+$fa-var-arrow-up-to-dotted-line: \e0a1;
+$fa-var-arrow-up-to-line: \f341;
+$fa-var-arrow-to-top: \f341;
+$fa-var-arrow-up-triangle-square: \f88a;
+$fa-var-sort-shapes-up: \f88a;
+$fa-var-arrow-up-wide-short: \f161;
+$fa-var-sort-amount-up: \f161;
+$fa-var-arrow-up-z-a: \f882;
+$fa-var-sort-alpha-up-alt: \f882;
+$fa-var-arrows-cross: \e0a2;
+$fa-var-arrows-down-to-line: \e4b8;
+$fa-var-arrows-from-dotted-line: \e0a3;
+$fa-var-arrows-from-line: \e0a4;
+$fa-var-arrows-left-right: \f07e;
+$fa-var-arrows-h: \f07e;
+$fa-var-arrows-left-right-to-line: \e4ba;
+$fa-var-arrows-maximize: \f31d;
+$fa-var-expand-arrows: \f31d;
+$fa-var-arrows-minimize: \e0a5;
+$fa-var-compress-arrows: \e0a5;
+$fa-var-arrows-repeat: \f364;
+$fa-var-repeat-alt: \f364;
+$fa-var-arrows-repeat-1: \f366;
+$fa-var-repeat-1-alt: \f366;
+$fa-var-arrows-retweet: \f361;
+$fa-var-retweet-alt: \f361;
+$fa-var-arrows-rotate: \f021;
+$fa-var-refresh: \f021;
+$fa-var-sync: \f021;
+$fa-var-arrows-spin: \e4bb;
+$fa-var-arrows-split-up-and-left: \e4bc;
+$fa-var-arrows-to-circle: \e4bd;
+$fa-var-arrows-to-dot: \e4be;
+$fa-var-arrows-to-dotted-line: \e0a6;
+$fa-var-arrows-to-eye: \e4bf;
+$fa-var-arrows-to-line: \e0a7;
+$fa-var-arrows-turn-right: \e4c0;
+$fa-var-arrows-turn-to-dots: \e4c1;
+$fa-var-arrows-up-down: \f07d;
+$fa-var-arrows-v: \f07d;
+$fa-var-arrows-up-down-left-right: \f047;
+$fa-var-arrows: \f047;
+$fa-var-arrows-up-to-line: \e4c2;
+$fa-var-backward: \f04a;
+$fa-var-backward-fast: \f049;
+$fa-var-fast-backward: \f049;
+$fa-var-badge-check: \f336;
+$fa-var-ballot: \f732;
+$fa-var-ballot-check: \f733;
+$fa-var-bars: \f0c9;
+$fa-var-navicon: \f0c9;
+$fa-var-briefcase-arrow-right: \e2f2;
+$fa-var-calendar-arrow-down: \e0d0;
+$fa-var-calendar-download: \e0d0;
+$fa-var-calendar-arrow-up: \e0d1;
+$fa-var-calendar-upload: \e0d1;
+$fa-var-calendar-check: \f274;
+$fa-var-calendar-circle-exclamation: \e46e;
+$fa-var-calendar-circle-minus: \e46f;
+$fa-var-calendar-circle-plus: \e470;
+$fa-var-calendar-clock: \e0d2;
+$fa-var-calendar-time: \e0d2;
+$fa-var-calendar-day: \f783;
+$fa-var-calendar-lines: \e0d5;
+$fa-var-calendar-note: \e0d5;
+$fa-var-calendar-lines-pen: \e472;
+$fa-var-calendar-minus: \f272;
+$fa-var-calendar-pen: \f333;
+$fa-var-calendar-edit: \f333;
+$fa-var-calendar-plus: \f271;
+$fa-var-caret-down: \f0d7;
+$fa-var-caret-left: \f0d9;
+$fa-var-caret-right: \f0da;
+$fa-var-caret-up: \f0d8;
+$fa-var-carrot: \f787;
+$fa-var-chart-bar: \f080;
+$fa-var-bar-chart: \f080;
+$fa-var-chart-column: \e0e3;
+$fa-var-chart-gantt: \e0e4;
+$fa-var-chart-line: \f201;
+$fa-var-line-chart: \f201;
+$fa-var-chart-line-down: \f64d;
+$fa-var-chart-line-up: \e0e5;
+$fa-var-chart-line-up-down: \e5d7;
+$fa-var-chart-mixed-up-circle-dollar: \e5d9;
+$fa-var-chart-simple: \e473;
+$fa-var-chart-simple-horizontal: \e474;
+$fa-var-chart-waterfall: \e0eb;
+$fa-var-check: \f00c;
+$fa-var-check-double: \f560;
+$fa-var-chevron-down: \f078;
+$fa-var-chevron-left: \f053;
+$fa-var-chevron-right: \f054;
+$fa-var-chevron-up: \f077;
+$fa-var-chevrons-down: \f322;
+$fa-var-chevron-double-down: \f322;
+$fa-var-chevrons-left: \f323;
+$fa-var-chevron-double-left: \f323;
+$fa-var-chevrons-right: \f324;
+$fa-var-chevron-double-right: \f324;
+$fa-var-chevrons-up: \f325;
+$fa-var-chevron-double-up: \f325;
+$fa-var-circle-arrow-down: \f0ab;
+$fa-var-arrow-circle-down: \f0ab;
+$fa-var-circle-arrow-down-left: \e0f9;
+$fa-var-circle-arrow-down-right: \e0fa;
+$fa-var-circle-arrow-left: \f0a8;
+$fa-var-arrow-circle-left: \f0a8;
+$fa-var-circle-arrow-right: \f0a9;
+$fa-var-arrow-circle-right: \f0a9;
+$fa-var-circle-arrow-up: \f0aa;
+$fa-var-arrow-circle-up: \f0aa;
+$fa-var-circle-arrow-up-left: \e0fb;
+$fa-var-circle-arrow-up-right: \e0fc;
+$fa-var-circle-caret-down: \f32d;
+$fa-var-caret-circle-down: \f32d;
+$fa-var-circle-caret-left: \f32e;
+$fa-var-caret-circle-left: \f32e;
+$fa-var-circle-caret-right: \f330;
+$fa-var-caret-circle-right: \f330;
+$fa-var-circle-caret-up: \f331;
+$fa-var-caret-circle-up: \f331;
+$fa-var-circle-check: \f058;
+$fa-var-check-circle: \f058;
+$fa-var-circle-chevron-down: \f13a;
+$fa-var-chevron-circle-down: \f13a;
+$fa-var-circle-chevron-left: \f137;
+$fa-var-chevron-circle-left: \f137;
+$fa-var-circle-chevron-right: \f138;
+$fa-var-chevron-circle-right: \f138;
+$fa-var-circle-chevron-up: \f139;
+$fa-var-chevron-circle-up: \f139;
+$fa-var-circle-down: \f358;
+$fa-var-arrow-alt-circle-down: \f358;
+$fa-var-circle-down-left: \e107;
+$fa-var-circle-down-right: \e108;
+$fa-var-circle-left: \f359;
+$fa-var-arrow-alt-circle-left: \f359;
+$fa-var-circle-location-arrow: \f602;
+$fa-var-location-circle: \f602;
+$fa-var-circle-right: \f35a;
+$fa-var-arrow-alt-circle-right: \f35a;
+$fa-var-circle-up: \f35b;
+$fa-var-arrow-alt-circle-up: \f35b;
+$fa-var-circle-up-left: \e128;
+$fa-var-circle-up-right: \e129;
+$fa-var-clipboard: \f328;
+$fa-var-clipboard-check: \f46c;
+$fa-var-clipboard-list: \f46d;
+$fa-var-clipboard-list-check: \f737;
+$fa-var-clipboard-question: \e4e3;
+$fa-var-clock-rotate-left: \f1da;
+$fa-var-history: \f1da;
+$fa-var-clone: \f24d;
+$fa-var-cloud-arrow-down: \f0ed;
+$fa-var-cloud-download: \f0ed;
+$fa-var-cloud-download-alt: \f0ed;
+$fa-var-cloud-arrow-up: \f0ee;
+$fa-var-cloud-upload: \f0ee;
+$fa-var-cloud-upload-alt: \f0ee;
+$fa-var-comment-arrow-down: \e143;
+$fa-var-comment-arrow-up: \e144;
+$fa-var-comment-arrow-up-right: \e145;
+$fa-var-comment-check: \f4ac;
+$fa-var-computer-mouse: \f8cc;
+$fa-var-mouse: \f8cc;
+$fa-var-computer-mouse-scrollwheel: \f8cd;
+$fa-var-mouse-alt: \f8cd;
+$fa-var-copy: \f0c5;
+$fa-var-database: \f1c0;
+$fa-var-delete-left: \f55a;
+$fa-var-backspace: \f55a;
+$fa-var-delete-right: \e154;
+$fa-var-desktop-arrow-down: \e155;
+$fa-var-diagram-nested: \e157;
+$fa-var-diagram-subtask: \e479;
+$fa-var-display-arrow-down: \e164;
+$fa-var-display-chart-up: \e5e3;
+$fa-var-display-chart-up-circle-dollar: \e5e6;
+$fa-var-door-closed: \f52a;
+$fa-var-door-open: \f52b;
+$fa-var-down: \f354;
+$fa-var-arrow-alt-down: \f354;
+$fa-var-down-from-dotted-line: \e407;
+$fa-var-down-from-line: \f349;
+$fa-var-arrow-alt-from-top: \f349;
+$fa-var-down-left: \e16a;
+$fa-var-down-left-and-up-right-to-center: \f422;
+$fa-var-compress-alt: \f422;
+$fa-var-down-long: \f309;
+$fa-var-long-arrow-alt-down: \f309;
+$fa-var-down-right: \e16b;
+$fa-var-down-to-bracket: \e4e7;
+$fa-var-down-to-dotted-line: \e408;
+$fa-var-down-to-line: \f34a;
+$fa-var-arrow-alt-to-bottom: \f34a;
+$fa-var-envelope-circle-check: \e4e8;
+$fa-var-eraser: \f12d;
+$fa-var-file: \f15b;
+$fa-var-file-arrow-down: \f56d;
+$fa-var-file-download: \f56d;
+$fa-var-file-arrow-up: \f574;
+$fa-var-file-upload: \f574;
+$fa-var-file-chart-column: \f659;
+$fa-var-file-chart-line: \f659;
+$fa-var-file-check: \f316;
+$fa-var-file-circle-check: \e5a0;
+$fa-var-file-csv: \f6dd;
+$fa-var-file-excel: \f1c3;
+$fa-var-file-export: \f56e;
+$fa-var-arrow-right-from-file: \f56e;
+$fa-var-file-import: \f56f;
+$fa-var-arrow-right-to-file: \f56f;
+$fa-var-file-minus: \f318;
+$fa-var-file-plus: \f319;
+$fa-var-file-plus-minus: \e177;
+$fa-var-file-spreadsheet: \f65b;
+$fa-var-files: \e178;
+$fa-var-flag-checkered: \f11e;
+$fa-var-folder-arrow-down: \e053;
+$fa-var-folder-download: \e053;
+$fa-var-folder-arrow-up: \e054;
+$fa-var-folder-upload: \e054;
+$fa-var-folder-tree: \f802;
+$fa-var-forward: \f04e;
+$fa-var-forward-fast: \f050;
+$fa-var-fast-forward: \f050;
+$fa-var-hand-pointer: \f25a;
+$fa-var-hexagon-check: \e416;
+$fa-var-inbox-in: \f310;
+$fa-var-inbox-arrow-down: \f310;
+$fa-var-inbox-out: \f311;
+$fa-var-inbox-arrow-up: \f311;
+$fa-var-input-numeric: \e1bd;
+$fa-var-input-pipe: \e1be;
+$fa-var-input-text: \e1bf;
+$fa-var-keyboard: \f11c;
+$fa-var-laptop-arrow-down: \e1c6;
+$fa-var-laptop-file: \e51d;
+$fa-var-left: \f355;
+$fa-var-arrow-alt-left: \f355;
+$fa-var-left-from-line: \f348;
+$fa-var-arrow-alt-from-right: \f348;
+$fa-var-left-long: \f30a;
+$fa-var-long-arrow-alt-left: \f30a;
+$fa-var-left-long-to-line: \e41e;
+$fa-var-left-right: \f337;
+$fa-var-arrows-alt-h: \f337;
+$fa-var-left-to-line: \f34b;
+$fa-var-arrow-alt-to-left: \f34b;
+$fa-var-list: \f03a;
+$fa-var-list-squares: \f03a;
+$fa-var-list-check: \f0ae;
+$fa-var-tasks: \f0ae;
+$fa-var-list-ol: \f0cb;
+$fa-var-list-1-2: \f0cb;
+$fa-var-list-numeric: \f0cb;
+$fa-var-list-tree: \e1d2;
+$fa-var-list-ul: \f0ca;
+$fa-var-list-dots: \f0ca;
+$fa-var-location-arrow: \f124;
+$fa-var-lock-keyhole: \f30d;
+$fa-var-lock-alt: \f30d;
+$fa-var-lock-keyhole-open: \f3c2;
+$fa-var-lock-open-alt: \f3c2;
+$fa-var-maximize: \f31e;
+$fa-var-expand-arrows-alt: \f31e;
+$fa-var-merge: \e526;
+$fa-var-message: \f27a;
+$fa-var-comment-alt: \f27a;
+$fa-var-message-arrow-down: \e1db;
+$fa-var-comment-alt-arrow-down: \e1db;
+$fa-var-message-arrow-up: \e1dc;
+$fa-var-comment-alt-arrow-up: \e1dc;
+$fa-var-message-arrow-up-right: \e1dd;
+$fa-var-message-check: \f4a2;
+$fa-var-comment-alt-check: \f4a2;
+$fa-var-minimize: \f78c;
+$fa-var-compress-arrows-alt: \f78c;
+$fa-var-minus: \f068;
+$fa-var-subtract: \f068;
+$fa-var-page: \e428;
+$fa-var-paste: \f0ea;
+$fa-var-file-clipboard: \f0ea;
+$fa-var-pen-field: \e211;
+$fa-var-pipe: \7c;
+$fa-var-play: \f04b;
+$fa-var-play-pause: \e22f;
+$fa-var-print: \f02f;
+$fa-var-rectangle-list: \f022;
+$fa-var-list-alt: \f022;
+$fa-var-recycle: \f1b8;
+$fa-var-repeat: \f363;
+$fa-var-repeat-1: \f365;
+$fa-var-reply: \f3e5;
+$fa-var-mail-reply: \f3e5;
+$fa-var-reply-all: \f122;
+$fa-var-mail-reply-all: \f122;
+$fa-var-retweet: \f079;
+$fa-var-right: \f356;
+$fa-var-arrow-alt-right: \f356;
+$fa-var-right-from-bracket: \f2f5;
+$fa-var-sign-out-alt: \f2f5;
+$fa-var-right-from-line: \f347;
+$fa-var-arrow-alt-from-left: \f347;
+$fa-var-right-left: \f362;
+$fa-var-exchange-alt: \f362;
+$fa-var-right-left-large: \e5e1;
+$fa-var-right-long: \f30b;
+$fa-var-long-arrow-alt-right: \f30b;
+$fa-var-right-long-to-line: \e444;
+$fa-var-right-to-bracket: \f2f6;
+$fa-var-sign-in-alt: \f2f6;
+$fa-var-right-to-line: \f34c;
+$fa-var-arrow-alt-to-right: \f34c;
+$fa-var-rotate: \f2f1;
+$fa-var-sync-alt: \f2f1;
+$fa-var-rotate-left: \f2ea;
+$fa-var-rotate-back: \f2ea;
+$fa-var-rotate-backward: \f2ea;
+$fa-var-undo-alt: \f2ea;
+$fa-var-rotate-right: \f2f9;
+$fa-var-redo-alt: \f2f9;
+$fa-var-rotate-forward: \f2f9;
+$fa-var-server: \f233;
+$fa-var-share: \f064;
+$fa-var-mail-forward: \f064;
+$fa-var-share-all: \f367;
+$fa-var-share-from-square: \f14d;
+$fa-var-share-square: \f14d;
+$fa-var-shield-check: \f2f7;
+$fa-var-shield-keyhole: \e248;
+$fa-var-shuffle: \f074;
+$fa-var-random: \f074;
+$fa-var-shutters: \e449;
+$fa-var-sort: \f0dc;
+$fa-var-unsorted: \f0dc;
+$fa-var-sort-down: \f0dd;
+$fa-var-sort-desc: \f0dd;
+$fa-var-sort-up: \f0de;
+$fa-var-sort-asc: \f0de;
+$fa-var-split: \e254;
+$fa-var-square-arrow-down: \f339;
+$fa-var-arrow-square-down: \f339;
+$fa-var-square-arrow-down-left: \e261;
+$fa-var-square-arrow-down-right: \e262;
+$fa-var-square-arrow-left: \f33a;
+$fa-var-arrow-square-left: \f33a;
+$fa-var-square-arrow-right: \f33b;
+$fa-var-arrow-square-right: \f33b;
+$fa-var-square-arrow-up: \f33c;
+$fa-var-arrow-square-up: \f33c;
+$fa-var-square-arrow-up-left: \e263;
+$fa-var-square-arrow-up-right: \f14c;
+$fa-var-external-link-square: \f14c;
+$fa-var-square-caret-down: \f150;
+$fa-var-caret-square-down: \f150;
+$fa-var-square-caret-left: \f191;
+$fa-var-caret-square-left: \f191;
+$fa-var-square-caret-right: \f152;
+$fa-var-caret-square-right: \f152;
+$fa-var-square-caret-up: \f151;
+$fa-var-caret-square-up: \f151;
+$fa-var-square-check: \f14a;
+$fa-var-check-square: \f14a;
+$fa-var-square-chevron-down: \f329;
+$fa-var-chevron-square-down: \f329;
+$fa-var-square-chevron-left: \f32a;
+$fa-var-chevron-square-left: \f32a;
+$fa-var-square-chevron-right: \f32b;
+$fa-var-chevron-square-right: \f32b;
+$fa-var-square-chevron-up: \f32c;
+$fa-var-chevron-square-up: \f32c;
+$fa-var-square-down: \f350;
+$fa-var-arrow-alt-square-down: \f350;
+$fa-var-square-down-left: \e26b;
+$fa-var-square-down-right: \e26c;
+$fa-var-square-left: \f351;
+$fa-var-arrow-alt-square-left: \f351;
+$fa-var-square-list: \e489;
+$fa-var-square-minus: \f146;
+$fa-var-minus-square: \f146;
+$fa-var-square-right: \f352;
+$fa-var-arrow-alt-square-right: \f352;
+$fa-var-square-up: \f353;
+$fa-var-arrow-alt-square-up: \f353;
+$fa-var-square-up-left: \e282;
+$fa-var-square-up-right: \f360;
+$fa-var-external-link-square-alt: \f360;
+$fa-var-symbols: \f86e;
+$fa-var-icons-alt: \f86e;
+$fa-var-table: \f0ce;
+$fa-var-table-list: \f00b;
+$fa-var-th-list: \f00b;
+$fa-var-table-tree: \e293;
+$fa-var-timeline-arrow: \e29d;
+$fa-var-trash: \f1f8;
+$fa-var-trash-arrow-up: \f829;
+$fa-var-trash-restore: \f829;
+$fa-var-trash-can: \f2ed;
+$fa-var-trash-alt: \f2ed;
+$fa-var-trash-can-arrow-up: \f82a;
+$fa-var-trash-restore-alt: \f82a;
+$fa-var-trash-can-check: \e2a9;
+$fa-var-trash-can-clock: \e2aa;
+$fa-var-trash-can-list: \e2ab;
+$fa-var-trash-can-plus: \e2ac;
+$fa-var-trash-can-slash: \e2ad;
+$fa-var-trash-alt-slash: \e2ad;
+$fa-var-trash-can-undo: \f896;
+$fa-var-trash-can-arrow-turn-left: \f896;
+$fa-var-trash-undo-alt: \f896;
+$fa-var-trash-can-xmark: \e2ae;
+$fa-var-trash-check: \e2af;
+$fa-var-trash-clock: \e2b0;
+$fa-var-trash-list: \e2b1;
+$fa-var-trash-plus: \e2b2;
+$fa-var-trash-slash: \e2b3;
+$fa-var-trash-undo: \f895;
+$fa-var-trash-arrow-turn-left: \f895;
+$fa-var-trash-xmark: \e2b4;
+$fa-var-tree: \f1bb;
+$fa-var-tree-city: \e587;
+$fa-var-tree-deciduous: \f400;
+$fa-var-tree-alt: \f400;
+$fa-var-tree-large: \f7dd;
+$fa-var-trees: \f724;
+$fa-var-turn-down: \f3be;
+$fa-var-level-down-alt: \f3be;
+$fa-var-turn-down-left: \e331;
+$fa-var-turn-down-right: \e455;
+$fa-var-turn-up: \f3bf;
+$fa-var-level-up-alt: \f3bf;
+$fa-var-unlock-keyhole: \f13e;
+$fa-var-unlock-alt: \f13e;
+$fa-var-up: \f357;
+$fa-var-arrow-alt-up: \f357;
+$fa-var-up-down: \f338;
+$fa-var-arrows-alt-v: \f338;
+$fa-var-up-down-left-right: \f0b2;
+$fa-var-arrows-alt: \f0b2;
+$fa-var-up-from-bracket: \e590;
+$fa-var-up-from-dotted-line: \e456;
+$fa-var-up-from-line: \f346;
+$fa-var-arrow-alt-from-bottom: \f346;
+$fa-var-up-left: \e2bd;
+$fa-var-up-long: \f30c;
+$fa-var-long-arrow-alt-up: \f30c;
+$fa-var-up-right: \e2be;
+$fa-var-up-right-and-down-left-from-center: \f424;
+$fa-var-expand-alt: \f424;
+$fa-var-up-right-from-square: \f35d;
+$fa-var-external-link-alt: \f35d;
+$fa-var-up-to-dotted-line: \e457;
+$fa-var-up-to-line: \f34d;
+$fa-var-arrow-alt-to-top: \f34d;
+$fa-var-upload: \f093;
+
+
+$fa-icons: (
+  "angle-down": $fa-var-angle-down,
+  "angle-left": $fa-var-angle-left,
+  "angle-right": $fa-var-angle-right,
+  "angle-up": $fa-var-angle-up,
+  "angles-down": $fa-var-angles-down,
+  "angle-double-down": $fa-var-angle-double-down,
+  "angles-left": $fa-var-angles-left,
+  "angle-double-left": $fa-var-angle-double-left,
+  "angles-right": $fa-var-angles-right,
+  "angle-double-right": $fa-var-angle-double-right,
+  "angles-up": $fa-var-angles-up,
+  "angle-double-up": $fa-var-angle-double-up,
+  "arrow-down": $fa-var-arrow-down,
+  "arrow-down-1-9": $fa-var-arrow-down-1-9,
+  "sort-numeric-asc": $fa-var-sort-numeric-asc,
+  "sort-numeric-down": $fa-var-sort-numeric-down,
+  "arrow-down-9-1": $fa-var-arrow-down-9-1,
+  "sort-numeric-desc": $fa-var-sort-numeric-desc,
+  "sort-numeric-down-alt": $fa-var-sort-numeric-down-alt,
+  "arrow-down-a-z": $fa-var-arrow-down-a-z,
+  "sort-alpha-asc": $fa-var-sort-alpha-asc,
+  "sort-alpha-down": $fa-var-sort-alpha-down,
+  "arrow-down-arrow-up": $fa-var-arrow-down-arrow-up,
+  "sort-alt": $fa-var-sort-alt,
+  "arrow-down-big-small": $fa-var-arrow-down-big-small,
+  "sort-size-down": $fa-var-sort-size-down,
+  "arrow-down-from-dotted-line": $fa-var-arrow-down-from-dotted-line,
+  "arrow-down-from-line": $fa-var-arrow-down-from-line,
+  "arrow-from-top": $fa-var-arrow-from-top,
+  "arrow-down-left": $fa-var-arrow-down-left,
+  "arrow-down-left-and-arrow-up-right-to-center": $fa-var-arrow-down-left-and-arrow-up-right-to-center,
+  "arrow-down-long": $fa-var-arrow-down-long,
+  "long-arrow-down": $fa-var-long-arrow-down,
+  "arrow-down-right": $fa-var-arrow-down-right,
+  "arrow-down-short-wide": $fa-var-arrow-down-short-wide,
+  "sort-amount-desc": $fa-var-sort-amount-desc,
+  "sort-amount-down-alt": $fa-var-sort-amount-down-alt,
+  "arrow-down-small-big": $fa-var-arrow-down-small-big,
+  "sort-size-down-alt": $fa-var-sort-size-down-alt,
+  "arrow-down-square-triangle": $fa-var-arrow-down-square-triangle,
+  "sort-shapes-down-alt": $fa-var-sort-shapes-down-alt,
+  "arrow-down-to-arc": $fa-var-arrow-down-to-arc,
+  "arrow-down-to-bracket": $fa-var-arrow-down-to-bracket,
+  "arrow-down-to-dotted-line": $fa-var-arrow-down-to-dotted-line,
+  "arrow-down-to-line": $fa-var-arrow-down-to-line,
+  "arrow-to-bottom": $fa-var-arrow-to-bottom,
+  "arrow-down-to-square": $fa-var-arrow-down-to-square,
+  "arrow-down-triangle-square": $fa-var-arrow-down-triangle-square,
+  "sort-shapes-down": $fa-var-sort-shapes-down,
+  "arrow-down-up-across-line": $fa-var-arrow-down-up-across-line,
+  "arrow-down-up-lock": $fa-var-arrow-down-up-lock,
+  "arrow-down-wide-short": $fa-var-arrow-down-wide-short,
+  "sort-amount-asc": $fa-var-sort-amount-asc,
+  "sort-amount-down": $fa-var-sort-amount-down,
+  "arrow-down-z-a": $fa-var-arrow-down-z-a,
+  "sort-alpha-desc": $fa-var-sort-alpha-desc,
+  "sort-alpha-down-alt": $fa-var-sort-alpha-down-alt,
+  "arrow-left": $fa-var-arrow-left,
+  "arrow-left-from-line": $fa-var-arrow-left-from-line,
+  "arrow-from-right": $fa-var-arrow-from-right,
+  "arrow-left-long": $fa-var-arrow-left-long,
+  "long-arrow-left": $fa-var-long-arrow-left,
+  "arrow-left-long-to-line": $fa-var-arrow-left-long-to-line,
+  "arrow-left-to-line": $fa-var-arrow-left-to-line,
+  "arrow-to-left": $fa-var-arrow-to-left,
+  "arrow-pointer": $fa-var-arrow-pointer,
+  "mouse-pointer": $fa-var-mouse-pointer,
+  "arrow-progress": $fa-var-arrow-progress,
+  "arrow-right": $fa-var-arrow-right,
+  "arrow-right-arrow-left": $fa-var-arrow-right-arrow-left,
+  "exchange": $fa-var-exchange,
+  "arrow-right-from-arc": $fa-var-arrow-right-from-arc,
+  "arrow-right-from-bracket": $fa-var-arrow-right-from-bracket,
+  "sign-out": $fa-var-sign-out,
+  "arrow-right-from-line": $fa-var-arrow-right-from-line,
+  "arrow-from-left": $fa-var-arrow-from-left,
+  "arrow-right-long": $fa-var-arrow-right-long,
+  "long-arrow-right": $fa-var-long-arrow-right,
+  "arrow-right-long-to-line": $fa-var-arrow-right-long-to-line,
+  "arrow-right-to-arc": $fa-var-arrow-right-to-arc,
+  "arrow-right-to-bracket": $fa-var-arrow-right-to-bracket,
+  "sign-in": $fa-var-sign-in,
+  "arrow-right-to-line": $fa-var-arrow-right-to-line,
+  "arrow-to-right": $fa-var-arrow-to-right,
+  "arrow-rotate-left": $fa-var-arrow-rotate-left,
+  "arrow-left-rotate": $fa-var-arrow-left-rotate,
+  "arrow-rotate-back": $fa-var-arrow-rotate-back,
+  "arrow-rotate-backward": $fa-var-arrow-rotate-backward,
+  "undo": $fa-var-undo,
+  "arrow-rotate-right": $fa-var-arrow-rotate-right,
+  "arrow-right-rotate": $fa-var-arrow-right-rotate,
+  "arrow-rotate-forward": $fa-var-arrow-rotate-forward,
+  "redo": $fa-var-redo,
+  "arrow-trend-down": $fa-var-arrow-trend-down,
+  "arrow-trend-up": $fa-var-arrow-trend-up,
+  "arrow-turn-down": $fa-var-arrow-turn-down,
+  "level-down": $fa-var-level-down,
+  "arrow-turn-down-left": $fa-var-arrow-turn-down-left,
+  "arrow-turn-down-right": $fa-var-arrow-turn-down-right,
+  "arrow-turn-up": $fa-var-arrow-turn-up,
+  "level-up": $fa-var-level-up,
+  "arrow-up": $fa-var-arrow-up,
+  "arrow-up-1-9": $fa-var-arrow-up-1-9,
+  "sort-numeric-up": $fa-var-sort-numeric-up,
+  "arrow-up-9-1": $fa-var-arrow-up-9-1,
+  "sort-numeric-up-alt": $fa-var-sort-numeric-up-alt,
+  "arrow-up-a-z": $fa-var-arrow-up-a-z,
+  "sort-alpha-up": $fa-var-sort-alpha-up,
+  "arrow-up-arrow-down": $fa-var-arrow-up-arrow-down,
+  "sort-up-down": $fa-var-sort-up-down,
+  "arrow-up-big-small": $fa-var-arrow-up-big-small,
+  "sort-size-up": $fa-var-sort-size-up,
+  "arrow-up-from-arc": $fa-var-arrow-up-from-arc,
+  "arrow-up-from-bracket": $fa-var-arrow-up-from-bracket,
+  "arrow-up-from-dotted-line": $fa-var-arrow-up-from-dotted-line,
+  "arrow-up-from-line": $fa-var-arrow-up-from-line,
+  "arrow-from-bottom": $fa-var-arrow-from-bottom,
+  "arrow-up-from-square": $fa-var-arrow-up-from-square,
+  "arrow-up-left": $fa-var-arrow-up-left,
+  "arrow-up-left-from-circle": $fa-var-arrow-up-left-from-circle,
+  "arrow-up-long": $fa-var-arrow-up-long,
+  "long-arrow-up": $fa-var-long-arrow-up,
+  "arrow-up-right": $fa-var-arrow-up-right,
+  "arrow-up-right-and-arrow-down-left-from-center": $fa-var-arrow-up-right-and-arrow-down-left-from-center,
+  "arrow-up-right-dots": $fa-var-arrow-up-right-dots,
+  "arrow-up-right-from-square": $fa-var-arrow-up-right-from-square,
+  "external-link": $fa-var-external-link,
+  "arrow-up-short-wide": $fa-var-arrow-up-short-wide,
+  "sort-amount-up-alt": $fa-var-sort-amount-up-alt,
+  "arrow-up-small-big": $fa-var-arrow-up-small-big,
+  "sort-size-up-alt": $fa-var-sort-size-up-alt,
+  "arrow-up-square-triangle": $fa-var-arrow-up-square-triangle,
+  "sort-shapes-up-alt": $fa-var-sort-shapes-up-alt,
+  "arrow-up-to-dotted-line": $fa-var-arrow-up-to-dotted-line,
+  "arrow-up-to-line": $fa-var-arrow-up-to-line,
+  "arrow-to-top": $fa-var-arrow-to-top,
+  "arrow-up-triangle-square": $fa-var-arrow-up-triangle-square,
+  "sort-shapes-up": $fa-var-sort-shapes-up,
+  "arrow-up-wide-short": $fa-var-arrow-up-wide-short,
+  "sort-amount-up": $fa-var-sort-amount-up,
+  "arrow-up-z-a": $fa-var-arrow-up-z-a,
+  "sort-alpha-up-alt": $fa-var-sort-alpha-up-alt,
+  "arrows-cross": $fa-var-arrows-cross,
+  "arrows-down-to-line": $fa-var-arrows-down-to-line,
+  "arrows-from-dotted-line": $fa-var-arrows-from-dotted-line,
+  "arrows-from-line": $fa-var-arrows-from-line,
+  "arrows-left-right": $fa-var-arrows-left-right,
+  "arrows-h": $fa-var-arrows-h,
+  "arrows-left-right-to-line": $fa-var-arrows-left-right-to-line,
+  "arrows-maximize": $fa-var-arrows-maximize,
+  "expand-arrows": $fa-var-expand-arrows,
+  "arrows-minimize": $fa-var-arrows-minimize,
+  "compress-arrows": $fa-var-compress-arrows,
+  "arrows-repeat": $fa-var-arrows-repeat,
+  "repeat-alt": $fa-var-repeat-alt,
+  "arrows-repeat-1": $fa-var-arrows-repeat-1,
+  "repeat-1-alt": $fa-var-repeat-1-alt,
+  "arrows-retweet": $fa-var-arrows-retweet,
+  "retweet-alt": $fa-var-retweet-alt,
+  "arrows-rotate": $fa-var-arrows-rotate,
+  "refresh": $fa-var-refresh,
+  "sync": $fa-var-sync,
+  "arrows-spin": $fa-var-arrows-spin,
+  "arrows-split-up-and-left": $fa-var-arrows-split-up-and-left,
+  "arrows-to-circle": $fa-var-arrows-to-circle,
+  "arrows-to-dot": $fa-var-arrows-to-dot,
+  "arrows-to-dotted-line": $fa-var-arrows-to-dotted-line,
+  "arrows-to-eye": $fa-var-arrows-to-eye,
+  "arrows-to-line": $fa-var-arrows-to-line,
+  "arrows-turn-right": $fa-var-arrows-turn-right,
+  "arrows-turn-to-dots": $fa-var-arrows-turn-to-dots,
+  "arrows-up-down": $fa-var-arrows-up-down,
+  "arrows-v": $fa-var-arrows-v,
+  "arrows-up-down-left-right": $fa-var-arrows-up-down-left-right,
+  "arrows": $fa-var-arrows,
+  "arrows-up-to-line": $fa-var-arrows-up-to-line,
+  "backward": $fa-var-backward,
+  "backward-fast": $fa-var-backward-fast,
+  "fast-backward": $fa-var-fast-backward,
+  "badge-check": $fa-var-badge-check,
+  "ballot": $fa-var-ballot,
+  "ballot-check": $fa-var-ballot-check,
+  "bars": $fa-var-bars,
+  "navicon": $fa-var-navicon,
+  "briefcase-arrow-right": $fa-var-briefcase-arrow-right,
+  "calendar-arrow-down": $fa-var-calendar-arrow-down,
+  "calendar-download": $fa-var-calendar-download,
+  "calendar-arrow-up": $fa-var-calendar-arrow-up,
+  "calendar-upload": $fa-var-calendar-upload,
+  "calendar-check": $fa-var-calendar-check,
+  "calendar-circle-exclamation": $fa-var-calendar-circle-exclamation,
+  "calendar-circle-minus": $fa-var-calendar-circle-minus,
+  "calendar-circle-plus": $fa-var-calendar-circle-plus,
+  "calendar-clock": $fa-var-calendar-clock,
+  "calendar-time": $fa-var-calendar-time,
+  "calendar-day": $fa-var-calendar-day,
+  "calendar-lines": $fa-var-calendar-lines,
+  "calendar-note": $fa-var-calendar-note,
+  "calendar-lines-pen": $fa-var-calendar-lines-pen,
+  "calendar-minus": $fa-var-calendar-minus,
+  "calendar-pen": $fa-var-calendar-pen,
+  "calendar-edit": $fa-var-calendar-edit,
+  "calendar-plus": $fa-var-calendar-plus,
+  "caret-down": $fa-var-caret-down,
+  "caret-left": $fa-var-caret-left,
+  "caret-right": $fa-var-caret-right,
+  "caret-up": $fa-var-caret-up,
+  "carrot": $fa-var-carrot,
+  "chart-bar": $fa-var-chart-bar,
+  "bar-chart": $fa-var-bar-chart,
+  "chart-column": $fa-var-chart-column,
+  "chart-gantt": $fa-var-chart-gantt,
+  "chart-line": $fa-var-chart-line,
+  "line-chart": $fa-var-line-chart,
+  "chart-line-down": $fa-var-chart-line-down,
+  "chart-line-up": $fa-var-chart-line-up,
+  "chart-line-up-down": $fa-var-chart-line-up-down,
+  "chart-mixed-up-circle-dollar": $fa-var-chart-mixed-up-circle-dollar,
+  "chart-simple": $fa-var-chart-simple,
+  "chart-simple-horizontal": $fa-var-chart-simple-horizontal,
+  "chart-waterfall": $fa-var-chart-waterfall,
+  "check": $fa-var-check,
+  "check-double": $fa-var-check-double,
+  "chevron-down": $fa-var-chevron-down,
+  "chevron-left": $fa-var-chevron-left,
+  "chevron-right": $fa-var-chevron-right,
+  "chevron-up": $fa-var-chevron-up,
+  "chevrons-down": $fa-var-chevrons-down,
+  "chevron-double-down": $fa-var-chevron-double-down,
+  "chevrons-left": $fa-var-chevrons-left,
+  "chevron-double-left": $fa-var-chevron-double-left,
+  "chevrons-right": $fa-var-chevrons-right,
+  "chevron-double-right": $fa-var-chevron-double-right,
+  "chevrons-up": $fa-var-chevrons-up,
+  "chevron-double-up": $fa-var-chevron-double-up,
+  "circle-arrow-down": $fa-var-circle-arrow-down,
+  "arrow-circle-down": $fa-var-arrow-circle-down,
+  "circle-arrow-down-left": $fa-var-circle-arrow-down-left,
+  "circle-arrow-down-right": $fa-var-circle-arrow-down-right,
+  "circle-arrow-left": $fa-var-circle-arrow-left,
+  "arrow-circle-left": $fa-var-arrow-circle-left,
+  "circle-arrow-right": $fa-var-circle-arrow-right,
+  "arrow-circle-right": $fa-var-arrow-circle-right,
+  "circle-arrow-up": $fa-var-circle-arrow-up,
+  "arrow-circle-up": $fa-var-arrow-circle-up,
+  "circle-arrow-up-left": $fa-var-circle-arrow-up-left,
+  "circle-arrow-up-right": $fa-var-circle-arrow-up-right,
+  "circle-caret-down": $fa-var-circle-caret-down,
+  "caret-circle-down": $fa-var-caret-circle-down,
+  "circle-caret-left": $fa-var-circle-caret-left,
+  "caret-circle-left": $fa-var-caret-circle-left,
+  "circle-caret-right": $fa-var-circle-caret-right,
+  "caret-circle-right": $fa-var-caret-circle-right,
+  "circle-caret-up": $fa-var-circle-caret-up,
+  "caret-circle-up": $fa-var-caret-circle-up,
+  "circle-check": $fa-var-circle-check,
+  "check-circle": $fa-var-check-circle,
+  "circle-chevron-down": $fa-var-circle-chevron-down,
+  "chevron-circle-down": $fa-var-chevron-circle-down,
+  "circle-chevron-left": $fa-var-circle-chevron-left,
+  "chevron-circle-left": $fa-var-chevron-circle-left,
+  "circle-chevron-right": $fa-var-circle-chevron-right,
+  "chevron-circle-right": $fa-var-chevron-circle-right,
+  "circle-chevron-up": $fa-var-circle-chevron-up,
+  "chevron-circle-up": $fa-var-chevron-circle-up,
+  "circle-down": $fa-var-circle-down,
+  "arrow-alt-circle-down": $fa-var-arrow-alt-circle-down,
+  "circle-down-left": $fa-var-circle-down-left,
+  "circle-down-right": $fa-var-circle-down-right,
+  "circle-left": $fa-var-circle-left,
+  "arrow-alt-circle-left": $fa-var-arrow-alt-circle-left,
+  "circle-location-arrow": $fa-var-circle-location-arrow,
+  "location-circle": $fa-var-location-circle,
+  "circle-right": $fa-var-circle-right,
+  "arrow-alt-circle-right": $fa-var-arrow-alt-circle-right,
+  "circle-up": $fa-var-circle-up,
+  "arrow-alt-circle-up": $fa-var-arrow-alt-circle-up,
+  "circle-up-left": $fa-var-circle-up-left,
+  "circle-up-right": $fa-var-circle-up-right,
+  "clipboard": $fa-var-clipboard,
+  "clipboard-check": $fa-var-clipboard-check,
+  "clipboard-list": $fa-var-clipboard-list,
+  "clipboard-list-check": $fa-var-clipboard-list-check,
+  "clipboard-question": $fa-var-clipboard-question,
+  "clock-rotate-left": $fa-var-clock-rotate-left,
+  "history": $fa-var-history,
+  "clone": $fa-var-clone,
+  "cloud-arrow-down": $fa-var-cloud-arrow-down,
+  "cloud-download": $fa-var-cloud-download,
+  "cloud-download-alt": $fa-var-cloud-download-alt,
+  "cloud-arrow-up": $fa-var-cloud-arrow-up,
+  "cloud-upload": $fa-var-cloud-upload,
+  "cloud-upload-alt": $fa-var-cloud-upload-alt,
+  "comment-arrow-down": $fa-var-comment-arrow-down,
+  "comment-arrow-up": $fa-var-comment-arrow-up,
+  "comment-arrow-up-right": $fa-var-comment-arrow-up-right,
+  "comment-check": $fa-var-comment-check,
+  "computer-mouse": $fa-var-computer-mouse,
+  "mouse": $fa-var-mouse,
+  "computer-mouse-scrollwheel": $fa-var-computer-mouse-scrollwheel,
+  "mouse-alt": $fa-var-mouse-alt,
+  "copy": $fa-var-copy,
+  "database": $fa-var-database,
+  "delete-left": $fa-var-delete-left,
+  "backspace": $fa-var-backspace,
+  "delete-right": $fa-var-delete-right,
+  "desktop-arrow-down": $fa-var-desktop-arrow-down,
+  "diagram-nested": $fa-var-diagram-nested,
+  "diagram-subtask": $fa-var-diagram-subtask,
+  "display-arrow-down": $fa-var-display-arrow-down,
+  "display-chart-up": $fa-var-display-chart-up,
+  "display-chart-up-circle-dollar": $fa-var-display-chart-up-circle-dollar,
+  "door-closed": $fa-var-door-closed,
+  "door-open": $fa-var-door-open,
+  "down": $fa-var-down,
+  "arrow-alt-down": $fa-var-arrow-alt-down,
+  "down-from-dotted-line": $fa-var-down-from-dotted-line,
+  "down-from-line": $fa-var-down-from-line,
+  "arrow-alt-from-top": $fa-var-arrow-alt-from-top,
+  "down-left": $fa-var-down-left,
+  "down-left-and-up-right-to-center": $fa-var-down-left-and-up-right-to-center,
+  "compress-alt": $fa-var-compress-alt,
+  "down-long": $fa-var-down-long,
+  "long-arrow-alt-down": $fa-var-long-arrow-alt-down,
+  "down-right": $fa-var-down-right,
+  "down-to-bracket": $fa-var-down-to-bracket,
+  "down-to-dotted-line": $fa-var-down-to-dotted-line,
+  "down-to-line": $fa-var-down-to-line,
+  "arrow-alt-to-bottom": $fa-var-arrow-alt-to-bottom,
+  "envelope-circle-check": $fa-var-envelope-circle-check,
+  "eraser": $fa-var-eraser,
+  "file": $fa-var-file,
+  "file-arrow-down": $fa-var-file-arrow-down,
+  "file-download": $fa-var-file-download,
+  "file-arrow-up": $fa-var-file-arrow-up,
+  "file-upload": $fa-var-file-upload,
+  "file-chart-column": $fa-var-file-chart-column,
+  "file-chart-line": $fa-var-file-chart-line,
+  "file-check": $fa-var-file-check,
+  "file-circle-check": $fa-var-file-circle-check,
+  "file-csv": $fa-var-file-csv,
+  "file-excel": $fa-var-file-excel,
+  "file-export": $fa-var-file-export,
+  "arrow-right-from-file": $fa-var-arrow-right-from-file,
+  "file-import": $fa-var-file-import,
+  "arrow-right-to-file": $fa-var-arrow-right-to-file,
+  "file-minus": $fa-var-file-minus,
+  "file-plus": $fa-var-file-plus,
+  "file-plus-minus": $fa-var-file-plus-minus,
+  "file-spreadsheet": $fa-var-file-spreadsheet,
+  "files": $fa-var-files,
+  "flag-checkered": $fa-var-flag-checkered,
+  "folder-arrow-down": $fa-var-folder-arrow-down,
+  "folder-download": $fa-var-folder-download,
+  "folder-arrow-up": $fa-var-folder-arrow-up,
+  "folder-upload": $fa-var-folder-upload,
+  "folder-tree": $fa-var-folder-tree,
+  "forward": $fa-var-forward,
+  "forward-fast": $fa-var-forward-fast,
+  "fast-forward": $fa-var-fast-forward,
+  "hand-pointer": $fa-var-hand-pointer,
+  "hexagon-check": $fa-var-hexagon-check,
+  "inbox-in": $fa-var-inbox-in,
+  "inbox-arrow-down": $fa-var-inbox-arrow-down,
+  "inbox-out": $fa-var-inbox-out,
+  "inbox-arrow-up": $fa-var-inbox-arrow-up,
+  "input-numeric": $fa-var-input-numeric,
+  "input-pipe": $fa-var-input-pipe,
+  "input-text": $fa-var-input-text,
+  "keyboard": $fa-var-keyboard,
+  "laptop-arrow-down": $fa-var-laptop-arrow-down,
+  "laptop-file": $fa-var-laptop-file,
+  "left": $fa-var-left,
+  "arrow-alt-left": $fa-var-arrow-alt-left,
+  "left-from-line": $fa-var-left-from-line,
+  "arrow-alt-from-right": $fa-var-arrow-alt-from-right,
+  "left-long": $fa-var-left-long,
+  "long-arrow-alt-left": $fa-var-long-arrow-alt-left,
+  "left-long-to-line": $fa-var-left-long-to-line,
+  "left-right": $fa-var-left-right,
+  "arrows-alt-h": $fa-var-arrows-alt-h,
+  "left-to-line": $fa-var-left-to-line,
+  "arrow-alt-to-left": $fa-var-arrow-alt-to-left,
+  "list": $fa-var-list,
+  "list-squares": $fa-var-list-squares,
+  "list-check": $fa-var-list-check,
+  "tasks": $fa-var-tasks,
+  "list-ol": $fa-var-list-ol,
+  "list-1-2": $fa-var-list-1-2,
+  "list-numeric": $fa-var-list-numeric,
+  "list-tree": $fa-var-list-tree,
+  "list-ul": $fa-var-list-ul,
+  "list-dots": $fa-var-list-dots,
+  "location-arrow": $fa-var-location-arrow,
+  "lock-keyhole": $fa-var-lock-keyhole,
+  "lock-alt": $fa-var-lock-alt,
+  "lock-keyhole-open": $fa-var-lock-keyhole-open,
+  "lock-open-alt": $fa-var-lock-open-alt,
+  "maximize": $fa-var-maximize,
+  "expand-arrows-alt": $fa-var-expand-arrows-alt,
+  "merge": $fa-var-merge,
+  "message": $fa-var-message,
+  "comment-alt": $fa-var-comment-alt,
+  "message-arrow-down": $fa-var-message-arrow-down,
+  "comment-alt-arrow-down": $fa-var-comment-alt-arrow-down,
+  "message-arrow-up": $fa-var-message-arrow-up,
+  "comment-alt-arrow-up": $fa-var-comment-alt-arrow-up,
+  "message-arrow-up-right": $fa-var-message-arrow-up-right,
+  "message-check": $fa-var-message-check,
+  "comment-alt-check": $fa-var-comment-alt-check,
+  "minimize": $fa-var-minimize,
+  "compress-arrows-alt": $fa-var-compress-arrows-alt,
+  "minus": $fa-var-minus,
+  "subtract": $fa-var-subtract,
+  "page": $fa-var-page,
+  "paste": $fa-var-paste,
+  "file-clipboard": $fa-var-file-clipboard,
+  "pen-field": $fa-var-pen-field,
+  "pipe": $fa-var-pipe,
+  "play": $fa-var-play,
+  "play-pause": $fa-var-play-pause,
+  "print": $fa-var-print,
+  "rectangle-list": $fa-var-rectangle-list,
+  "list-alt": $fa-var-list-alt,
+  "recycle": $fa-var-recycle,
+  "repeat": $fa-var-repeat,
+  "repeat-1": $fa-var-repeat-1,
+  "reply": $fa-var-reply,
+  "mail-reply": $fa-var-mail-reply,
+  "reply-all": $fa-var-reply-all,
+  "mail-reply-all": $fa-var-mail-reply-all,
+  "retweet": $fa-var-retweet,
+  "right": $fa-var-right,
+  "arrow-alt-right": $fa-var-arrow-alt-right,
+  "right-from-bracket": $fa-var-right-from-bracket,
+  "sign-out-alt": $fa-var-sign-out-alt,
+  "right-from-line": $fa-var-right-from-line,
+  "arrow-alt-from-left": $fa-var-arrow-alt-from-left,
+  "right-left": $fa-var-right-left,
+  "exchange-alt": $fa-var-exchange-alt,
+  "right-left-large": $fa-var-right-left-large,
+  "right-long": $fa-var-right-long,
+  "long-arrow-alt-right": $fa-var-long-arrow-alt-right,
+  "right-long-to-line": $fa-var-right-long-to-line,
+  "right-to-bracket": $fa-var-right-to-bracket,
+  "sign-in-alt": $fa-var-sign-in-alt,
+  "right-to-line": $fa-var-right-to-line,
+  "arrow-alt-to-right": $fa-var-arrow-alt-to-right,
+  "rotate": $fa-var-rotate,
+  "sync-alt": $fa-var-sync-alt,
+  "rotate-left": $fa-var-rotate-left,
+  "rotate-back": $fa-var-rotate-back,
+  "rotate-backward": $fa-var-rotate-backward,
+  "undo-alt": $fa-var-undo-alt,
+  "rotate-right": $fa-var-rotate-right,
+  "redo-alt": $fa-var-redo-alt,
+  "rotate-forward": $fa-var-rotate-forward,
+  "server": $fa-var-server,
+  "share": $fa-var-share,
+  "mail-forward": $fa-var-mail-forward,
+  "share-all": $fa-var-share-all,
+  "share-from-square": $fa-var-share-from-square,
+  "share-square": $fa-var-share-square,
+  "shield-check": $fa-var-shield-check,
+  "shield-keyhole": $fa-var-shield-keyhole,
+  "shuffle": $fa-var-shuffle,
+  "random": $fa-var-random,
+  "shutters": $fa-var-shutters,
+  "sort": $fa-var-sort,
+  "unsorted": $fa-var-unsorted,
+  "sort-down": $fa-var-sort-down,
+  "sort-desc": $fa-var-sort-desc,
+  "sort-up": $fa-var-sort-up,
+  "sort-asc": $fa-var-sort-asc,
+  "split": $fa-var-split,
+  "square-arrow-down": $fa-var-square-arrow-down,
+  "arrow-square-down": $fa-var-arrow-square-down,
+  "square-arrow-down-left": $fa-var-square-arrow-down-left,
+  "square-arrow-down-right": $fa-var-square-arrow-down-right,
+  "square-arrow-left": $fa-var-square-arrow-left,
+  "arrow-square-left": $fa-var-arrow-square-left,
+  "square-arrow-right": $fa-var-square-arrow-right,
+  "arrow-square-right": $fa-var-arrow-square-right,
+  "square-arrow-up": $fa-var-square-arrow-up,
+  "arrow-square-up": $fa-var-arrow-square-up,
+  "square-arrow-up-left": $fa-var-square-arrow-up-left,
+  "square-arrow-up-right": $fa-var-square-arrow-up-right,
+  "external-link-square": $fa-var-external-link-square,
+  "square-caret-down": $fa-var-square-caret-down,
+  "caret-square-down": $fa-var-caret-square-down,
+  "square-caret-left": $fa-var-square-caret-left,
+  "caret-square-left": $fa-var-caret-square-left,
+  "square-caret-right": $fa-var-square-caret-right,
+  "caret-square-right": $fa-var-caret-square-right,
+  "square-caret-up": $fa-var-square-caret-up,
+  "caret-square-up": $fa-var-caret-square-up,
+  "square-check": $fa-var-square-check,
+  "check-square": $fa-var-check-square,
+  "square-chevron-down": $fa-var-square-chevron-down,
+  "chevron-square-down": $fa-var-chevron-square-down,
+  "square-chevron-left": $fa-var-square-chevron-left,
+  "chevron-square-left": $fa-var-chevron-square-left,
+  "square-chevron-right": $fa-var-square-chevron-right,
+  "chevron-square-right": $fa-var-chevron-square-right,
+  "square-chevron-up": $fa-var-square-chevron-up,
+  "chevron-square-up": $fa-var-chevron-square-up,
+  "square-down": $fa-var-square-down,
+  "arrow-alt-square-down": $fa-var-arrow-alt-square-down,
+  "square-down-left": $fa-var-square-down-left,
+  "square-down-right": $fa-var-square-down-right,
+  "square-left": $fa-var-square-left,
+  "arrow-alt-square-left": $fa-var-arrow-alt-square-left,
+  "square-list": $fa-var-square-list,
+  "square-minus": $fa-var-square-minus,
+  "minus-square": $fa-var-minus-square,
+  "square-right": $fa-var-square-right,
+  "arrow-alt-square-right": $fa-var-arrow-alt-square-right,
+  "square-up": $fa-var-square-up,
+  "arrow-alt-square-up": $fa-var-arrow-alt-square-up,
+  "square-up-left": $fa-var-square-up-left,
+  "square-up-right": $fa-var-square-up-right,
+  "external-link-square-alt": $fa-var-external-link-square-alt,
+  "symbols": $fa-var-symbols,
+  "icons-alt": $fa-var-icons-alt,
+  "table": $fa-var-table,
+  "table-list": $fa-var-table-list,
+  "th-list": $fa-var-th-list,
+  "table-tree": $fa-var-table-tree,
+  "timeline-arrow": $fa-var-timeline-arrow,
+  "trash": $fa-var-trash,
+  "trash-arrow-up": $fa-var-trash-arrow-up,
+  "trash-restore": $fa-var-trash-restore,
+  "trash-can": $fa-var-trash-can,
+  "trash-alt": $fa-var-trash-alt,
+  "trash-can-arrow-up": $fa-var-trash-can-arrow-up,
+  "trash-restore-alt": $fa-var-trash-restore-alt,
+  "trash-can-check": $fa-var-trash-can-check,
+  "trash-can-clock": $fa-var-trash-can-clock,
+  "trash-can-list": $fa-var-trash-can-list,
+  "trash-can-plus": $fa-var-trash-can-plus,
+  "trash-can-slash": $fa-var-trash-can-slash,
+  "trash-alt-slash": $fa-var-trash-alt-slash,
+  "trash-can-undo": $fa-var-trash-can-undo,
+  "trash-can-arrow-turn-left": $fa-var-trash-can-arrow-turn-left,
+  "trash-undo-alt": $fa-var-trash-undo-alt,
+  "trash-can-xmark": $fa-var-trash-can-xmark,
+  "trash-check": $fa-var-trash-check,
+  "trash-clock": $fa-var-trash-clock,
+  "trash-list": $fa-var-trash-list,
+  "trash-plus": $fa-var-trash-plus,
+  "trash-slash": $fa-var-trash-slash,
+  "trash-undo": $fa-var-trash-undo,
+  "trash-arrow-turn-left": $fa-var-trash-arrow-turn-left,
+  "trash-xmark": $fa-var-trash-xmark,
+  "tree": $fa-var-tree,
+  "tree-city": $fa-var-tree-city,
+  "tree-deciduous": $fa-var-tree-deciduous,
+  "tree-alt": $fa-var-tree-alt,
+  "tree-large": $fa-var-tree-large,
+  "trees": $fa-var-trees,
+  "turn-down": $fa-var-turn-down,
+  "level-down-alt": $fa-var-level-down-alt,
+  "turn-down-left": $fa-var-turn-down-left,
+  "turn-down-right": $fa-var-turn-down-right,
+  "turn-up": $fa-var-turn-up,
+  "level-up-alt": $fa-var-level-up-alt,
+  "unlock-keyhole": $fa-var-unlock-keyhole,
+  "unlock-alt": $fa-var-unlock-alt,
+  "up": $fa-var-up,
+  "arrow-alt-up": $fa-var-arrow-alt-up,
+  "up-down": $fa-var-up-down,
+  "arrows-alt-v": $fa-var-arrows-alt-v,
+  "up-down-left-right": $fa-var-up-down-left-right,
+  "arrows-alt": $fa-var-arrows-alt,
+  "up-from-bracket": $fa-var-up-from-bracket,
+  "up-from-dotted-line": $fa-var-up-from-dotted-line,
+  "up-from-line": $fa-var-up-from-line,
+  "arrow-alt-from-bottom": $fa-var-arrow-alt-from-bottom,
+  "up-left": $fa-var-up-left,
+  "up-long": $fa-var-up-long,
+  "long-arrow-alt-up": $fa-var-long-arrow-alt-up,
+  "up-right": $fa-var-up-right,
+  "up-right-and-down-left-from-center": $fa-var-up-right-and-down-left-from-center,
+  "expand-alt": $fa-var-expand-alt,
+  "up-right-from-square": $fa-var-up-right-from-square,
+  "external-link-alt": $fa-var-external-link-alt,
+  "up-to-dotted-line": $fa-var-up-to-dotted-line,
+  "up-to-line": $fa-var-up-to-line,
+  "arrow-alt-to-top": $fa-var-arrow-alt-to-top,
+  "upload": $fa-var-upload,
+);
+
+$fa-brand-icons: (
+);
+
+$fa-custom-icons: (
+);

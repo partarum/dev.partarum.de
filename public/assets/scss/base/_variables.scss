@@ -1,0 +1,17 @@
+:root {
+
+  /*
+        ! IE 11 kennt keine Variablen - also dennoch alles vor Ort definieren
+  */
+
+  --primeColor_1: #FFFFFF;
+  --primeColor_2: #FCFEFC;
+
+  --ratio: 1;
+
+  --picture-height: calc(100vw / var(--ratio));
+  --footer-height: calc(calc(100vh - calc(100vw / var(--ratio))) / 2);
+  --main-height: var(--picture-height);
+  --header-height: calc(calc(100vh - calc(100vw / var(--ratio))) / 2);
+
+}
