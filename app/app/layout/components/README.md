@@ -1,0 +1,2 @@
+**/components/**: Enthält kleinere, wiederverwendbare UI-Komponenten (z.B. Header, Footer, Navigation, Formularelemente).
+*   Dieser Ordner hilft, Code-Duplizierung zu vermeiden und die Wartbarkeit zu verbessern.
