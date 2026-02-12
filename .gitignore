@@ -9,3 +9,8 @@
 /vendor
 /.git
 /.idea
+/node_modules
+/vendor
+composer.lock
+history.txt
+/Partarum/PartarumLorem
