@@ -1,0 +1,23 @@
+#!/bin/bash
+#
+# Brief description of your script
+# Copyright 2023 bombi
+
+function main() {
+
+    pwd
+
+    killall screen
+
+    screen -wipe
+
+    denon start
+
+    #denon run --allow-net --allow-run --allow-read --allow-write ./Partarum/PartarumServer/server.js
+
+    #bash screen -dmS executive_Start_index
+    #bash screen -list
+    #bash screen -S executive_Start_index -X stuff "denon run --allow-net --allow-run --allow-read --allow-write ./index.js"
+}
+
+main "$@"

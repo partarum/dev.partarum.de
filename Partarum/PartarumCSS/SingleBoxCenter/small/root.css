@@ -1,18 +1,46 @@
 :root {
-    --ratio1_1_small: calc(calc(100vw - calc(100vw / 1.1)) / 1.5);
-    --ratio1_2_small: calc(calc(100vw - calc(100vw / 1.2)) / 1.5);
-    --ratio1_3_small: calc(calc(100vw - calc(100vw / 1.3)) / 1.5);
-    --ratio1_4_small: calc(calc(100vw - calc(100vw / 1.4)) / 1.5);
-    --ratio1_5_small: calc(calc(100vw - calc(100vw / 1.5)) / 1.5);
-    --ratio1_6_small: calc(calc(100vw - calc(100vw / 1.6)) / 1.5);
-    --ratio1_7_small: calc(calc(100vw - calc(100vw / 1.7)) / 1.5);
-    --ratio1_8_small: calc(calc(100vw - calc(100vw / 1.8)) / 1.5);
-    --ratio1_9_small: calc(calc(100vw - calc(100vw / 1.9)) / 1.5);
-    --ratio2_0_small: calc(calc(100vw - calc(100vw / 2)) / 1.5);
-    --ratio2_1_small: calc(calc(100vw - calc(100vw / 2.1)) / 1.5);
-    --ratio2_2_small: calc(calc(100vw - calc(100vw / 2.2)) / 1.5);
-    --ratio2_3_small: calc(calc(100vw - calc(100vw / 2.3)) / 1.5);
-    --ratio2_4_small: calc(calc(100vw - calc(100vw / 2.4)) / 1.5);
-    --ratio2_5_small: calc(calc(100vw - calc(100vw / 2.5)) / 1.5);
-    --ratio2_6_small: calc(calc(100vw - calc(100vw / 2.6)) / 1.5);
+
+    --ratio-small: 1.5;
+    --ratio-medium: 3;
+    --ratio-large: 10;
+
+    --ratio1_1: 1.1;
+    --ratio1_2: 1.2;
+    --ratio1_3: 1.3;
+    --ratio1_4: 1.4;
+    --ratio1_5: 1.5;
+    --ratio1_6: 1.6;
+    --ratio1_7: 1.7;
+    --ratio1_8: 1.8;
+    --ratio1_9: 1.9;
+    --ratio2_0: 2.0;
+    --ratio2_1: 2.1;
+    --ratio2_2: 2.2;
+    --ratio2_3: 2.3;
+    --ratio2_4: 2.4;
+    --ratio2_5: 2.5;
+    --ratio2_6: 2.6;
+
+    /*
+        --linearScale bezieht sich auf --ratio-small
+        !!! ist also nicht das gleiche bei --ratio-medium
+     */
+
+    --linearScale1_1: 1.1;
+    --linearScale1_2: 1.138;
+    --linearScale1_3: 1.176;
+    --linearScale1_4: 1.214;
+    --linearScale1_5: 1.252;
+    --linearScale1_6: 1.29;
+    --linearScale1_7: 1.328;
+    --linearScale1_8: 1.366;
+    --linearScale1_9: 1.404;
+    --linearScale2_0: 1.442;
+    --linearScale2_1: 1.48;
+    --linearScale2_2: 1.518;
+    --linearScale2_3: 1.556;
+    --linearScale2_4: 1.594;
+    --linearScale2_5: 1.632;
+    --linearScale2_6: 1.67;
+
 }

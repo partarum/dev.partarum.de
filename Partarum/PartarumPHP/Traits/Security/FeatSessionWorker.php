@@ -1,5 +1,5 @@
 <?php
-namespace Partarum\Security {
+namespace Partarum\PartarumPHP\Traits\Security {
 
 
     use \mysqli as mysqli;

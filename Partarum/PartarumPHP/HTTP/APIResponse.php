@@ -1,7 +1,8 @@
 <?php
-namespace Partarum\HTTP {
+namespace Partarum\PartarumPHP\HTTP {
 
     use JsonException;
+    use Partarum\HTTP\Header;
     use Partarum\HTTP\Header\Entity;
     use Partarum\Security\Token\UUID;
     use Partarum\HTTP\Response\Channel;
@@ -44,7 +45,11 @@ namespace Partarum\HTTP {
 
         }
 
-        public function run(){
+        public function setStatus($status): void {
+            http_response_code($status);
+        }
+
+        public function run($status = 200): void {
 
             if(!isset($this->channel->headerObject->contentType)){
 
@@ -53,7 +58,7 @@ namespace Partarum\HTTP {
                 $this->isHeader = true;
             }
 
-            $this->channel->open();
+            $this->channel->open($status);
         }
 
         public function getPostFromRequest(){

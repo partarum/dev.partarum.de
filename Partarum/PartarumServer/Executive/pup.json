@@ -1,0 +1,103 @@
+{
+  "logger": {
+    "console": true,
+    "decorate": true,
+    "colors": true,
+    "decorateFiles": true
+  },
+  "processes": [
+    {
+      "id": "dashboard",
+      "cwd": "/home/users/cs23-0089-gx/www/new",
+      "cmd": [
+        "deno",
+        "run",
+        "--allow-read",
+        "--allow-net",
+        "--allow-env",
+        "--allow-write",
+        "./Partarum/PartarumServer/Executive/server/dashboard.js"
+      ],
+      "env": {
+        "TZ": "Europe/Berlin"
+      },
+      "pidFile": "pid/server_dashboard.pid",
+      "autostart": true,
+      "restart": "always",
+      "restartDelayMs": 10000,
+      "logger": {
+        "stdout": "log/dashboard.log",
+        "stderr": "log/dashboard.error.log"
+      }
+    },
+    {
+      "id": "Befragung",
+      "cwd": "/home/users/cs23-0089-gx/www/new",
+      "cmd": [
+        "deno",
+        "run",
+        "--allow-read",
+        "--allow-net",
+        "--allow-env",
+        "./Partarum/PartarumServer/Executive/server/Befragung.js"
+      ],
+      "env": {
+        "TZ": "Europe/Berlin"
+      },
+      "pidFile": "pid/server_Befragung.pid",
+      "autostart": true,
+      "restart": "always",
+      "restartDelayMs": 10000,
+      "logger": {
+        "stdout": "log/Befragung.log",
+        "stderr": "log/Befragung.error.log"
+      }
+    },
+    {
+      "id": "index",
+      "cwd": "/home/users/cs23-0089-gx/www/new",
+      "cmd": [
+        "deno",
+        "run",
+        "--allow-read",
+        "--allow-net",
+        "--allow-env",
+        "./Partarum/PartarumServer/Executive/server/index.js"
+      ],
+      "env": {
+        "TZ": "Europe/Berlin"
+      },
+      "pidFile": "pid/server_index.pid",
+      "autostart": true,
+      "restart": "always",
+      "restartDelayMs": 10000,
+      "logger": {
+        "stdout": "log/index.log",
+        "stderr": "log/index.error.log"
+      }
+    },
+    {
+      "id": "partarum",
+      "cwd": "/home/users/cs23-0089-gx/www/new",
+      "cmd": [
+        "deno",
+        "run",
+        "--allow-read",
+        "--allow-net",
+        "--allow-env",
+        "./Partarum/PartarumServer/Executive/server/Partarum.js"
+      ],
+      "env": {
+        "TZ": "Europe/Berlin"
+      },
+      "pidFile": "pid/server_partarum.pid",
+      "autostart": true,
+      "restart": "always",
+      "restartDelayMs": 10000,
+      "logger": {
+        "stdout": "log/partarum.log",
+        "stderr": "log/partarum.error.log"
+      }
+    }
+  ]
+}

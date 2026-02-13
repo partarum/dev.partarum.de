@@ -1,5 +1,5 @@
 <?php
-namespace Partarum\HTTP {
+namespace Partarum\PartarumPHP\HTTP {
 
     use JsonException;
     use Partarum\HTTP\HTTPHeaderObject;
@@ -39,26 +39,34 @@ namespace Partarum\HTTP {
         }
 
         
-        public static function fromGET(?string $needle = NULL) : string | object {
+        public static function fromGET(?string $needle = NULL) : null | string | array {
             
             if(count($_GET) > 0){
-                
-                
-                return (isset($needle)) ? $_GET[$needle]: (object)$_GET;
+
+                if(isset($needle)){
+
+                    return $_GET[$needle] ?? NULL;
+                } else {
+
+                    return $_GET;
+                }
             }
 
-            return (object)$_GET;
+            return NULL;
         }
-        
-        
+
+
         /**
-         * @return object|null
+         * @param string|null $needle
+         * @return string|array|null
          */
-        public static function fromPOST() : ?object {
+        public static function fromPOST(?string $needle = NULL) : null | string | array {
+
+            $post = NULL;
 
             if(count($_POST) > 0){
 
-                return (object)$_POST;
+                $post = $_POST;
 
             }
 
@@ -68,13 +76,24 @@ namespace Partarum\HTTP {
 
                 try {
 
-                    return json_decode($postData, FALSE, 512, JSON_THROW_ON_ERROR);
+                    $post = json_decode($postData, TRUE, 512, JSON_THROW_ON_ERROR);
 
                 } catch (JsonException $e) {
 
                 }
             } catch(RuntimeException $e){
 
+            }
+
+            if(isset($post)){
+
+                if(isset($needle)){
+
+                    return $post[$needle] ?? NULL;
+                } else {
+
+                    return $post;
+                }
             }
 
             return NULL;

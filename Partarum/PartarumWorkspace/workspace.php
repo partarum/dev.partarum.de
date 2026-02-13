@@ -7,6 +7,18 @@
 error_reporting(-1);
 ini_set("display_errors", "1");
 
-$proxy = new Partarum(Partarum::PROXY, ["proxyPath" => __DIR__, "proxyRoute" =>"PartarumWorkspace", "type" => "Partarum"]);
+$option = [
+  "manifest" => [
+
+  ]
+];
+
+$proxy = new Partarum("Partarum/Workspace",Partarum::PROXY, ["proxyPath" => __DIR__]);
+
+$proxy->addRouter("Partarum/Workspace", [
+    "Partarum/PartarumWorkspace/config/routes-manifest.json",
+    "Partarum/PartarumWorkspace/config/surface-manifest.json"
+]);
+
 
 $proxy->goDev()->with($_SERVER["REQUEST_URI"]);

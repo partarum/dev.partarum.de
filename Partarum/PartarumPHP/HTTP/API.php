@@ -9,8 +9,12 @@
  *           representing the domain "cordes-software.de"
  *           and also modified for their use.
  */
-namespace Partarum\HTTP {
+namespace Partarum\PartarumPHP\HTTP {
 
+    use Partarum\HTTP\APIRequest;
+    use Partarum\HTTP\APIResponse;
+    use Partarum\HTTP\Data;
+    use Partarum\HTTP\Header;
     use Partarum\HTTP\Header\Entity\Allow;
     use Partarum\HTTP\Header\Entity;
     use Partarum\HTTP\Request\REST;
@@ -81,7 +85,7 @@ namespace Partarum\HTTP {
             return $this->response;
         }
 
-        public function createJSONResponse($body = null){
+        public function createJSONResponse($body = null): APIResponse {
 
             $response = $this->createResponse();
 
@@ -94,7 +98,7 @@ namespace Partarum\HTTP {
             return $response;
         }
 
-        public function setResponse(){
+        public function setResponse(): APIResponse {
 
             return $this->createResponse();
 
@@ -105,28 +109,57 @@ namespace Partarum\HTTP {
             return new Data();
         }
 
-        public function fromGET(?string $needle = NULL) : string|object {
+        public function fromGET(null | string $needle = NULL) : null | string | array {
 
             return Data::fromGET($needle);
-
         }
 
-        public function fromPOST($needle){
+        public function fromPOST(null | string $needle = NULL) : null | string | array {
 
-            $data = Data::fromPost();
-
-            return $data;
-
+            return Data::fromPost($needle);
         }
         
         public function fromHeader($key, $flag){
-            $data = Data::fromHeader($key, $flag);
-            
-            return $data;
+
+            return Data::fromHeader($key, $flag);
         }
 
-        public function createUUID(){
+        public function createUUID(): array {
+
             return ["v4" => UUID::v4()->current()];
+        }
+
+        public function getRequestScheme() {
+
+            $port = $_SERVER["SERVER_PORT"];
+
+            $serverAddress = $_SERVER["SERVER_ADDR"];
+
+            $remoteAddress = $_SERVER["REMOTE_ADDR"];
+
+            $requestScheme = $_SERVER["REQUEST_SCHEME"];
+
+            $protocol = "https";
+
+            if(($port === 80)) {
+                $protocol = "http";
+            }
+
+            return $protocol;
+        }
+
+        public function redirectOutside(string $url): void {
+
+            $protocol = $this->getRequestScheme();
+
+            header("Location: {$protocol}://{$url}");
+        }
+
+        public function redirectInside(string $path): void {
+
+            $protocol = $this->getRequestScheme();
+
+            header("Location: {$path}");
         }
     }
 }

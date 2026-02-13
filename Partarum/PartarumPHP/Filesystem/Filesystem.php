@@ -11,7 +11,7 @@ namespace Partarum\PartarumPHP\Filesystem {
 
     use FilesystemIterator;
     use Partarum\PartarumPHP\Traits\Filesystem\FeatFilesystem;
-    use Partarum\PartarumCLI\System\Root;
+    use Partarum\PartarumCLI\v_b\System\Root;
     use Partarum\Service\Binary\FlagWorker;
     use SplFileInfo;
 

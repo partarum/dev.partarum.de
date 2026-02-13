@@ -1,0 +1,504 @@
+/* ==========================================================================
+   Core / Base Variables and Styles
+   ========================================================================== */
+
+:root {
+    /* Variables specifically for the 'prt-area' block */
+    --prt-area-rows: none;
+    --prt-area-columns: none;
+    --prt-area-grid-template: none; /* Renamed for clarity, corresponds to grid-template-areas */
+
+    --prt-area-width: none;
+    --prt-area-height: none;
+
+    --prt-area-margin: none;
+}
+
+/* General grid display for common layout blocks - consider if this is too broad */
+/* Potentially, apply 'display: grid' only where needed within specific blocks */
+.prt-area,
+.prt-header, /* Assuming .prt-header is a Block */
+.prt-main,   /* Assuming .prt-main is a Block */
+.prt-footer, /* Assuming .prt-footer is a Block */
+.prt-container, /* Assuming .prt-container is a Block */
+.prt-box,    /* Added based on later definitions */
+.prt-section-layout, /* Renamed from prt-to-section */
+.prt-article-layout, /* Renamed from prt-to-article */
+.prt-header-layout,  /* Renamed from prt-to-header */
+.prt-footer-layout,  /* Renamed from prt-to-footer */
+.prt-form-layout,    /* Renamed from prt-to-form */
+.prt-fieldset-layout,/* Renamed from prt-to-fieldset */
+.prt-show-container, /* Renamed from prt-showContainer */
+.prt-navigation-layout, /* Renamed from prt-to-navigation */
+.prt-toolbox-layout    /* Renamed from prt-to-toolbox */
+{
+    display: grid;
+}
+
+.prt-area__item,
+.prt-container__item,
+.prt-box__item,
+.prt-show-box__item
+{
+    container-type: inline-size; /* Apply common properties here */
+}
+
+
+/* ==========================================================================
+   Block: prt-area
+   Desc: Main layout area container.
+   ========================================================================== */
+
+.prt-area {
+    grid-template-rows: var(--prt-area-rows);
+    grid-template-columns: var(--prt-area-columns);
+    grid-template-areas: var(--prt-area-grid-template);
+
+    width: var(--prt-area-width);
+    height: var(--prt-area-height);
+    margin: var(--prt-area-margin);
+
+    container-type: inline-size;
+    container-name: prt-area; /* Container name matches block */
+}
+
+/* Elements within prt-area (using generic 'item' name) */
+/* Ideally, replace '--a0', '--a1' etc. with more semantic names if possible */
+
+.prt-area__item--a0 {
+    container-name: prt-area__item--a0; /* Container name reflects BEM */
+    grid-area: prt-a0; /* Grid area name remains as defined */
+}
+
+.prt-area__item--a1 {
+    container-name: prt-area__item--a1;
+    grid-area: prt-a1;
+}
+
+.prt-area__item--a2 {
+    container-name: prt-area__item--a2;
+    grid-area: prt-a2;
+}
+
+.prt-area__item--a3 {
+    container-name: prt-area__item--a3;
+    grid-area: prt-a3;
+}
+
+.prt-area__item--a4 {
+    container-name: prt-area__item--a4;
+    grid-area: prt-a4;
+}
+
+.prt-area__item--a5 {
+    container-name: prt-area__item--a5;
+    grid-area: prt-a5;
+}
+
+/* Specific named elements within prt-area */
+.prt-area__header {
+    container-type: inline-size;
+    container-name: prt-area__header;
+    grid-area: prt-area-header; /* Assumes this name is used in grid-template-areas */
+}
+
+.prt-area__main {
+    container-type: inline-size;
+    container-name: prt-area__main;
+    grid-area: prt-area-main; /* Assumes this name is used in grid-template-areas */
+}
+
+.prt-area__footer {
+    container-type: inline-size;
+    container-name: prt-area__footer;
+    grid-area: prt-area-footer; /* Assumes this name is used in grid-template-areas */
+}
+
+
+/* ==========================================================================
+   Block: prt-container (Assuming this is a distinct block)
+   Desc: Generic container block.
+   ========================================================================== */
+
+.prt-container {
+    /* Container-specific styles, if any */
+}
+
+/* Elements within prt-container */
+
+.prt-container__item--c0 {
+    container-name: prt-container__item--c0;
+    grid-area: prt-c0;
+}
+
+.prt-container__item--c1 {
+    container-name: prt-container__item--c1;
+    grid-area: prt-c1;
+}
+
+.prt-container__item--c2 {
+    container-name: prt-container__item--c2;
+    grid-area: prt-c2;
+}
+
+.prt-container__item--c3 {
+    container-name: prt-container__item--c3;
+    grid-area: prt-c3;
+}
+
+.prt-container__item--c4 {
+    container-name: prt-container__item--c4;
+    grid-area: prt-c4;
+}
+
+/* ==========================================================================
+   Block: prt-box
+   Desc: A box component, likely for grouping content.
+   ========================================================================== */
+
+.prt-box {
+    /* display: grid; -- Already applied globally, remove if not always needed */
+}
+
+.prt-box__item--b0 {
+    container-name: prt-box__item--b0;
+    grid-area: prt-b0;
+}
+
+.prt-box__item--b1 {
+    container-name: prt-box__item--b1;
+    grid-area: prt-b1;
+}
+
+.prt-box__item--b2 {
+    container-name: prt-box__item--b2;
+    grid-area: prt-b2;
+}
+
+.prt-box__item--b3 {
+    container-name: prt-box__item--b3;
+    grid-area: prt-b3;
+}
+
+.prt-box__item--b4 {
+    container-name: prt-box__item--b4;
+    grid-area: prt-b4;
+}
+
+/* ==========================================================================
+   Block: prt-section
+   Desc: Represents a thematic section of content.
+   Note: prt-to-section renamed to prt-section-layout (Layout Helper)
+   ========================================================================== */
+
+.prt-section-layout {
+    /* Styles for the grid container holding sections */
+}
+
+.prt-section {
+    container-type: inline-size;
+    container-name: prt-section; /* Base section */
+    grid-area: section; /* Default grid area? */
+}
+
+/* Modifiers for specific section variations/positions */
+.prt-section--s1 {
+    container-name: prt-section--s1;
+    grid-area: section_1;
+}
+
+.prt-section--s2 {
+    container-name: prt-section--s2;
+    grid-area: section_2;
+}
+
+.prt-section--s3 {
+    container-name: prt-section--s3;
+    grid-area: section_3;
+}
+
+.prt-section--s4 {
+    container-name: prt-section--s4;
+    grid-area: section_4;
+}
+
+/* ==========================================================================
+   Block: prt-article
+   Desc: Represents a self-contained piece of content.
+   Note: prt-to-article renamed to prt-article-layout (Layout Helper)
+   ========================================================================== */
+
+.prt-article-layout {
+    /* Styles for the grid container holding articles */
+}
+
+.prt-article {
+    container-type: inline-size;
+    container-name: prt-article; /* Base article */
+    grid-area: article; /* Default grid area? */
+}
+
+/* Modifiers for specific article variations/positions */
+.prt-article--art1 { container-name: prt-article--art1; grid-area: prt-art1; }
+.prt-article--art2 { container-name: prt-article--art2; grid-area: prt-art2; }
+.prt-article--art3 { container-name: prt-article--art3; grid-area: prt-art3; }
+.prt-article--art4 { container-name: prt-article--art4; grid-area: prt-art4; }
+.prt-article--art5 { container-name: prt-article--art5; grid-area: prt-art5; }
+.prt-article--art6 { container-name: prt-article--art6; grid-area: prt-art6; }
+.prt-article--art7 { container-name: prt-article--art7; grid-area: prt-art7; }
+.prt-article--art8 { container-name: prt-article--art8; grid-area: prt-art8; }
+.prt-article--art9 { container-name: prt-article--art9; grid-area: prt-art9; }
+.prt-article--art10 { container-name: prt-article--art10; grid-area: prt-art10; }
+.prt-article--art11 { container-name: prt-article--art11; grid-area: prt-art11; }
+.prt-article--art12 { container-name: prt-article--art12; grid-area: prt-art12; }
+
+
+/* ==========================================================================
+   Block: prt-header
+   Desc: Represents header content (could be site header, section header, etc.)
+   Note: prt-to-header renamed to prt-header-layout (Layout Helper)
+   ========================================================================== */
+
+.prt-header-layout { /* Styles for the grid container holding headers */ }
+
+.prt-header {
+    container-type: inline-size;
+    container-name: prt-header; /* Base header */
+    grid-area: header; /* Default grid area? */
+}
+
+/* Modifiers for specific header variations/positions */
+.prt-header--h1 { container-name: prt-header--h1; grid-area: header_1; }
+.prt-header--h2 { container-name: prt-header--h2; grid-area: header_2; }
+.prt-header--h3 { container-name: prt-header--h3; grid-area: header_3; }
+.prt-header--h4 { container-name: prt-header--h4; grid-area: header_4; }
+
+
+/* ==========================================================================
+   Block: prt-footer
+   Desc: Represents footer content.
+   Note: prt-to-footer renamed to prt-footer-layout (Layout Helper)
+   ========================================================================== */
+
+.prt-footer-layout { /* Styles for the grid container holding footers */ }
+
+.prt-footer {
+    container-type: inline-size;
+    container-name: prt-footer; /* Base footer */
+    grid-area: footer; /* Default grid area? */
+}
+
+/* Modifiers for specific footer variations/positions */
+.prt-footer--f1 { container-name: prt-footer--f1; grid-area: footer_1; }
+.prt-footer--f2 { container-name: prt-footer--f2; grid-area: footer_2; }
+.prt-footer--f3 { container-name: prt-footer--f3; grid-area: footer_3; }
+.prt-footer--f4 { container-name: prt-footer--f4; grid-area: footer_4; }
+
+
+/* ==========================================================================
+   Block: prt-form
+   Desc: Represents a form.
+   Note: prt-to-form renamed to prt-form-layout (Layout Helper)
+   ========================================================================== */
+
+.prt-form-layout { /* Styles for the grid container holding the form */ }
+
+.prt-form {
+    container-type: inline-size;
+    container-name: prt-form; /* Base form */
+    grid-area: form; /* Default grid area? */
+}
+
+/* Elements or specific areas within the form */
+.prt-form__area { /* Generic class for form areas if needed */
+    container-type: inline-size;
+}
+.prt-form__area--f1 { container-name: prt-form__area--f1; grid-area: prt-f1; }
+.prt-form__area--f2 { container-name: prt-form__area--f2; grid-area: prt-f2; }
+.prt-form__area--f3 { container-name: prt-form__area--f3; grid-area: prt-f3; }
+.prt-form__area--f4 { container-name: prt-form__area--f4; grid-area: prt-f4; }
+
+
+/* ==========================================================================
+   Block: prt-fieldset
+   Desc: Represents a fieldset within a form.
+   Note: prt-to-fieldset renamed to prt-fieldset-layout (Layout Helper)
+   ========================================================================== */
+
+.prt-fieldset-layout { /* Styles for the grid container holding the fieldset */ }
+
+.prt-fieldset {
+    container-type: inline-size;
+    container-name: prt-fieldset; /* Base fieldset */
+    grid-area: fieldset; /* Default grid area? */
+    border: none; /* Reset default fieldset border */
+    padding: 0;   /* Reset default fieldset padding */
+    margin: 0;    /* Reset default fieldset margin */
+}
+
+/* Elements or specific areas within the fieldset */
+.prt-fieldset__area { /* Generic class for fieldset areas if needed */
+    container-type: inline-size;
+}
+.prt-fieldset__area--fs1 { container-name: prt-fieldset__area--fs1; grid-area: prt-fs1; }
+.prt-fieldset__area--fs2 { container-name: prt-fieldset__area--fs2; grid-area: prt-fs2; }
+.prt-fieldset__area--fs3 { container-name: prt-fieldset__area--fs3; grid-area: prt-fs3; }
+.prt-fieldset__area--fs4 { container-name: prt-fieldset__area--fs4; grid-area: prt-fs4; }
+
+
+/* ==========================================================================
+   Block: prt-show-container
+   Desc: Container that potentially shows/hides content based on children.
+   ========================================================================== */
+
+.prt-show-container {
+    /* display: grid; -- Applied globally */
+    display: none; /* Default state */
+}
+
+/* Modifier for active state */
+/* Original logic: Show container if it has an active show-box */
+/* This might need JS or can be simplified if the container itself gets the active class */
+.prt-show-container--active, /* Add this class directly to the container */
+.prt-show-container:has(.prt-show-box--active) { /* Keep :has() for original logic */
+    display: grid;
+}
+
+/* Element: Form within the show container */
+.prt-show-container__form {
+    display: grid; /* Default state */
+}
+
+/* Hide form inside area when a show-box is active (complex selector, review use case) */
+.prt-area:has(.prt-show-box--active) .prt-show-container__form {
+    display: none;
+}
+
+/* Elements: Items within the show container (if prt-sc0 etc. belong here) */
+.prt-show-container__item { /* Base styles */ }
+.prt-show-container__item--sc0 { /* Specific styles */ }
+.prt-show-container__item--sc1 { /* Specific styles */ }
+.prt-show-container__item--sc2 { /* Specific styles */ }
+.prt-show-container__item--sc3 { /* Specific styles */ }
+.prt-show-container__item--sc4 { /* Specific styles */ }
+
+
+/* ==========================================================================
+   Block: prt-show-box
+   Desc: A box that can be toggled active/inactive.
+   ========================================================================== */
+
+.prt-show-box {
+    /* Base styles for the show-box wrapper itself, if any */
+    /* display: none; perhaps? Or is visibility controlled by the active/inactive modifier? */
+}
+
+/* Modifiers for state */
+.prt-show-box--active {
+    display: grid;
+}
+
+.prt-show-box--inactive {
+    display: none;
+}
+
+/* Elements within the show-box */
+.prt-show-box__item--sb0 { container-name: prt-show-box__item--sb0; grid-area: prt-sb0; }
+.prt-show-box__item--sb1 { container-name: prt-show-box__item--sb1; grid-area: prt-sb1; }
+.prt-show-box__item--sb2 { container-name: prt-show-box__item--sb2; grid-area: prt-sb2; }
+.prt-show-box__item--sb3 { container-name: prt-show-box__item--sb3; grid-area: prt-sb3; }
+.prt-show-box__item--sb4 { container-name: prt-show-box__item--sb4; grid-area: prt-sb4; }
+
+
+/* ==========================================================================
+   Block: prt-navigation
+   Desc: Navigation block.
+   Note: prt-to-navigation renamed to prt-navigation-layout (Layout Helper)
+   ========================================================================== */
+
+.prt-navigation-layout { /* Styles for the grid container holding the navigation */ }
+
+.prt-navigation {
+    container-type: inline-size;
+    container-name: prt-navigation; /* Base navigation */
+    grid-area: navigation; /* Default grid area? */
+    display: none; /* Default state seems inactive */
+}
+
+/* Modifiers for state */
+.prt-navigation--active {
+    display: grid;
+}
+
+.prt-navigation--inactive {
+    display: none; /* Explicitly define inactive state if needed, otherwise default handles it */
+}
+
+/* Elements within navigation */
+.prt-navigation__header { /* Styles for nav header */ }
+.prt-navigation__footer { /* Styles for nav footer */ }
+
+.prt-navigation__item { /* Generic item/link style */
+    container-type: inline-size;
+}
+/* Modifier for specific navigation items/positions */
+.prt-navigation__item--n1 { container-name: prt-navigation__item--n1; grid-area: navigation_1; }
+.prt-navigation__item--n2 { container-name: prt-navigation__item--n2; grid-area: navigation_2; }
+.prt-navigation__item--n3 { container-name: prt-navigation__item--n3; grid-area: navigation_3; }
+.prt-navigation__item--n4 { container-name: prt-navigation__item--n4; grid-area: navigation_4; }
+
+
+/* ==========================================================================
+   Block: prt-toolbox
+   Desc: Toolbox block.
+   Note: prt-to-toolbox renamed to prt-toolbox-layout (Layout Helper)
+   ========================================================================== */
+
+.prt-toolbox-layout { /* Styles for the grid container holding the toolbox */ }
+
+.prt-toolbox {
+    container-type: inline-size;
+    container-name: prt-toolbox; /* Base toolbox */
+    grid-area: toolbox; /* Default grid area? */
+    display: none; /* Default state seems inactive */
+}
+
+/* Modifiers for state */
+.prt-toolbox--active {
+    display: grid;
+}
+
+.prt-toolbox--inactive {
+    display: none;
+}
+
+/* Elements within the toolbox */
+.prt-toolbox__item {
+    container-type: inline-size; /* Assuming items might need container queries */
+}
+/* Modifier for specific toolbox items/positions */
+.prt-toolbox__item--tlb1 { container-name: prt-toolbox__item--tlb1; grid-area: toolbox_1; }
+.prt-toolbox__item--tlb2 { container-name: prt-toolbox__item--tlb2; grid-area: toolbox_2; }
+.prt-toolbox__item--tlb3 { container-name: prt-toolbox__item--tlb3; grid-area: toolbox_3; }
+.prt-toolbox__item--tlb4 { container-name: prt-toolbox__item--tlb4; grid-area: toolbox_4; }
+
+
+/* ==========================================================================
+   Legacy / Tag Selectors (Review and Refactor)
+   ========================================================================== */
+
+/* Avoid qualifying BEM classes with tag names if possible */
+/* Instead of 'html > body.prt-area', apply '.prt-area' directly to <body> */
+
+/* Instead of 'section.prt-sec1', use '.prt-section--s1' */
+
+/* Instead of 'article.prt-art1', use '.prt-article--art1' */
+
+/* Instead of 'nav.prt-nav', use '.prt-navigation' (assuming prt-nav maps to the navigation block) */
+
+/* The comment about :has vs > remains valid regarding performance */
+/* Example with BEM:
+   .prt-container__item--c1:has(> .prt-header.prt-container__header-element) > .prt-header {}  <-- Less performant
+   .prt-container__item--c1 > .prt-header.prt-container__header-element {} <-- More performant
+   Note: Added hypothetical .prt-container__header-element for illustration
+*/

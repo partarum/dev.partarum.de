@@ -1,2 +1,6 @@
 @import url("/Partarum/PartarumCSS/SingleBoxCenter/medium/root.css");
 @import url("/Partarum/PartarumCSS/SingleBoxCenter/medium/queries.css");
+
+.single-box-center-medium-inside {
+    padding: 0 calc(calc(100% - calc(100% / 2)) / 3);
+}

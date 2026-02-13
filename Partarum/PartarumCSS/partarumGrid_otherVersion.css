@@ -1,0 +1,212 @@
+.pg-static {
+    display: grid;
+
+    --r-fine: 4rem;
+}
+
+.pg-dynamic {
+    display: grid;
+
+    --r-fine: 0.5fr;
+}
+
+
+/*
+    TODO: ggf. noch einzelne --r- variablen für die Intensität hinzufügen - 4rem ist echt grob
+ */
+
+.pgc-r15, .pgc-fine-odd{
+    grid-template-columns: repeat(15, var(--r-fine));
+}
+
+.pgr-r15, .pgr-fine-odd {
+    grid-template-rows: repeat(15, var(--r-fine));
+}
+
+.pgc-r16, .pgc-fine-even{
+    grid-template-columns: repeat(16, var(--r-fine));
+}
+
+.pgc-superfine {
+    grid-template-columns: repeat(31, 0.5fr);
+}
+
+.pgc16 {
+    grid-column: auto / span 16;
+}
+
+.pgc15 {
+    grid-column: auto / span 15;
+}
+
+.pgc14 {
+    grid-column: auto / span 14;
+}
+
+.pgc13 {
+    grid-column: auto / span 13;
+}
+
+.pgc12 {
+    grid-column: auto / span 12;
+}
+
+.pgc11 {
+    grid-column: auto / span 11;
+}
+
+.pgc10 {
+    grid-column: auto / span 10;
+}
+
+.pgc9 {
+    grid-column: auto / span 9;
+}
+
+.pgc8 {
+    grid-column: auto / span 8;
+}
+
+.pgc7 {
+    grid-column: auto / span 7;
+}
+
+.pgc6 {
+    grid-column: auto / span 6;
+}
+
+.pgc5 {
+    grid-column: auto / span 5;
+}
+
+.pgc4 {
+    grid-column: auto / span 4;
+}
+
+.pgc3 {
+    grid-column: auto / span 3;
+}
+
+.pgc2 {
+    grid-column: auto / span 2;
+}
+
+.pgc1 {
+    grid-column: auto / span 1;
+}
+
+.from-pgc2 {
+    grid-column-start: 2;
+}
+
+.from-pgc3 {
+    grid-column-start: 3;
+}
+
+.from-pgc4 {
+    grid-column-start: 4;
+}
+
+.from-pgc5 {
+    grid-column-start: 5;
+}
+
+.from-pgc6 {
+    grid-column-start: 6;
+}
+
+.from-pgc7 {
+    grid-column-start: 7;
+}
+
+.from-pgc8 {
+    grid-column-start: 8;
+}
+
+.from-pgc9 {
+    grid-column-start: 9;
+}
+
+.from-pgc10 {
+    grid-column-start: 10;
+}
+
+.from-pgc11 {
+    grid-column-start: 11;
+}
+
+.from-pgc12 {
+    grid-column-start: 12;
+}
+
+.from-pgc13 {
+    grid-column-start: 13;
+}
+
+.from-pgc14 {
+    grid-column-start: 14;
+}
+
+.from-pgc15 {
+    grid-column-start: 15;
+}
+
+.to-pgc2 {
+    grid-column-end: calc(2 + 1);
+}
+
+.to-pgc3 {
+    grid-column-end: calc(3 + 1);
+}
+
+.to-pgc4 {
+    grid-column-end: calc(4 + 1);
+}
+
+.to-pgc5 {
+    grid-column-end: calc(5 + 1);
+}
+
+.to-pgc6 {
+    grid-column-end: calc(6 + 1);
+}
+
+.to-pgc7 {
+    grid-column-end: calc(7 + 1);
+}
+
+.to-pgc8 {
+    grid-column-end: calc(8 + 1);
+}
+
+.to-pgc9 {
+    grid-column-end: calc(9 + 1);
+}
+
+.to-pgc10 {
+    grid-column-end: calc(10 + 1);
+}
+
+.to-pgc11 {
+    grid-column-end: calc(11 + 1);
+}
+
+.to-pgc12 {
+    grid-column-end: calc(12 + 1);
+}
+
+.to-pgc13 {
+    grid-column-end: calc(13 + 1);
+}
+
+.to-pgc14 {
+    grid-column-end: calc(14 + 1);
+}
+
+.to-pgc15 {
+    grid-column-end: calc(15 + 1);
+}
+
+.to-pgc16 {
+    grid-column-end: calc(16 + 1);
+}

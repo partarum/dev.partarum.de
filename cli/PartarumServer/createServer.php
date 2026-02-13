@@ -8,11 +8,11 @@ require_once "Partarum/PartarumCLI/System/Setup/Read.php";
 require_once "Partarum/PartarumCLI/System/Setup/Input.php";
 require_once "Partarum/PartarumCLI/System/Setup/ConfigLoader.php";
 
-use Partarum\PartarumCLI\System\Setup\Input;
-use Partarum\PartarumCLI\System\Setup\ConfigLoader;
-use Partarum\PartarumCLI\System\Setup\Logo;
-use Partarum\PartarumCLI\System\Setup\Read;
-use Partarum\PartarumCLI\System\Setup\Show;
+use Partarum\PartarumCLI\v_b\System\Setup\Input;
+use Partarum\PartarumCLI\v_b\System\Setup\ConfigLoader;
+use Partarum\PartarumCLI\v_b\System\Setup\Logo;
+use Partarum\PartarumCLI\v_b\System\Setup\Read;
+use Partarum\PartarumCLI\v_b\System\Setup\Show;
 
 // set Logo
 

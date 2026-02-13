@@ -1,0 +1,702 @@
+:root {
+    --prt-area-rows: none;
+    --prt-area-columns: none;
+    --prt-area: none;
+
+    --prt-area-width: none;
+    --prt-area-height: none;
+
+    --prt-area-margin: none;
+}
+
+.prt-area, .prt-header, .prt-main, .prt-footer, .prt-container {
+    display: grid;
+}
+
+
+/*
+ * ************************ START Aufarbeitung Area ******** *
+ */
+
+.prt-area {
+
+    grid-template-rows: var(--prt-area-rows);
+    grid-template-columns: var(--prt-area-columns);
+    grid-template-areas: var(--prt-area);
+
+    width: var(--prt-area-width);
+    height: var(--prt-area-height);
+
+    margin: var(--prt-area-margin);
+
+    container-type:  inline-size;
+    container-name: prt-area;
+}
+
+.prt-a0, .prt-a1, .prt-a2, .prt-a3, .prt-a4, .prt-a5 {
+    container-type: inline-size;
+}
+
+.prt-a0 {
+    container-name: prt-a0;
+    grid-area: prt-a0;
+}
+
+.prt-a1 {
+    container-name: prt-a1;
+    grid-area: prt-a1;
+}
+
+.prt-a2 {
+    container-name: prt-a2;
+    grid-area: prt-a2;
+}
+
+.prt-a3 {
+    container-name: prt-a3;
+    grid-area: prt-a3;
+}
+
+.prt-a4 {
+    container-name: prt-a4;
+    grid-area: prt-a4;
+}
+
+.prt-a5 {
+    container-name: prt-a5;
+    grid-area: prt-a5;
+}
+
+/*
+ * ************************ END Aufarbeitung Area ******** *
+ */
+
+/*
+ * ************************ START Aufarbeitung Container ******** *
+ */
+
+.prt-c0,.prt-c1, .prt-c2, .prt-c3, .prt-c4, .prt-c5 {
+    container-type: inline-size;
+}
+
+.prt-c0 {
+    container-name: prt-c0;
+    grid-area: prt-c0;
+}
+
+.prt-c1 {
+    container-name: prt-c1;
+    grid-area: prt-c1;
+}
+
+.prt-c2 {
+    container-name: prt-c2;
+    grid-area: prt-c2;
+}
+
+.prt-c3 {
+    container-name: prt-c3;
+    grid-area: prt-c3;
+}
+
+.prt-c4 {
+    container-name: prt-c4;
+    grid-area: prt-c4;
+}
+
+/*
+ * ************************ End Aufarbeitung Container ******** *
+ */
+
+
+/*
+ * ************************ START Aufarbeitung Block-Elements ******** *
+ */
+
+html > body.prt-area {
+
+}
+
+.prt-area__header {
+    container-type: inline-size;
+    container-name: prt-area-header;
+
+    grid-area: prt-area-header;
+}
+
+.prt-area__main {
+    container-type: inline-size;
+    container-name: prt-area-main;
+
+    grid-area: prt-area-main;
+}
+
+.prt-area__footer {
+    container-type: inline-size;
+    container-name: prt-area-footer;
+
+    grid-area: prt-area-footer;
+}
+
+.prt-c1 {
+
+}
+
+section.prt-sec1 {
+
+}
+
+article.prt-art1 {
+
+}
+
+nav.prt-nav {
+
+}
+
+/*
+.prt-c1:has(> header.prt-c1-header) > header {} <-- weniger performanter, da DOM durchsucht werden muss, also besser für Zuweisungen die noch nicht bewusst sind
+
+ist gleich
+
+.prt-c1 > header.prt-c1-header {} <-- performanter - da DOM direkt durchgearbeitet wird, also besser für Zuweisungen die eh bewusst sind
+ */
+
+
+
+/*
+ * ************************ END Aufarbeitung Block-Elements ******** *
+ */
+
+/*
+ * ************************ START Aufarbeitung Box ******** *
+ */
+
+.prt-box {
+    display: grid;
+}
+
+.prt-b0, .prt-b1, .prt-b2, .prt-b3, .prt-b4, .prt-b5 {
+    container-type: inline-size;
+}
+
+.prt-b0 {
+    container-name: prt-b0;
+    grid-area: prt-b0;
+}
+
+.prt-b1 {
+    container-name: prt-b1;
+    grid-area: prt-b1;
+}
+
+.prt-b2 {
+    container-name: prt-b2;
+    grid-area: prt-b2;
+}
+
+.prt-b3 {
+    container-name: prt-b3;
+    grid-area: prt-b3;
+}
+
+.prt-b4 {
+    container-name: prt-b4;
+    grid-area: prt-b4;
+}
+
+/*
+ * ************************ END Aufarbeitung Box ******** *
+ */
+
+/*
+ * ************************ START Aufarbeitung Section ******** *
+ */
+
+.prt-to-section {
+    display: grid;
+}
+
+.prt-section, .prt-sec1, .prt-sec2, .prt-sec3, .prt-sec4 {
+    container-type: inline-size;
+}
+
+.prt-section {
+    container-name: prt-section;
+    grid-area: section;
+}
+
+.prt-sec1 {
+    container-name: prt-sec1;
+    grid-area: section_1;
+}
+
+.prt-sec2 {
+    container-name: prt-sec2;
+    grid-area: section_2;
+}
+
+.prt-sec3 {
+    container-name: prt-sec3;
+    grid-area: section_3;
+}
+
+.prt-sec4 {
+    container-name: prt-sec4;
+    grid-area: section_4;
+}
+
+/*
+ * ************************ End Aufarbeitung Section ******** *
+ */
+
+/*
+ * ************************ START Aufarbeitung Article ******** *
+ */
+
+.prt-to-article {
+    display: grid;
+}
+
+.prt-article,.prt-art1, .prt-art2, .prt-art3, .prt-art4, .prt-art5, .prt-art6, .prt-art7, .prt-art8, .prt-art9, .prt-art10, .prt-art11, .prt-art12 {
+    container-type: inline-size;
+}
+
+.prt-article {
+    container-name: prt-article;
+    grid-area: article;
+}
+
+.prt-art1 {
+    container-name: prt-art1;
+    grid-area: prt-art1;
+}
+
+.prt-art2 {
+    container-name: prt-art2;
+    grid-area: prt-art2;
+}
+
+.prt-art3 {
+    container-name: prt-art3;
+    grid-area: prt-art3;
+}
+
+.prt-art4 {
+    container-name: prt-art4;
+    grid-area: prt-art4;
+}
+
+.prt-art5 {
+    container-name: prt-art5;
+    grid-area: prt-art5;
+}
+
+.prt-art6 {
+    container-name: prt-art6;
+    grid-area: prt-art6;
+}
+
+.prt-art7 {
+    container-name: prt-art7;
+    grid-area: prt-art7;
+}
+
+.prt-art8 {
+    container-name: prt-art8;
+    grid-area: prt-art8;
+}
+
+.prt-art9 {
+    container-name: prt-art9;
+    grid-area: prt-art9;
+}
+
+.prt-art10 {
+    container-name: prt-art10;
+    grid-area: prt-art10;
+}
+
+.prt-art11 {
+    container-name: prt-art11;
+    grid-area: prt-art11;
+}
+
+.prt-art12 {
+    container-name: prt-art12;
+    grid-area: prt-art12;
+}
+
+/*
+ * ************************ End Aufarbeitung Article ******** *
+ */
+
+/*
+ * ************************ START Aufarbeitung Header ******** *
+ */
+
+.prt-to-header {
+    display: grid;
+}
+
+.prt-header,.prt-head1, .prt-head2, .prt-head3, .prt-head4, .prt-head5 {
+    container-type: inline-size;
+}
+
+.prt-header {
+    container-name: prt-header;
+    grid-area: header;
+}
+
+.prt-head1 {
+    container-name: prt-head1;
+    grid-area: header_1;
+}
+
+.prt-head2 {
+    container-name: prt-head2;
+    grid-area: header_2;
+}
+
+.prt-head3 {
+    container-name: prt-head3;
+    grid-area: header_3;
+}
+
+.prt-head4 {
+    container-name: prt-head4;
+    grid-area: header_4;
+}
+
+/*
+ * ************************ End Aufarbeitung Header ******** *
+ */
+
+/*
+ * ************************ START Aufarbeitung Footer ******** *
+ */
+
+.prt-to-footer {
+    display: grid;
+}
+
+.prt-footer,.prt-foot1, .prt-foot2, .prt-foot3, .prt-foot4, .prt-foot5 {
+    container-type: inline-size;
+}
+
+.prt-footer {
+    container-name: prt-footer;
+    grid-area: footer;
+}
+
+.prt-foot1 {
+    container-name: prt-foot1;
+    grid-area: footer_1;
+}
+
+.prt-foot2 {
+    container-name: prt-foot2;
+    grid-area: footer_2;
+}
+
+.prt-foot3 {
+    container-name: prt-foot3;
+    grid-area: footer_3;
+}
+
+.prt-foot4 {
+    container-name: prt-foot4;
+    grid-area: footer_4;
+}
+
+/*
+ * ************************ End Aufarbeitung Footer ******** *
+ */
+
+
+/*
+ * ************************ START Aufarbeitung Form ******** *
+ */
+
+.prt-to-form {
+    display: grid;
+}
+
+.prt-form, .prt-f1, .prt-f2, .prt-f3, .prt-f4 {
+    container-type: inline-size;
+}
+
+.prt-form {
+    container-name: prt-form;
+    grid-area: form;
+}
+
+.prt-f1 {
+    container-name: prt-f1;
+    grid-area: prt-f1;
+}
+
+.prt-f2 {
+    container-name: prt-f2;
+    grid-area: prt-f2;
+}
+
+.prt-f3 {
+    container-name: prt-f3;
+    grid-area: prt-f3;
+}
+
+.prt-f4 {
+    container-name: prt-f4;
+    grid-area: prt-f4;
+}
+
+/*
+ * ************************ END Aufarbeitung Form ******** *
+ */
+
+/*
+ * ************************ START Aufarbeitung Fieldset ******** *
+ */
+
+.prt-to-fieldset {
+    display: grid;
+}
+
+.prt-fieldset, .prt-fs1, .prt-fs2, .prt-fs3, .prt-fs4 {
+    container-type: inline-size;
+}
+
+.prt-fieldset {
+    container-name: prt-fieldset;
+    grid-area: fieldset;
+}
+
+.prt-fs1 {
+    container-name: prt-fs1;
+    grid-area: prt-fs1;
+}
+
+.prt-fs2 {
+    container-name: prt-fs2;
+    grid-area: prt-fs2;
+}
+
+.prt-fs3 {
+    container-name: prt-fs3;
+    grid-area: prt-fs3;
+}
+
+.prt-fs4 {
+    container-name: prt-fs4;
+    grid-area: prt-fs4;
+}
+
+/*
+ * ************************ END Aufarbeitung Fieldset ******** *
+ */
+
+/*
+ * ************************ START Aufarbeitung ShowContainer ******** *
+ */
+
+.prt-showContainer {
+    display: none;
+}
+
+.prt-showContainer:has(.prt-sb-active) {
+    display: grid;
+}
+
+.prt-sc-active {
+    display: grid;
+}
+
+.prt-sc-inactive {
+    display: none;
+}
+
+.prt-sc-form {
+    display: grid;
+}
+
+.prt-area:has(.prt-sb-active) .prt-sc-form {
+    display: none;
+}
+
+.prt-sc0, .prt-sc1, .prt-sc2, .prt-sc3, .prt-sc4 {
+
+}
+
+.prt-sc0 {
+
+}
+
+.prt-sc1 {
+
+}
+
+.prt-sc2 {
+
+}
+
+.prt-sc3 {
+
+}
+
+.prt-sc4 {
+
+}
+/*
+ * ************************ END Aufarbeitung ShowContainer ******** *
+ */
+
+/*
+ * ************************ START Aufarbeitung ShowBox ******** *
+ */
+.prt-showBox {
+
+}
+
+.prt-sb-active {
+    display: grid;
+}
+
+.prt-sb-inactive {
+    display: none;
+}
+
+.prt-sb0, .prt-sb1, .prt-sb2, .prt-sb3, .prt-sb4 {
+    container-type: inline-size;
+}
+
+.prt-sb0 {
+    container-name: prt-sb0;
+    grid-area: prt-sb0;
+}
+
+.prt-sb1 {
+    container-name: prt-sb1;
+    grid-area: prt-sb1;
+}
+
+.prt-sb2 {
+    container-name: prt-sb2;
+    grid-area: prt-sb2;
+}
+
+.prt-sb3 {
+    container-name: prt-sb3;
+    grid-area: prt-sb3;
+}
+
+.prt-sb4 {
+    container-name: prt-sb4;
+    grid-area: prt-sb4;
+}
+
+/*
+ * ************************ END Aufarbeitung ShowBox ******** *
+ */
+
+/*
+ * ************************ START Aufarbeitung Navigator ******** *
+ */
+.prt-to-navigation {
+    display: grid;
+}
+
+.prt-nav-active {
+    display: grid;
+}
+
+.prt-nav-inactive {
+    display: none;
+}
+
+.prt-navigation, .prt-nav1, .prt-nav2, .prt-nav3, .prt-nav4 {
+    container-type: inline-size;
+}
+
+.prt-nav-header {
+
+}
+
+.prt-nav-footer {
+
+}
+
+.prt-navigation {
+    container-name: prt-navigation;
+    grid-area: navigation;
+}
+
+.prt-nav1 {
+    container-name: prt-nav1;
+    grid-area: navigation_1;
+}
+
+.prt-nav2 {
+    container-name: prt-nav2;
+    grid-area: navigation_2;
+}
+
+.prt-nav3 {
+    container-name: prt-nav3;
+    grid-area: navigation_3;
+}
+
+.prt-nav4 {
+    container-name: prt-nav4;
+    grid-area: navigation_4;
+}
+
+/*
+ * ************************ END Aufarbeitung Navigator ******** *
+ */
+
+/*
+ * ************************ START Aufarbeitung ToolBox ******** *
+ */
+
+.prt-to-toolbox {
+    display: grid;
+}
+
+.prt-tlb-active {
+    display: grid;
+}
+
+.prt-tlb-inactive {
+    display: none;
+}
+
+.prt-toolBox {
+    container-type: inline-size;
+    container-name: prt-toolbox;
+    grid-area: toolbox;
+}
+
+.prt-tlb1 {
+    container-name: prt-tlb1;
+    grid-area: toolbox_1;
+}
+
+.prt-tlb2 {
+    container-name: prt-tlb2;
+    grid-area: toolbox_2;
+}
+
+.prt-tlb3 {
+    container-name: prt-tlb3;
+    grid-area: toolbox_3;
+}
+
+.prt-tlb4 {
+    container-name: prt-tlb4;
+    grid-area: toolbox_4;
+}
+
+/*
+ * ************************ END Aufarbeitung ToolBox ******** *
+ */

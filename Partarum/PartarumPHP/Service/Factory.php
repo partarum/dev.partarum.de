@@ -1,5 +1,5 @@
 <?php
-namespace Partarum\Service {
+namespace Partarum\PartarumPHP\Service {
 
     use Partarum\Cache\WorkerMap;
     use Partarum\Service\Binary\FlagWorker;
@@ -47,9 +47,7 @@ namespace Partarum\Service {
 
         }
 
-        public
-
-        private static function setMap(){
+        public static function setMap(){
 
             self::$map = new WeakMap();
 

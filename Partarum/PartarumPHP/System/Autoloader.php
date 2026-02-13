@@ -11,6 +11,7 @@ namespace Partarum\System {
     
     use Exception;
     use RuntimeException;
+    use SplFileObject;
     use stdClass;
     use Partarum\System\Root as Root;
     use Partarum\System\AutoloadObject;
@@ -35,12 +36,13 @@ namespace Partarum\System {
 
         private static ?string $partarumRootPath = NULL;
 
+        /**
+         * @throws Exception
+         */
         public static function autoload($class) : void {
 
-            /*
-            echo "<br> class = ".$class;
-            echo "</br>".$_SERVER["DOCUMENT_ROOT"];
-            */
+
+            //echo "\n class = $class \n";
 
             (self::$baseSettled === false) && self::setBase();
 
@@ -55,16 +57,38 @@ namespace Partarum\System {
 
                 $cleanFilename = str_replace("//", "/", $fileName);
 
-                //echo PHP_EOL . "Start:". PHP_EOL . "clenFilename = " . $cleanFilename . PHP_EOL . "End" . PHP_EOL;
+                // TODO: Prüfung einbauen, ob User überhaupt berechtigt ist, den Pfad aufzurufen
 
-                if(file_exists($cleanFilename)) {
+                if($cleanFilename !== "/.php") {
 
-                    require_once $cleanFilename;
+                    try {
+
+                        try {
+
+                            $testFileObject_1 = new SplFileObject($cleanFilename, "r");
+
+                            if(file_exists($cleanFilename)) {
+
+                                require_once $cleanFilename;
+                            }
+
+                        } catch(FileException $fex) {
+
+                            //var_dump($fex);
+                            //$allowedPaths = explode(':', ini_get('open_basedir'));
+                            //var_dump($allowedPaths);
+                        }
+
+                    } catch(Exception $ex) {
+
+                        //var_dump($ex);
+
+                    }
                 } else {
 
-                    echo "not found";
+                    //echo "\n filename: $fileName \n \n";
+                    //echo PHP_EOL . "Start:". PHP_EOL . "cleanFilename = " . $cleanFilename . PHP_EOL . "End" . PHP_EOL;
                 }
-
             } else {
 
                 throw new Exception("Error");

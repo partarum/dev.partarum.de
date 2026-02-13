@@ -1,5 +1,6 @@
 {
   "Partarum/PartarumWorkspace/surface/import": "Partarum/PartarumWorkspace/public/surface/surface-import.js",
+  "Partarum/Workspace/surface/import": "Partarum/PartarumWorkspace/public/surface/surface-import.js",
   "Partarum/Workspace/surface/landingPage/header": "Partarum/PartarumWorkspace/public/surface/pages/workspacePage/header/header.js",
   "Partarum/Workspace/surface/landingPage/aside": "Partarum/PartarumWorkspace/public/surface/pages/workspacePage/aside/aside.js",
   "Partarum/Workspace/surface/landingPage/main": "Partarum/PartarumWorkspace/public/surface/pages/workspacePage/main/main.js",

@@ -1,4 +1,9 @@
 {
+  "app": "Partarum/PartarumWorkspace/app/authPage.php",
+  "dashboard": "Partarum/PartarumWorkspace/app/dashboard.php",
+  "css": "Partarum/PartarumWorkspace/public/assets/css/workspace.css",
+  "dashboardJS": "Partarum/PartarumWorkspace/public/assets/js/plainPHP/landingPage.js",
+  "import": "Partarum/PartarumWorkspace/public/surface/surface-import.js",
   "Partarum/Workspace": "Partarum/PartarumWorkspace/app/authPage.php",
   "Partarum/PartarumWorkspace/css": "Partarum/PartarumWorkspace/public/assets/css/workspace.css",
   "Partarum/PartarumWorkspace/WorkspacePage": "Partarum/PartarumWorkspace/public/assets/js/plainPHP/landingPage.js",

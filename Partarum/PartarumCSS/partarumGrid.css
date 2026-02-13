@@ -1,0 +1,270 @@
+:root {
+    --prt-area-rows: none;
+    --prt-area-columns: none;
+    --prt-area: none;
+
+    --prt-area-width: none;
+    --prt-area-height: none;
+
+    --prt-area-margin: none;
+}
+
+.prt-area {
+    display: grid;
+
+    grid-template-rows: var(--prt-area-rows);
+    grid-template-columns: var(--prt-area-columns);
+    grid-template-areas: var(--prt-area);
+
+    width: var(--prt-area-width);
+    height: var(--prt-area-height);
+
+    margin: var(--prt-area-margin);
+
+    container-type:  inline-size;
+    container-name: prt-area;
+}
+
+.prt-a0, .prt-a1, .prt-a2, .prt-a3, .prt-a4 {
+    container-type: inline-size;
+}
+
+.prt-a0 {
+    container-name: prt-a0;
+}
+
+.prt-a1 {
+    container-name: prt-a1;
+    grid-area: prt-a1;
+}
+
+.prt-a2 {
+    container-name: prt-a2;
+    grid-area: prt-a2;
+}
+
+.prt-a3 {
+    container-name: prt-a3;
+    grid-area: prt-a3;
+}
+
+.prt-a4 {
+    container-name: prt-a4;
+    grid-area: prt-a4;
+}
+
+.prt-cont {
+    display: grid;
+}
+
+.prt-c0,.prt-c1, .prt-c2, .prt-c3, .prt-c4, .prt-c5 {
+    container-type: inline-size;
+}
+
+.prt-c0 {
+    container-name: prt-c0;
+}
+
+.prt-c1 {
+    container-name: prt-c1;
+    grid-area: prt-c1;
+}
+
+.prt-c2 {
+    container-name: prt-c2;
+    grid-area: prt-c2;
+}
+
+.prt-c3 {
+    container-name: prt-c3;
+    grid-area: prt-c3;
+}
+
+.prt-c4 {
+    container-name: prt-c4;
+    grid-area: prt-c4;
+}
+
+.prt-box {
+    display: grid;
+}
+
+.prt-b0, .prt-b1, .prt-b2, .prt-b3, .prt-b4, .prt-b5 {
+    container-type: inline-size;
+}
+
+.prt-b0 {
+    container-name: prt-b0;
+}
+
+.prt-b1 {
+    container-name: prt-b1;
+    grid-area: prt-b1;
+}
+
+.prt-b2 {
+    container-name: prt-b2;
+    grid-area: prt-b2;
+}
+
+.prt-b3 {
+    container-name: prt-b3;
+    grid-area: prt-b3;
+}
+
+.prt-b4 {
+    container-name: prt-b4;
+    grid-area: prt-b4;
+}
+
+.prt-form {
+    display: grid;
+}
+
+.prt-f0, .prt-f1, .prt-f2, .prt-f3, .prt-f4 {
+    container-type: inline-size;
+}
+
+.prt-f0 {
+    container-name: prt-f0;
+}
+
+.prt-f1 {
+    container-name: prt-f1;
+    grid-area: prt-f1;
+}
+
+.prt-f2 {
+    container-name: prt-f2;
+    grid-area: prt-f2;
+}
+
+.prt-f3 {
+    container-name: prt-f3;
+    grid-area: prt-f3;
+}
+
+.prt-f4 {
+    container-name: prt-f4;
+    grid-area: prt-f4;
+}
+
+.prt-fieldset {
+    display: grid;
+}
+
+.prt-fs-0, .prt-fs1, .prt-fs2, .prt-fs3, .prt-fs4 {
+    container-type: inline-size;
+}
+
+.prt-fs0 {
+    container-name: prt-fs0;
+}
+
+.prt-fs1 {
+    container-name: prt-fs1;
+    grid-area: prt-fs1;
+}
+
+.prt-fs2 {
+    container-name: prt-fs2;
+    grid-area: prt-fs2;
+}
+
+.prt-fs3 {
+    container-name: prt-fs3;
+    grid-area: prt-fs3;
+}
+
+.prt-fs4 {
+    container-name: prt-fs4;
+    grid-area: prt-fs4;
+}
+
+.prt-showContainer {
+    display: none;
+}
+
+.prt-showContainer:has(.prt-sb-active) {
+    display: grid;
+}
+
+.prt-sc-active {
+    display: grid;
+}
+
+.prt-sc-inactive {
+    display: none;
+}
+
+.prt-sc-form {
+    display: grid;
+}
+
+.prt-area:has(.prt-sb-active) .prt-sc-form {
+    display: none;
+}
+
+.prt-sc0, .prt-sc1, .prt-sc2, .prt-sc3, .prt-sc4 {
+
+}
+
+.prt-sc0 {
+
+}
+
+.prt-sc1 {
+
+}
+
+.prt-sc2 {
+
+}
+
+.prt-sc3 {
+
+}
+
+.prt-sc4 {
+
+}
+
+.prt-showBox {
+
+}
+
+.prt-sb-active {
+    display: grid;
+}
+
+.prt-sb-inactive {
+    display: none;
+}
+
+.prt-sb0, .prt-sb1, .prt-sb2, .prt-sb3, .prt-sb4 {
+    container-type: inline-size;
+}
+
+.prt-sb0 {
+    container-name: prt-sb0;
+}
+
+.prt-sb1 {
+    container-name: prt-sb1;
+    grid-area: prt-sb1;
+}
+
+.prt-sb2 {
+    container-name: prt-sb2;
+    grid-area: prt-sb2;
+}
+
+.prt-sb3 {
+    container-name: prt-sb3;
+    grid-area: prt-sb3;
+}
+
+.prt-sb4 {
+    container-name: prt-sb4;
+    grid-area: prt-sb4;
+}

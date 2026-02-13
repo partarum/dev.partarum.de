@@ -1,140 +1,198 @@
+@import url("/Partarum/PartarumCSS/SingleBoxCenter/small/root.css");
+
+:root {
+    --ratio: var(--ratio1_1);
+
+    --linearScale: var(--linearScale1_1);
+
+    --ratio-small-padding_fn: calc(calc(100vw - calc(100vw / var(--ratio))) / var(--linearScale));
+    --ratio-small-child_width_fn: calc(100vw - calc(calc(calc(100vw - calc(100vw / var(--ratio))) / var(--ratio-small)) * 2));
+
+    /*
+    --ratio-medium-padding_fn: calc(calc(100vw - calc(100vw / var(--ratio))) / var(--ratio-medium));
+    --ratio-medium-child_width_fn: calc(100vw - calc(var(--ratio-medium-padding_fn) * var(--linearScale)));
+
+    --ratio-large-padding_fn: calc(calc(100vw - calc(100vw / var(--ratio))) / var(--ratio-large));
+    --ratio-large-child_width_fn: calc(100vw - calc(var(--ratio-large-padding_fn) * var(--linearScale)));
+
+     */
+
+    /*
+    --ratio-test-child_width_fn: calc(1690 - calc(calc(calc(1690 - calc(1690 / 1.9)) / 1.5) * 1.404));
+    --ratio-test-child_width_fn_2: calc(1690 - calc(calc(calc(1690 - 889.47) / 1.5) * 1.404));
+    --ratio-test-child_width_fn_3: calc(1690 - calc(calc(800.53 / 1.5) * 1.404));
+    --ratio-test-child_width_fn_4: calc(1690 - calc(533.68 * 1.404));
+    --ratio-test-child_width_fn_5: calc(1690 - 749.28);
+    --ratio-test-child_width_fn_6: 940,72;
+
+     */
+
+}
+
+.single-box-center-small {
+
+    padding: 0 var(--ratio-small-padding_fn);
+}
+
+.single-box-center-small > :nth-child(1n+0){
+
+    /*
+    width: var(--ratio-small-child_width_fn);
+
+     */
+}
+
 @media only screen and (min-width: 601px) and (max-width: 725px){
 
-    .single-box-center-small {
+    :root {
+        --ratio: var(--ratio1_1);
 
-        padding: 0 var(--ratio1_1_small);
+        --linearScale: var(--linearScale1_1);
     }
+
 }
 
 @media only screen and (min-width: 726px) and (max-width: 850px){
 
-    .single-box-center-small {
+    :root {
+        --ratio: var(--ratio1_2);
 
-        padding: 0 var(--ratio1_2_small);
+        --linearScale: var(--linearScale1_2);
     }
+
 }
 
 @media only screen and (min-width: 851px) and (max-width: 975px){
 
-    .single-box-center-small {
+    :root {
+        --ratio: var(--ratio1_3);
 
-        padding: 0 var(--ratio1_3_small);
+        --linearScale: var(--linearScale1_3);
     }
+
 }
 
 @media only screen and (min-width: 976px) and (max-width: 1100px){
 
-    .single-box-center-small {
+    :root {
+        --ratio: var(--ratio1_4);
 
-        padding: 0 var(--ratio1_4_small);
+        --linearScale: var(--linearScale1_4);
     }
+
 }
 
 @media only screen and (min-width: 1101px) and (max-width: 1225px){
 
-    .single-box-center-small {
+    :root {
+        --ratio: var(--ratio1_5);
 
-        padding: 0 var(--ratio1_5_small);
+        --linearScale: var(--linearScale1_5);
     }
+
 }
 
 @media only screen and (min-width: 1226px) and (max-width: 1350px){
 
-    .single-box-center-small {
+    :root {
+        --ratio: var(--ratio1_6);
 
-        padding: 0 var(--ratio1_6_small);
+        --linearScale: var(--linearScale1_6);
     }
 }
 
 @media only screen and (min-width: 1351px) and (max-width: 1475px){
+    :root {
+        --ratio: var(--ratio1_7);
 
-    .single-box-center-small {
-
-        padding: 0 var(--ratio1_7_small);
+        --linearScale: var(--linearScale1_7);
     }
 }
 
 @media only screen and (min-width: 1476px) and (max-width: 1600px){
+    :root {
+        --ratio: var(--ratio1_8);
 
-    .single-box-center-small {
-
-        padding: 0 var(--ratio1_8_small);
+        --linearScale: var(--linearScale1_8);
     }
 }
 
 @media only screen and (min-width: 1601px) and (max-width: 1725px){
+    :root {
+        --ratio: var(--ratio1_9);
 
-    .single-box-center-small {
-
-        padding: 0 var(--ratio1_9_small);
+        --linearScale: var(--linearScale1_9);
     }
 }
 
 @media only screen and (min-width: 1726px) and (max-width: 1850px){
+    :root {
+        --ratio: var(--ratio2_0);
 
-    .single-box-center-small {
-
-        padding: 0 var(--ratio2_0_small);
+        --linearScale: var(--linearScale2_0);
     }
 }
 
 @media only screen and (min-width: 1851px) and (max-width: 1975px){
+    :root {
+        --ratio: var(--ratio2_1);
 
-    .single-box-center-small {
-
-        padding: 0 var(--ratio2_1_small);
+        --linearScale: var(--linearScale2_1);
     }
 }
 
 @media only screen and (min-width: 1976px) and (max-width: 2100px){
+    :root {
+        --ratio: var(--ratio2_2);
 
-    .single-box-center-small {
-
-        padding: 0 var(--ratio2_2_small);
+        --linearScale: var(--linearScale2_2);
     }
 }
 
 @media only screen and (min-width: 2101px) and (max-width: 2225px){
+    :root {
+        --ratio: var(--ratio2_3);
 
-    .single-box-center-small {
-
-        padding: 0 var(--ratio2_3_small);
+        --linearScale: var(--linearScale2_3);
     }
 }
 
 @media only screen and (min-width: 2226px) and (max-width: 2350px){
+    :root {
+        --ratio: var(--ratio2_4);
 
-    .single-box-center-small {
-
-        padding: 0 var(--ratio2_4_small);
+        --linearScale: var(--linearScale2_4);
     }
 }
 
 @media only screen and (min-width: 2351px) and (max-width: 2475px){
+    :root {
+        --ratio: var(--ratio2_5);
 
-    .single-box-center-small {
-
-        padding: 0 var(--ratio2_5_small);
+        --linearScale: var(--linearScale2_5);
     }
 }
 
 @media only screen and (min-width: 2476px) and (max-width: 2600px){
+    :root {
+        --ratio: var(--ratio2_6);
 
-    .single-box-center-small {
-
-        padding: 0 var(--ratio2_6_small);
+        --linearScale: var(--linearScale2_6);
     }
 }
 
 @media only screen and (min-width: 2600px){
+    :root {
+        --ratio: var(--ratio2_5);
 
-    .single-box-center-small {
-
-        padding: 0 var(--ratio2_5_small);
+        --linearScale: var(--linearScale2_5);
     }
 }
 
 @media only screen and (max-width:600px){
+    :root {
+
+    }
 
     .single-box-center {
         padding: 0 5vw;
