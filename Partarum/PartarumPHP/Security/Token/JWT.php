@@ -7,6 +7,10 @@ namespace Partarum\Security\Token {
 
         public JWTObject $object;
 
+        /*
+         *  HS256 for secret key
+         *  RS256 for privat 
+         */
         private $hash;
 
 
@@ -14,7 +18,7 @@ namespace Partarum\Security\Token {
 
             $this->object = new JWTObject();
 
-            $this->object->setHeader("jwt", "sha256");
+            $this->object->setHeader("HS256", "sha256");
 
         }
 

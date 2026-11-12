@@ -46,7 +46,15 @@ namespace Partarum\Security\Token {
 
         public function setPayload($payload){
 
-            foreach($payload as $key => $value){
+            $payloadArray = [];
+
+            if(!is_array($payload)) {
+                $payloadArray[] = $payload;
+            } else {
+                $payloadArray = $payload;
+            }
+
+            foreach($payloadArray as $key => $value){
 
                 $this->payload->$key = $value;
             }
@@ -56,7 +64,7 @@ namespace Partarum\Security\Token {
 
             try {
 
-                return json_encode($this->payload, JSON_THROW_ON_ERROR);
+                return json_encode($this->payload->getAll(), JSON_THROW_ON_ERROR);
 
             } catch(JsonException $e){
 
@@ -70,7 +78,9 @@ namespace Partarum\Security\Token {
 
             $this->signature->setHeader($this->getHeader());
 
-            $this->signature->setPayload($this->getPayload());
+            $payload = $this->getPayload();
+
+            $this->signature->setPayload($payload);
 
             $this->signature->setSecretKey($this->secretKey);
 

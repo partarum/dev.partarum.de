@@ -1,9 +1,10 @@
 <?php
-namespace Partarum\HTTP\Response {
+namespace Partarum\PartarumPHP\HTTP\Response {
 
     use Partarum\HTTP\Header;
     use Partarum\HTTP\Header\Entity;
     use Partarum\HTTP\HeaderObject;
+    use Partarum\HTTP\Response\BodyObject;
 
     class Channel {
 
@@ -49,7 +50,9 @@ namespace Partarum\HTTP\Response {
             $this->bodyObject->addBody($body);
         }
 
-        public function open(){
+        public function open($status = 200){
+
+            http_response_code($status);
 
             $this->headerObject->setHeader();
 

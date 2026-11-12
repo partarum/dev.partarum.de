@@ -1,0 +1,29 @@
+{
+  "name": "erhebung-projekt",
+  "version": "1.0.0",
+  "description": "Beschreibung deines Erhebung-Projekts",
+  "scripts": {
+    "sass:common:dev": "sass public/assets/scss/main.scss:public/assets/css/common.css --style=expanded --source-map",
+    "sass:pages:dev": "sass public/assets/scss/pages:public/assets/css/pages --style=expanded --source-map",
+    "sass:themes:dev": "sass public/assets/scss/themes:public/assets/css/themes --style=expanded --source-map",
+    "compile:css:dev": "npm-run-all --parallel sass:common:dev sass:pages:dev sass:themes:dev",
+
+    "sass:common:prod": "sass public/assets/scss/main.scss:public/assets/css/common.css --style=compressed",
+    "sass:pages:prod": "sass public/assets/scss/pages:public/assets/css/pages --style=compressed",
+    "sass:themes:prod": "sass public/assets/scss/themes:public/assets/css/themes --style=compressed",
+    "compile:css:prod": "npm-run-all --parallel sass:common:prod sass:pages:prod sass:themes:prod",
+
+    "postcss:css": "postcss public/assets/css/**/*.css --use autoprefixer --dir public/assets/css --replace",
+
+    "build": "npm run compile:css:prod && npm run postcss:css",
+    "dev": "npm run compile:css:dev && npm run postcss:css",
+
+    "watch:sass": "sass --watch public/assets/scss:public/assets/css --style=expanded --source-map"
+  },
+  "devDependencies": {
+    "sass": "^1.86.3",
+    "npm-run-all": "^4.1.5",
+    "postcss-cli": "^11.0.0",
+    "autoprefixer": "^10.4.19"
+  }
+}

@@ -5,11 +5,14 @@
  *            Email: email@alexander-bombis.de
  */
 
-namespace Partarum\HTTP\Request {
+namespace Partarum\PartarumPHP\HTTP\Request {
 
+    use JsonException;
     use Partarum;
     use Partarum\HTTP\Request\Material\Extension;
     use Partarum\HTTP\Request\Routes\Manifest;
+    use PHPMailer\PHPMailer\Exception;
+    use Predis\Client;
 
     /**
      * Class Router
@@ -30,9 +33,9 @@ namespace Partarum\HTTP\Request {
         public string $uri;
 
         /**
-         * @var string
+         * @var null | string
          */
-        public string $realURL;
+        public null | string $realURL = NULL;
 
 
         /**
@@ -55,6 +58,10 @@ namespace Partarum\HTTP\Request {
         private ?array $cacheTime;
 
         private int $type = Partarum::DOCUMENT;
+
+        private Client $redis;
+
+        private array $idInfo;
 
 
         /*
@@ -81,9 +88,16 @@ namespace Partarum\HTTP\Request {
          *
          * @param string|null $uri
          */
-        public function __construct(?string $uri = NULL){
+        public function __construct( Client $redis, array $idInfo, ?string $uri = NULL){
+
+            $this->redis = $redis;
+
+            $this->idInfo = $idInfo;
 
             $this->root = (!defined("PARTARUM_PLUGIN_PATH")) ? ROOT  : PARTARUM_PLUGIN_PATH ;
+
+
+            //echo $uri . PHP_EOL;
 
             if(isset($uri)) {
                 $this->setBase($uri);
@@ -96,7 +110,11 @@ namespace Partarum\HTTP\Request {
 
             $this->realURL = Manifest::getRealUrl($this->uri, $this->type);
 
-           // echo "<p>$this->realURL</p>";
+            /*
+            echo "\n setBase: ";
+            echo $this->type . "\n";
+            echo "$this->realURL \n";
+            */
 
             if(is_string($this->realURL)) {
 
@@ -135,6 +153,11 @@ namespace Partarum\HTTP\Request {
          */
         public function goDev(): void {
 
+            /*
+            echo $this->realURL;
+            echo "================================ \n================================";
+            echo $this->extension;
+            */
             Extension::action($this->realURL, $this->extension);
         }
 
@@ -146,42 +169,115 @@ namespace Partarum\HTTP\Request {
             ((isset($cacheTime)) || (isset($this->cacheTime))) && Extension::action($this->realURL, $this->extension, $cacheTime ?? $this->cacheTime);
         }
 
+        public static function getRoutingKey(string $uriPath, $idInfo): string {
+
+            $uri = $uriPath;
+
+            if($uriPath !== "/"){
+                $uri = ltrim($uriPath, "/");
+            }
+
+            //echo "uri: $uri \n";
+
+            $explodedUri = explode("/", $uri);
+
+            //echo "start with partarum: " . $explodedUri[0] . " \n";
+
+            return ($explodedUri[0] === "Partarum") ? $idInfo["partarumKey"] . ":routes:" . $uri : $idInfo["idKey"] . ":routes:" . $uri;
+        }
+
         /**
          * @param string|null $uri
          *
          * @return bool
          */
 
-        public function with(?string $uri) : bool {
+        public function with(string $uriPath = "Partarum/error.php") : void {
 
-            //echo "<p>$uri</p>";
 
-             if(isset($uri)){
-                 if($this->setBase($uri) === TRUE) {
+            // es wird noch nicht zwischen ::user: und ::partarum: unterschieden
 
-                     switch ($this->modus) {
-                         case self::MODUS_PUBLIC:
-                             $this->goPublic();
-                             break;
-                         case self::MODUS_DEV :
-                             $this->goDev();
-                             break;
-                         default:
-                             $this->goPublic();
-                     }
+            $routingKey = self::getRoutingKey($uriPath, $this->idInfo);
 
-                     return TRUE;
-                 }
-                 return FALSE;
-             }
-             return FALSE;
+            $routingURL = $this->redis->get($routingKey);
 
+            $this->realURL = ROOT . $this->redis->get($routingKey) ?? "Partarum/error.php";
+
+            /*
+            echo "<pre>";
+            var_dump($this->idInfo);
+
+            echo "uriPath: $uriPath \n";
+            echo "key: $routingKey \n";
+            echo "url: $routingURL \n";
+            echo "realURL: $this->realURL \n";
+            */
+
+            $this->extension = self::getExtension($this->realURL);
+
+            switch ($this->modus) {
+                case self::MODUS_PUBLIC:
+                    $this->goPublic();
+                    break;
+                case self::MODUS_DEV :
+                    $this->goDev();
+                    break;
+                default:
+                    $this->goPublic();
+            }
         }
 
 
-        public static function addRouter(string $name, string $manifestPath): void {
+        public static function addRouter(string | NULL $name, string | array $manifestPath, Client $redis, array &$idInfo): void {
 
-            Manifest::addUserRouter($name, $manifestPath);
+            /*
+             *Hier wird der User Router mitgeteilt
+             */
+
+            echo "addRouter: $name \n";
+            echo "manifestPath:  \n";
+            echo "<pre>";
+            var_dump($manifestPath);
+            var_dump($idInfo);
+
+            $idKey = $idInfo["idKey"];
+
+            $partarumKey = $idInfo["partarumKey"];
+
+            $userManifests = $idInfo["manifests"];
+
+            $manifestArray = (is_array($manifestPath)) ? $manifestPath : [$manifestPath];
+
+            foreach($manifestArray as $key => $value) {
+
+                if(!in_array($value, $userManifests)) {
+
+                    $idInfo["manifests"][] = $value;
+
+
+                    $json = file_get_contents($value);
+
+                    $config = json_decode($json, true);
+
+                    foreach ($config as $route => $path) {
+
+                        $routingKey = self::getRoutingKey(((is_string($name)) && (strlen($name) > 0)) ? $name . SLASH . $route : $route, $idInfo);
+
+                        echo "routingKey: $routingKey  --- path: $path \n";
+
+                        $redis->set($routingKey, $path);
+                    }
+
+                    echo "<pre>";
+                    var_dump($idInfo);
+
+                    $redis->set($idKey, json_encode($idInfo));
+                }
+            }
+
+
+            // TODO: Das ganze dann noch auf Manifest entsprechend auslagern
+            // ! der alte Aufruf -> Manifest::addUserRouter($name, $manifestPath, PARTARUM_PROXY_MANIFEST);
         }
 
         /**

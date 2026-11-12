@@ -4,9 +4,12 @@
  *            Developed by Alexander Bombis.
  *            Email: email@alexander-bombis.de
  */
-namespace Partarum\HTTP\Request\Routes {
+namespace Partarum\PartarumPHP\HTTP\Request\Routes {
 
     use Partarum;
+    use Partarum\HTTP\Request\Routes\ManifestPartarum;
+    use Partarum\HTTP\Request\Routes\ManifestProxy;
+    use Partarum\HTTP\Request\Routes\ManifestRoots;
     use stdClass;
 
     class Manifest {
@@ -20,6 +23,8 @@ namespace Partarum\HTTP\Request\Routes {
         protected int $type;
 
         public static null | object $userManifest;
+
+        public static null | array $partarum_proxy_manifest;
 
         public function __construct(){
 
@@ -54,10 +59,15 @@ namespace Partarum\HTTP\Request\Routes {
             //var_dump($uri);
 
 
+            echo "Manifest:getManifest: \n";
+            echo "uri: " . $uri . "\n";
+            echo "type: " . $type . "\n";
 
             switch($type){
 
                 case Partarum::PROXY:
+
+                    echo "PartarumProxy \n";
 
                     Partarum::$proxyRoutes[] = $uri;
 
@@ -76,10 +86,10 @@ namespace Partarum\HTTP\Request\Routes {
 
             $this->uriArray = explode("/", $needleURI);
 
-            /*
+            echo "this uriArray: " . count($this->uriArray) . "\n";
             echo "<pre>";
             print_r($this->uriArray);
-            */
+
 
             if((count($this->uriArray) > 2) && ($this->uriArray[1] === $this->uriArray[2])){
                 array_splice($this->uriArray, 1, 1);
@@ -88,9 +98,52 @@ namespace Partarum\HTTP\Request\Routes {
 
             if((count($this->uriArray) > 1) && (array_filter($this->uriArray, static fn($val) => (($val === "Partarum") || ($val === "PartarumJS"))))){
 
-                //echo "Partarum<br>";
+                echo "test if Partarum \n";
 
-                $getManifestPath = $this->manifestPartarum();
+                /*
+                 *  Partarum::PROXY fehlt hier, da der Path für den Workspace in der partarum-manifest.json ist
+                 *
+                 *  Welche Möglichkeiten habe ich um auf das Routing zu kommen, ohne weiter auf den Workspace hier einzugehen?
+                 *
+                 *  1. Der Type - Partarum::PROXY
+                 *  2. Das PARTARUM_PROXY_MANIFEST - ist allerdings im normalen Routing nicht angegeben
+                 *  3. PARTARUM_PROXY_IN_USE - alle bis jetzt registrierten baseRoutes + Inhalt von PARTARUM_PROXY_MANIFEST - ist allerdings auch nur gültig, wenn gerade registriert wird
+                 *  4. Partarum::$proxyInUse - alle bis jetzt regustrierten baseRoutes wie in PARTARUM_PROXY_IN_USE - überall verwendbar
+                 *
+                 *  Problem:
+                 * ! Wenn ein zusätzlicher Routingordner hinter PARTARUM_PROXY_MANIFEST["baseRoute"] erscheint - wird es als ganz normales Partarum - Routing betrachtet
+                 */
+
+                if(defined('PARTARUM_PROXY_PATH')){
+                echo "partarum_proxy_path: " . PARTARUM_PROXY_PATH . "\n";
+                }
+
+                echo "partarum:proxyInUse - array_keys: \n";
+                echo "<pre>";
+                var_dump(array_keys(Partarum::$proxyInUse));
+
+
+                $getManifestPath = "";
+
+                if(defined('PARTARUM_PROXY_MANIFEST')){
+
+                    echo "<pre>";
+                    var_dump(array_intersect_assoc($this->uriArray, PARTARUM_PROXY_MANIFEST["uriArray"]));
+
+                    $getManifestPath = $this->manifestProxy();
+
+                } /*else {
+
+                    if($type === Partarum::PROXY){
+
+                    } else {
+
+                    }
+                }*/
+
+
+
+                $getManifestPath = ($type === Partarum::PROXY) ? $this->manifestProxy() : $this->manifestPartarum();
 
                 /*
                 echo "<pre>";
@@ -178,7 +231,9 @@ namespace Partarum\HTTP\Request\Routes {
 
         protected function manifestProxy() : string {
 
-            return ManifestProxy::getPath($this->uriArray);
+            ($this->uriArray[0] !== "") && array_unshift($this->uriArray, "");
+
+            return ManifestProxy::getPath($this->uriArray, self::$userManifest);
         }
 
         protected function manifestPlugin(){
@@ -188,7 +243,15 @@ namespace Partarum\HTTP\Request\Routes {
 
         public static function getRealUrl(string $uri, int $type = Partarum::DOCUMENT): null | string {
 
+            echo "uri: " . $uri . "\n";
+
+            echo "type: " . $type . "\n";
+
             $manifest =  (new Manifest)->getManifest($uri, $type);
+
+            echo "Manifest:getRealUrl: \n";
+            echo "<pre>";
+            print_r($manifest);
 
             $urlFromManifest =  (count($manifest["uriArray"]) > 1) ? implode("/", array_slice($manifest["uriArray"], 0)) : $manifest["uriArray"][0]; //offset 1
 
@@ -215,11 +278,16 @@ namespace Partarum\HTTP\Request\Routes {
             self::$userManifest = new stdClass();
         }
 
-        public static function addUserRouter( string $name, string $path) : void {
+        public static function addUserRouter( string $name, string $path, array $proxyManifest) : void {
 
             (!isset(self::$userManifest)) && self::setUserObject();
 
             self::$userManifest->{$name} = $path;
+
+            echo "Manifest:addUserRouter: \n";
+            echo "<pre>";
+            print_r(self::$userManifest);
+            print_r($proxyManifest);
         }
 
     }

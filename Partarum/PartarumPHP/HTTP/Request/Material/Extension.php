@@ -4,7 +4,9 @@
  *            Developed by Alexander Bombis.
  *            Email: email@alexander-bombis.de
  */
-namespace Partarum\HTTP\Request\Material {
+namespace Partarum\PartarumPHP\HTTP\Request\Material {
+
+    use Partarum\HTTP\Request\Material\Headers;
 
     class Extension {
 
@@ -18,15 +20,22 @@ namespace Partarum\HTTP\Request\Material {
 
             $this->realURL = $realUrl;
 
-            // print_r("function constructor: realURL: " . $this->realURL);
-
             $this->cacheTime = $cacheTime;
 
             $this->headers = Headers::setHeader($ext);
 
             if($ext !== '') {
 
-                $this->{$ext}();
+//                print_r($ext);
+//                print_r("---------");
+//                print_r($realUrl);
+
+                if(method_exists($this, $ext)) {
+                    $this->{$ext}();
+                } else {
+                    http_response_code(404);
+                }
+
             }
         }
 
@@ -40,8 +49,6 @@ namespace Partarum\HTTP\Request\Material {
             $this->headers->setCacheControl("public", $this->cacheTime["js"] ?? null);
 
             $this->headers->setContentDisposition($this->realURL);
-
-            // print_r("function js: realURL: " . $this->realURL);
 
             readfile($this->realURL);
         }
@@ -66,7 +73,13 @@ namespace Partarum\HTTP\Request\Material {
 
         protected function php(): void {
 
-            require_once($this->realURL);
+
+            if (file_exists($this->realURL)) {
+                require_once($this->realURL);
+
+            } else {
+                http_response_code(404);
+            }
         }
 
         protected function zip(): void {
