@@ -1,7 +1,7 @@
 <?php
 namespace app\core\SurfaceExample {
 
-    use PartarumSurface\Stages\TransitionStageInterface;
+    use Partarum\PartarumSurface\Stages\TransitionStageInterface;
 
     enum SurfaceTransitionStage : string implements TransitionStageInterface {
 

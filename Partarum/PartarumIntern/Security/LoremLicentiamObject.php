@@ -1,5 +1,5 @@
 <?php
-namespace PartarumIntern\Security {
+namespace Partarum\PartarumIntern\Security {
 
     class LoremLicentiamObject {
 

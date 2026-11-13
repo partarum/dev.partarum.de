@@ -1,9 +1,9 @@
 <?php
-namespace Partarum\HTTP\Header {
+namespace Partarum\PartarumPHP\HTTP\Header {
 
-    use Partarum\HTTP\Header;
-    use Partarum\HTTP\Header\Entity\Allow;
-    use Partarum\HTTP\Header\Entity\ContentType;
+    use Partarum\PartarumPHP\HTTP\Header;
+    use Partarum\PartarumPHP\HTTP\Header\Entity\Allow;
+    use Partarum\PartarumPHP\HTTP\Header\Entity\ContentType;
 
     interface Entity {
 

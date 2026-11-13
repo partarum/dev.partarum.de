@@ -1,7 +1,7 @@
 <?php
 namespace app\core\SurfaceExample {
 
-    use PartarumSurface\Stages\FinalStageInterface;
+    use Partarum\PartarumSurface\Stages\FinalStageInterface;
 
     enum SurfaceFinalStage : string implements FinalStageInterface
     {

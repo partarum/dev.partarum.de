@@ -1,8 +1,8 @@
 <?php
-namespace PartarumCLI\v_a\System\Filesystem {
+namespace Partarum\PartarumCLI\v_a\System\Filesystem {
 
     use JsonException;
-    use Partarum\PartarumCLI\System\Root;
+    use Partarum\PartarumCLI\v_a\System\Root;
     use Partarum\PartarumPHP\Filesystem\Filesystem;
 
     class Create {

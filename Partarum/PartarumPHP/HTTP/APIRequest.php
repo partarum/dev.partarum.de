@@ -1,12 +1,12 @@
 <?php
-namespace Partarum\HTTP {
+namespace Partarum\PartarumPHP\HTTP {
 
 
     use ArrayIterator;
     use JsonException;
-    use Partarum\HTTP\Header\Entity\Allow;
-    use Partarum\HTTP\Request\REST;
-    use Partarum\Security\Token\UUID;
+    use Partarum\PartarumPHP\HTTP\Header\Entity\Allow;
+    use Partarum\PartarumPHP\HTTP\Request\REST;
+    use Partarum\PartarumPHP\Security\Token\UUID;
 
     class APIRequest {
 

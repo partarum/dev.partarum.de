@@ -1,5 +1,5 @@
 <?php
-namespace Partarum\HTTP\Request\Routes {
+namespace Partarum\PartarumPHP\HTTP\Request\Routes {
 
     class ManifestPartarum{
 

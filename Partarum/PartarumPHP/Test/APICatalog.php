@@ -1,14 +1,14 @@
 <?php
-namespace Partarum\Test {
+namespace Partarum\PartarumPHP\Test {
 
-    use Partarum\Design\TraidChain\Catalog;
-    use Partarum\Design\TraidChain\Category;
-    use Partarum\Design\TraidChain\Storage;
-    use Partarum\HTTP\Header;
-    use Partarum\HTTP\Header\Entity;
-    use Partarum\HTTP\Header\General;
-    use Partarum\HTTP\Header\Request;
-    use Partarum\HTTP\Header\Response;
+    use Partarum\PartarumPHP\Design\TraidChain\Catalog;
+    use Partarum\PartarumPHP\Design\TraidChain\Category;
+    use Partarum\PartarumPHP\Design\TraidChain\Storage;
+    use Partarum\PartarumPHP\HTTP\Header;
+    use Partarum\PartarumPHP\HTTP\Header\Entity;
+    use Partarum\PartarumPHP\HTTP\Header\General;
+    use Partarum\PartarumPHP\HTTP\Header\Request;
+    use Partarum\PartarumPHP\HTTP\Header\Response;
 
     class APICatalog extends Catalog {
         

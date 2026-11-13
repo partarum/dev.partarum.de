@@ -1,7 +1,7 @@
 <?php
 namespace app\core\SurfaceExample {
 
-    use PartarumSurface\Stages\SetupStageInterface;
+    use Partarum\PartarumSurface\Stages\SetupStageInterface;
 
     enum SurfaceSetupStage : string implements SetupStageInterface {
 

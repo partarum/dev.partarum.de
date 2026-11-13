@@ -1,5 +1,5 @@
 <?php
-namespace PartarumCLI\v_a\TCP {
+namespace Partarum\PartarumCLI\v_a\TCP {
 
     class WebSocketContext {
 

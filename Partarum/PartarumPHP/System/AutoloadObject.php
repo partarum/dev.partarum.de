@@ -1,5 +1,5 @@
 <?php
-namespace Partarum\System {
+namespace Partarum\PartarumPHP\System {
 
     use stdClass;
 

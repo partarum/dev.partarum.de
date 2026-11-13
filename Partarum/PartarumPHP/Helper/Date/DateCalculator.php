@@ -1,5 +1,5 @@
 <?php
-namespace Partarum\Helper\Date {
+namespace Partarum\PartarumPHP\Helper\Date {
 
     use Carbon\Carbon;
 

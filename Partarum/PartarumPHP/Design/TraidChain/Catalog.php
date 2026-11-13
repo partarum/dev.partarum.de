@@ -1,8 +1,8 @@
 <?php
-namespace Partarum\Design\TraidChain {
+namespace Partarum\PartarumPHP\Design\TraidChain {
 
     use ArrayObject;
-    use Partarum\Design\TraidChain\Category;
+    use Partarum\PartarumPHP\Design\TraidChain\Category;
     use ReflectionClass;
     use ReflectionException;
     use WeakMap;

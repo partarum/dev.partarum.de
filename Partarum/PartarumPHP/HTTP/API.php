@@ -11,14 +11,14 @@
  */
 namespace Partarum\PartarumPHP\HTTP {
 
-    use Partarum\HTTP\APIRequest;
-    use Partarum\HTTP\APIResponse;
-    use Partarum\HTTP\Data;
-    use Partarum\HTTP\Header;
-    use Partarum\HTTP\Header\Entity\Allow;
-    use Partarum\HTTP\Header\Entity;
-    use Partarum\HTTP\Request\REST;
-    use Partarum\Security\Token\UUID;
+    use Partarum\PartarumPHP\HTTP\APIRequest;
+    use Partarum\PartarumPHP\HTTP\APIResponse;
+    use Partarum\PartarumPHP\HTTP\Data;
+    use Partarum\PartarumPHP\HTTP\Header;
+    use Partarum\PartarumPHP\HTTP\Header\Entity\Allow;
+    use Partarum\PartarumPHP\HTTP\Header\Entity;
+    use Partarum\PartarumPHP\HTTP\Request\REST;
+    use Partarum\PartarumPHP\Security\Token\UUID;
 
     class API extends Header{
 

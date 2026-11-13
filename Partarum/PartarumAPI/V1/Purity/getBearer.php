@@ -4,17 +4,18 @@ ini_set("display_errors", "1");
 
 session_start();
 
-if(!class_exists('Partarum')){
+use Partarum\Partarum;
+use Partarum\PartarumPHP\HTTP\API;
+use Partarum\PartarumPHP\Security\Token\JWT;
+use Partarum\PartarumPHP\System\Autoloader;
+
+if(!class_exists(Partarum::class)){
     require_once $_SERVER["DOCUMENT_ROOT"] . "/Partarum/Partarum.php";
 }
 
-use Partarum\HTTP\API;
-use Partarum\Security\Token\JWT;
-use Partarum\System\Autoloader;
-
 $backend = new Partarum("getBearer");
 
-$backend->addAutoloader( ["PartarumIntern" => $_SERVER["DOCUMENT_ROOT"] . "/Partarum/PartarumIntern"], Autoloader::FOLDER);
+$backend->addAutoloader( ["Partarum\\PartarumIntern" => $_SERVER["DOCUMENT_ROOT"] . "/Partarum/PartarumIntern"], Autoloader::FOLDER);
 
 $api = new API();
 

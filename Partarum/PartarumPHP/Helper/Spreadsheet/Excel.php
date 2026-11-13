@@ -1,5 +1,5 @@
 <?php
-namespace Partarum\Helper\Spreadsheet {
+namespace Partarum\PartarumPHP\Helper\Spreadsheet {
 
     class Excel {
 

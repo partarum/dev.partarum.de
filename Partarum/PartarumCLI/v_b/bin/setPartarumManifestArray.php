@@ -1,7 +1,7 @@
 <?php
 require "../System/Root.php";
 
-use PartarumCLI\System\Root;
+use Partarum\PartarumCLI\v_b\System\Root;
 
 Root::setRootObject();
 
@@ -9,7 +9,7 @@ chdir(Root::$DOCUMENT_ROOT);
 
 require "Partarum/PartarumPHP/Filesystem/Filesystem.php";
 
-use Partarum\Filesystem\Filesystem;
+use Partarum\PartarumPHP\Filesystem\Filesystem;
 
 $fs = new Filesystem("Partarum/PartarumJS", Filesystem::RECURSIVE);
 

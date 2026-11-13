@@ -1,6 +1,6 @@
 <?php
 
-use Partarum\WebApp;
+use Partarum\PartarumPHP\WebApp;
 
 $app = new WebApp();
 

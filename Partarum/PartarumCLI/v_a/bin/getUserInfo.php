@@ -1,12 +1,12 @@
 <?php
 require_once "setRoot.php";
 
-require_once "Partarum/PartarumCLI/System/Base/Handle.php";
-require_once "Partarum/PartarumCLI/System/Base/User.php";
-require_once "Partarum/PartarumCLI/System/Base/UserType.php";
+require_once "Partarum/PartarumCLI/v_a/System/Base/Handle.php";
+require_once "Partarum/PartarumCLI/v_a/System/Base/User.php";
+require_once "Partarum/PartarumCLI/v_a/System/Base/UserType.php";
 
-use PartarumCLI\v_a\System\Base\Handle as System;
-use PartarumCLI\v_a\System\Base\UserType;
+use Partarum\PartarumCLI\v_a\System\Base\Handle as System;
+use Partarum\PartarumCLI\v_a\System\Base\UserType;
 
 $user = $argv[1] ?? null;
 

@@ -2,19 +2,19 @@
 
 require_once "setRoot.php";
 
-require_once "Partarum/PartarumCLI/System/Base/Handle.php";
-require_once "Partarum/PartarumCLI/System/Base/User.php";
-require_once "Partarum/PartarumCLI/System/Base/UserType.php";
+require_once "Partarum/PartarumCLI/v_a/System/Base/Handle.php";
+require_once "Partarum/PartarumCLI/v_a/System/Base/User.php";
+require_once "Partarum/PartarumCLI/v_a/System/Base/UserType.php";
 
-require_once "Partarum/PartarumCLI/System/Filesystem/Handle.php";
-require_once "Partarum/PartarumCLI/System/Filesystem/Folder.php";
-require_once "Partarum/PartarumCLI/System/Filesystem/FolderType.php";
+require_once "Partarum/PartarumCLI/v_a/System/Filesystem/Handle.php";
+require_once "Partarum/PartarumCLI/v_a/System/Filesystem/Folder.php";
+require_once "Partarum/PartarumCLI/v_a/System/Filesystem/FolderType.php";
 
-use PartarumCLI\v_a\System\Base\Handle as System;
-use PartarumCLI\v_a\System\Base\UserType;
-use PartarumCLI\v_a\System\Filesystem\Folder;
-use PartarumCLI\v_a\System\Filesystem\FolderType;
-use PartarumCLI\v_a\System\Filesystem\Handle as Filesystem;
+use Partarum\PartarumCLI\v_a\System\Base\Handle as System;
+use Partarum\PartarumCLI\v_a\System\Base\UserType;
+use Partarum\PartarumCLI\v_a\System\Filesystem\Folder;
+use Partarum\PartarumCLI\v_a\System\Filesystem\FolderType;
+use Partarum\PartarumCLI\v_a\System\Filesystem\Handle as Filesystem;
 
 var_dump(System::USER->read(UserType::CHECK));
 

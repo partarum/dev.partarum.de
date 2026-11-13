@@ -6,7 +6,7 @@ $port = $argv[2];
 
 echo getcwd() . "\n";
 
-$path = "Partarum/PartarumCLI/PartarumServer/Services/Websocket/Server/WebsocketServer_{$port}.php {$ip} {$port}";
+$path = "Partarum/PartarumCLI/v_b/PartarumServer/Services/Websocket/Server/WebsocketServer_{$port}.php {$ip} {$port}";
 
 $screenName = "socketServer_" . $port;
 

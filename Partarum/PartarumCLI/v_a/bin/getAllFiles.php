@@ -4,7 +4,7 @@ require "setRoot.php";
 require "Partarum/PartarumPHP/Filesystem/Filesystem.php";
 
 use Partarum\PartarumPHP\Filesystem\Filesystem;
-use Partarum\PartarumCLI\System\Root;
+use Partarum\PartarumCLI\v_a\System\Root;
 
 $fs = new Filesystem("./", Filesystem::RECURSIVE | Filesystem::DOCUMENT_ROOT);
 

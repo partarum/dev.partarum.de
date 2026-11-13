@@ -1,9 +1,9 @@
 <?php
-namespace Partarum\Document {
+namespace Partarum\PartarumPHP\Document {
 
     //use Partarum\TheOffice;
-    use Partarum\Document\FeatHTMLPage;
-    use Partarum\Document\{
+    use Partarum\PartarumPHP\Traits\Document\FeatHTMLPage;
+    use Partarum\PartarumPHP\Document\{
         HTMLgetEtc as HTMLgetEtc,
         HTMLDocument as HTMLDocument,
         HTMLSeries as HTMLSeries,

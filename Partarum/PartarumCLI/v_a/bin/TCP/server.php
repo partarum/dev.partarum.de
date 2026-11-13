@@ -2,10 +2,10 @@
 
 require "../setRoot.php";
 
-use PartarumCLI\v_a\System\Root;
-use PartarumCLI\v_a\TCP\WebSocket;
+use Partarum\PartarumCLI\v_a\System\Root;
+use Partarum\PartarumCLI\v_a\TCP\WebSocket;
 
-require Root::$DOCUMENT_ROOT . "Partarum/PartarumCLI/TCP/WebSocket.php";
+require Root::$DOCUMENT_ROOT . "Partarum/PartarumCLI/v_a/TCP/WebSocket.php";
 
 switch ($_SERVER["argv"][1]) {
 

@@ -1,13 +1,13 @@
 <?php
-namespace Partarum\Document {
+namespace Partarum\PartarumPHP\Traits\Document {
 
 
-    use Partarum\Config\GlobalConfig;
-    use Partarum\Document\HTMLElement as HTMLElement;
-    use Partarum\Document\HTMLSeries as HTMLSeries;
-    use Partarum\Document\HTMLService;
-    use Partarum\Document\HTMLArticle;
-    use Partarum\Document\HTMLAttribute;
+    use Partarum\PartarumPHP\Config\GlobalConfig;
+    use Partarum\PartarumPHP\Document\HTMLElement as HTMLElement;
+    use Partarum\PartarumPHP\Document\HTMLSeries as HTMLSeries;
+    use Partarum\PartarumPHP\Document\HTMLService;
+    use Partarum\PartarumPHP\Document\HTMLArticle;
+    use Partarum\PartarumPHP\Document\HTMLAttribute;
     use Exception;
     use stdClass;
 

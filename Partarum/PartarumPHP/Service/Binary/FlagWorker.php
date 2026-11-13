@@ -1,5 +1,5 @@
 <?php
-namespace Partarum\Service\Binary {
+namespace Partarum\PartarumPHP\Service\Binary {
 
     class FlagWorker {
 

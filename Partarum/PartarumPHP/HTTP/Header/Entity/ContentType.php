@@ -1,9 +1,9 @@
 <?php
-namespace Partarum\HTTP\Header\Entity {
+namespace Partarum\PartarumPHP\HTTP\Header\Entity {
 
     use InvalidArgumentException;
-    use Partarum\HTTP\Header\Entity;
-    use Partarum\HTTP\Header\HeaderField;
+    use Partarum\PartarumPHP\HTTP\Header\Entity;
+    use Partarum\PartarumPHP\HTTP\Header\HeaderField;
 
     class ContentType implements HeaderField {
 

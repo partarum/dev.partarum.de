@@ -4,14 +4,15 @@
 
 //session_start();
 
-if (!class_exists('Partarum')) {
+if (!class_exists(\Partarum\Partarum::class)) {
     require_once $_SERVER["DOCUMENT_ROOT"] . "/Partarum/Partarum.php";
 }
 
 use Carbon\Carbon;
-use Partarum\HTTP\API;
-use Partarum\Helper\Date\DateFormatter;
-use Partarum\Helper\Date\DateCalculator;
+use Partarum\Partarum;
+use Partarum\PartarumPHP\HTTP\API;
+use Partarum\PartarumPHP\Helper\Date\DateFormatter;
+use Partarum\PartarumPHP\Helper\Date\DateCalculator;
 
 $backend = new Partarum("startSurvey");
 

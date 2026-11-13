@@ -14,7 +14,7 @@ namespace Cordes\Process\Registration {
     use Cordes\Forms\Registration as Form;
     use Cordes\Process\Registration\SendEmail as SendEmail;
     use DateTime;
-    use Partarum\Database\CacheConnect as CacheConnect;
+    use Partarum\PartarumPHP\Database\CacheConnect as CacheConnect;
     use stdClass;
 
     class User {

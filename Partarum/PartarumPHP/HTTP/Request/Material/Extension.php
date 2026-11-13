@@ -6,7 +6,7 @@
  */
 namespace Partarum\PartarumPHP\HTTP\Request\Material {
 
-    use Partarum\HTTP\Request\Material\Headers;
+    use Partarum\PartarumPHP\HTTP\Request\Material\Headers;
 
     class Extension {
 

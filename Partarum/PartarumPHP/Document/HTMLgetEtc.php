@@ -1,13 +1,13 @@
 <?php
-namespace Partarum\Document {
+namespace Partarum\PartarumPHP\Document {
 
-    use Partarum\GlobalConfig;
-    use Partarum\Service\TheOffice;
-    use Partarum\Document\FeatHTMLgetEtc;
-    use Partarum\Document\HTMLObject;
-    use Partarum\Document\HTMLetcElementInfo;
+    use Partarum\PartarumPHP\Config\GlobalConfig;
+    use Partarum\PartarumPHP\Service\TheOffice;
+    use Partarum\PartarumPHP\Traits\Document\FeatHTMLgetEtc;
+    use Partarum\PartarumPHP\Document\HTMLObject;
+    use Partarum\PartarumPHP\Document\HTMLetcElementInfo;
     use ReflectionClass;
-    use Partarum\FILESYSTEM\FilesystemGenerator;
+    use Partarum\PartarumPHP\Filesystem\FilesystemGenerator;
 
     class HTMLgetEtc {
 

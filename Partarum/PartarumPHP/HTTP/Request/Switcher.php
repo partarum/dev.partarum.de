@@ -1,7 +1,7 @@
 <?php
-namespace Partarum\HTTP\Request {
+namespace Partarum\PartarumPHP\HTTP\Request {
 
-    use Partarum\Cache\SharedMemory;
+    use Partarum\PartarumPHP\Cache\SharedMemory;
 
     class Switcher {
 

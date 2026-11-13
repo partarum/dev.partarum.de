@@ -1,5 +1,5 @@
 <?php
-namespace Partarum\HTTP {
+namespace Partarum\PartarumPHP\HTTP {
 
     class HTTPHeaderObject {
 

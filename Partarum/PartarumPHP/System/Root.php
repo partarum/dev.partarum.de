@@ -1,5 +1,5 @@
 <?php
-namespace Partarum\System {
+namespace Partarum\PartarumPHP\System {
 
     use SplFileInfo;
 
@@ -57,11 +57,11 @@ namespace Partarum\System {
          *
          * @return string
          */
-        public static function getPath(string $needlePath = "Partarum", string $needleFile = Root::SLASH . "WebApp.php"): string {
+        public static function getPath(string $needlePath = "Partarum", string $needleFile = ".." . Root::SLASH . "WebApp.php"): string {
 
             // TODO: zusätlich noch getcwd() auswerten
 
-            $root = ($_SERVER["DOCUMENT_ROOT"] !== "") ? $_SERVER["DOCUMENT_ROOT"] : (self::isENV_HOME() ?? self::analyseRoot($needlePath, $needleFile));
+            $root = (!empty($_SERVER["DOCUMENT_ROOT"])) ? $_SERVER["DOCUMENT_ROOT"] : (self::analyseRoot($needlePath, $needleFile));
 
             (!defined("ROOT")) && define("ROOT", (str_ends_with($root, DIRECTORY_SEPARATOR)) ? $root : $root . DIRECTORY_SEPARATOR);
 

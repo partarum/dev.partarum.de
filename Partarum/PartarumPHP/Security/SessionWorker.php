@@ -1,7 +1,7 @@
 <?php
-namespace Partarum\Security {
+namespace Partarum\PartarumPHP\Security {
 
-    use Partarum\Security\FeatSessionWorker as FeatSessionWorker;
+    use Partarum\PartarumPHP\Security\FeatSessionWorker as FeatSessionWorker;
     use SessionHandlerInterface;
 
     class SessionWorker  implements SessionHandlerInterface

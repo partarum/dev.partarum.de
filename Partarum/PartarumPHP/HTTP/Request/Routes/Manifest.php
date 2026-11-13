@@ -6,10 +6,10 @@
  */
 namespace Partarum\PartarumPHP\HTTP\Request\Routes {
 
-    use Partarum;
-    use Partarum\HTTP\Request\Routes\ManifestPartarum;
-    use Partarum\HTTP\Request\Routes\ManifestProxy;
-    use Partarum\HTTP\Request\Routes\ManifestRoots;
+    use Partarum\Partarum;
+    use Partarum\PartarumPHP\HTTP\Request\Routes\ManifestPartarum;
+    use Partarum\PartarumPHP\HTTP\Request\Routes\ManifestProxy;
+    use Partarum\PartarumPHP\HTTP\Request\Routes\ManifestRoots;
     use stdClass;
 
     class Manifest {

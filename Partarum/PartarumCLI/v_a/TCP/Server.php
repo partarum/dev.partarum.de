@@ -1,11 +1,11 @@
 <?php
-namespace PartarumCLI\v_a\TCP {
+namespace Partarum\PartarumCLI\v_a\TCP {
 
-    require_once  "../../../vendor/autoload.php";
-    require_once "../../System/Root.php";
+    require_once __DIR__ . "/../../../../vendor/autoload.php";
+    require_once __DIR__ . "/../System/Root.php";
 
     use JsonException;
-    use PartarumCLI\v_a\System\Root;
+    use Partarum\PartarumCLI\v_a\System\Root;
     use RuntimeException;
     use Workerman\Worker;
 

@@ -5,7 +5,7 @@
  *            Email: email@alexander-bombis.de
  */
 
-namespace Partarum\HTTP\Request\Routes {
+namespace Partarum\PartarumPHP\HTTP\Request\Routes {
 
 
     class ManifestWorkspace {

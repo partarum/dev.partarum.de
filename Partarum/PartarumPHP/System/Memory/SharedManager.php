@@ -1,8 +1,8 @@
 <?php
-namespace Partarum\System\Memory {
+namespace Partarum\PartarumPHP\System\Memory {
 
     use JsonException;
-    use Partarum\System\Root;
+    use Partarum\PartarumPHP\System\Root;
 
     class SharedManager extends SharedFactory {
 

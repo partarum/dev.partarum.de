@@ -1,5 +1,5 @@
 <?php
-namespace Partarum\Filesystem {
+namespace Partarum\PartarumPHP\Filesystem {
 
 
     use \FilesystemIterator;

@@ -2,10 +2,13 @@
 error_reporting(-1);
 ini_set("display_errors", "1");
 
-include $_SERVER["DOCUMENT_ROOT"]."cordes/partarum/Autoloader.php";
-spl_autoload_register(['Autoloader', "autoload"]);
+include __DIR__ . "/System/Autoloader.php";
 
-use Partarum\Document\HTMLPage;
+use Partarum\PartarumPHP\System\Autoloader;
+
+spl_autoload_register([Autoloader::class, "autoload"]);
+
+use Partarum\PartarumPHP\Document\HTMLPage;
 
 $html = new HTMLPage();
 $html->openWithWrapper();

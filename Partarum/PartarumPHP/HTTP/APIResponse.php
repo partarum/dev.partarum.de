@@ -2,10 +2,10 @@
 namespace Partarum\PartarumPHP\HTTP {
 
     use JsonException;
-    use Partarum\HTTP\Header;
-    use Partarum\HTTP\Header\Entity;
-    use Partarum\Security\Token\UUID;
-    use Partarum\HTTP\Response\Channel;
+    use Partarum\PartarumPHP\HTTP\Header;
+    use Partarum\PartarumPHP\HTTP\Header\Entity;
+    use Partarum\PartarumPHP\Security\Token\UUID;
+    use Partarum\PartarumPHP\HTTP\Response\Channel;
 
     class APIResponse {
 

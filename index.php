@@ -10,8 +10,9 @@ ini_set("display_errors", "1");
 
 require $_SERVER["DOCUMENT_ROOT"] . "/Partarum/Partarum.php";
 
-use Partarum\System\Autoloader;
-use Partarum\HTTP\API;
+use Partarum\Partarum;
+use Partarum\PartarumPHP\System\Autoloader;
+use Partarum\PartarumPHP\HTTP\API;
 
 //***********************
 /*

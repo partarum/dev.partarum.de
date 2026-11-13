@@ -6,7 +6,7 @@ ini_set("display_errors", "1");
 
 include_once __DIR__."/Cookie.php";
 
-use Partarum\HTTP\Cookie;
+use Partarum\PartarumPHP\HTTP\Cookie;
 
 $cookie = new Cookie();
 $cookie->setName("test");

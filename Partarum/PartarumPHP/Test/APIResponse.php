@@ -1,9 +1,9 @@
 <?php
-namespace Partarum\Test {
+namespace Partarum\PartarumPHP\Test {
 
-    use Partarum\Design\TraidChain\Factory;
-    use Partarum\HTTP\Response\Channel;
-    use Partarum\Security\Token\UUID;
+    use Partarum\PartarumPHP\Design\TraidChain\Factory;
+    use Partarum\PartarumPHP\HTTP\Response\Channel;
+    use Partarum\PartarumPHP\Security\Token\UUID;
 
     class APIResponse extends Factory {
 

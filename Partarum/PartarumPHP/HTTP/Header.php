@@ -1,8 +1,8 @@
 <?php
-namespace Partarum\HTTP {
+namespace Partarum\PartarumPHP\HTTP {
 
-    use Partarum\HTTP\Header\Cause;
-    use Partarum\HTTP\Header\Entity\ContentType;
+    use Partarum\PartarumPHP\HTTP\Header\Cause;
+    use Partarum\PartarumPHP\HTTP\Header\Entity\ContentType;
 
     class Header extends Cause {
 

@@ -1,5 +1,5 @@
 <?php
-namespace Partarum\Config {
+namespace Partarum\PartarumPHP\Config {
 
     class GlobalConfig {
 

@@ -13,7 +13,7 @@ namespace Partarum\PartarumCLI\v_b\PartarumServer\System\Handle {
         public function getFilePath() : string {
             return match($this){
                 SystemConfig::HTTP, SystemConfig::TCP, SystemConfig::UDP, SystemConfig::MQTT, SystemConfig::GRPC => "",
-                SystemConfig::Websocket => "Partarum/PartarumCLI/PartarumServer/Config/System/WebsocketConfig.json"
+                SystemConfig::Websocket => "Partarum/PartarumCLI/v_b/PartarumServer/Config/System/WebsocketConfig.json"
             };
         }
     }

@@ -3,7 +3,7 @@
 /*
 require_once "../Header.php";
 
-use Partarum\HTTP\Header;
+use Partarum\PartarumPHP\HTTP\Header;
 
 $flagOR = Header::ALLOW_GET |
             Header::ALLOW_POST |

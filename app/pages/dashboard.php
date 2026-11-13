@@ -3,8 +3,8 @@
 error_reporting(-1);
 ini_set("display_errors", "1");
 
-use Partarum\HTTP\API;
-use Partarum\Security\Token\JWT;
+use Partarum\PartarumPHP\HTTP\API;
+use Partarum\PartarumPHP\Security\Token\JWT;
 
 $api = new API();
 

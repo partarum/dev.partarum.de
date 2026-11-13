@@ -1,6 +1,7 @@
 <?php
-use Partarum\HTTP\API;
-use Partarum\Security\Token\JWT;
+use Partarum\Partarum;
+use Partarum\PartarumPHP\HTTP\API;
+use Partarum\PartarumPHP\Security\Token\JWT;
 
 session_start();
 

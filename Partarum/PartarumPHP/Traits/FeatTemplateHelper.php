@@ -9,6 +9,7 @@
  *          representing the domain "cordes-software.de"
  *          and also modified for their use.
  */
+namespace Partarum\PartarumPHP\Traits;
 
 trait FeatTemplateHelper
 {

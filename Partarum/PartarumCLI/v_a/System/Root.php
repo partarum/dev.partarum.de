@@ -1,5 +1,5 @@
 <?php
-namespace PartarumCLI\v_a\System {
+namespace Partarum\PartarumCLI\v_a\System {
 
     use SplFileInfo;
 
@@ -75,7 +75,7 @@ namespace PartarumCLI\v_a\System {
         
         public static function getDocumentRoot(){
             
-            $basePath = "Partarum/PartarumCLI/System";
+            $basePath = "Partarum/PartarumCLI/v_a/System";
 
             //echo __DIR__ . PHP_EOL;
 

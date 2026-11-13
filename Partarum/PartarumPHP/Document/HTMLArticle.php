@@ -1,9 +1,9 @@
 <?php
-namespace Partarum\Document {
+namespace Partarum\PartarumPHP\Document {
 
-    use Partarum\Service\TheOffice;
+    use Partarum\PartarumPHP\Service\TheOffice;
     use \SplFileObject;
-    use Partarum\Document\HTMLElement as HTMLElement;
+    use Partarum\PartarumPHP\Document\HTMLElement as HTMLElement;
     use stdClass;
 
     class HTMLArticle {

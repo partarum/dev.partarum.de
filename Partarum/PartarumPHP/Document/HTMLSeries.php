@@ -1,9 +1,9 @@
 <?php
-namespace Partarum\Document {
+namespace Partarum\PartarumPHP\Document {
 
-    use Partarum\Document\HTMLElement;
-    use Partarum\Document\HTMLAttribute;
-    use Partarum\Document\HTMLText;
+    use Partarum\PartarumPHP\Document\HTMLElement;
+    use Partarum\PartarumPHP\Document\HTMLAttribute;
+    use Partarum\PartarumPHP\Document\HTMLText;
 
     class HTMLSeries
     {

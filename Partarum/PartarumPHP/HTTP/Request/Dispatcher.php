@@ -1,5 +1,5 @@
 <?php
-namespace Partarum\HTTP\Request {
+namespace Partarum\PartarumPHP\HTTP\Request {
 
     class Dispatcher {
 

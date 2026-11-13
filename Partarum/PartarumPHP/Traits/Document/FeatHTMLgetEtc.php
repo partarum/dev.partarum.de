@@ -1,7 +1,7 @@
 <?php
-namespace Partarum\Document {
+namespace Partarum\PartarumPHP\Traits\Document {
 
-    use Partarum\Filesystem\FilesystemGenerator;
+    use Partarum\PartarumPHP\Filesystem\FilesystemGenerator;
     use ReflectionClass;
 
     trait FeatHTMLgetEtc {

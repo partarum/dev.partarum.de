@@ -1,5 +1,5 @@
 <?php
-namespace Partarum\Document {
+namespace Partarum\PartarumPHP\Document {
 
     use DOMImplementation as DOMImplementation;
     use stdClass as stdClass;

@@ -1,8 +1,8 @@
 <?php
-namespace Partarum\Cache {
+namespace Partarum\PartarumPHP\Cache {
 
-    use Partarum\System\Memory\SharedHelper;
-    use Partarum\System\Memory\SharedManager;
+    use Partarum\PartarumPHP\System\Memory\SharedHelper;
+    use Partarum\PartarumPHP\System\Memory\SharedManager;
     use Shmop;
 
 

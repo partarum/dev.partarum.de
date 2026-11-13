@@ -1,13 +1,13 @@
 <?php 
-namespace PartarumCLI\v_a\TCP {
+namespace Partarum\PartarumCLI\v_a\TCP {
 
     require "Server.php";
     require "Listener.php";
     require "WebSocketObject.php";
 
     use JsonException;
-    use PartarumCLI\TCP\Listener;
-    use PartarumCLI\v_a\System\Root;
+    use Partarum\PartarumCLI\v_a\TCP\Listener;
+    use Partarum\PartarumCLI\v_a\System\Root;
     use RuntimeException;
 
     class WebSocket {
@@ -57,7 +57,7 @@ namespace PartarumCLI\v_a\TCP {
 
             try {
 
-                $manifestFile = file_get_contents(Root::$DOCUMENT_ROOT . "Partarum/PartarumCLI/config/websocket-manifest.json");
+                $manifestFile = file_get_contents(Root::$DOCUMENT_ROOT . "Partarum/PartarumCLI/v_a/config/websocket-manifest.json");
 
                 try {
 

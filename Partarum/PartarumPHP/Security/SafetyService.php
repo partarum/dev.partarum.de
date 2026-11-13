@@ -1,11 +1,11 @@
 <?php
-namespace Partarum\Security {
+namespace Partarum\PartarumPHP\Security {
 
 
     use JsonException;
-    use Partarum\HTTP\Request\APIconnect;
-    use Partarum\HTTP\Request\REST;
-    use Partarum\Security\Token\JWT;
+    use Partarum\PartarumPHP\HTTP\Request\APIconnect;
+    use Partarum\PartarumPHP\HTTP\Request\REST;
+    use Partarum\PartarumPHP\Security\Token\JWT;
 
     class SafetyService {
 

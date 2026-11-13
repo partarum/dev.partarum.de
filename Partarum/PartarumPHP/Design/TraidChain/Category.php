@@ -1,5 +1,5 @@
 <?php
-namespace Partarum\Design\TraidChain {
+namespace Partarum\PartarumPHP\Design\TraidChain {
 
     use ArrayObject;
     use ReflectionClass;

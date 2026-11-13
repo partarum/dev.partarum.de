@@ -1,13 +1,13 @@
 <?PHP
-namespace Partarum {
+namespace Partarum\PartarumPHP {
 
     //include $_SERVER["DOCUMENT_ROOT"] . "/src/php/constants.php";
 
-    use Partarum\Config\GlobalConfig;
-    use Partarum\Security\SessionWorker;
+    use Partarum\PartarumPHP\Config\GlobalConfig;
+    use Partarum\PartarumPHP\Security\SessionWorker;
     use ReflectionClass;
-    use Partarum\Database\CacheConnect;
-    use Partarum\Document\HTMLPage;
+    use Partarum\PartarumPHP\Database\CacheConnect;
+    use Partarum\PartarumPHP\Document\HTMLPage;
     use Throwable;
 
     //use etc\configPage as configPage;

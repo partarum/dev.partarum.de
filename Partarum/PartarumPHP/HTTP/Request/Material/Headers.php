@@ -4,7 +4,7 @@
  *            Developed by Alexander Bombis.
  *            Email: email@alexander-bombis.de
  */
-namespace Partarum\HTTP\Request\Material {
+namespace Partarum\PartarumPHP\HTTP\Request\Material {
 
     class Headers {
 

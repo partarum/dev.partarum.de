@@ -1,5 +1,5 @@
 <?php
-namespace PartarumCLI\v_a\System\Filesystem {
+namespace Partarum\PartarumCLI\v_a\System\Filesystem {
 
     use RuntimeException;
 

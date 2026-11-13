@@ -1,7 +1,7 @@
 <?php
-namespace Partarum\Test {
+namespace Partarum\PartarumPHP\Test {
 
-    use Partarum\Design\TraidChain\Store;
+    use Partarum\PartarumPHP\Design\TraidChain\Store;
 
     trait APIStore {
 

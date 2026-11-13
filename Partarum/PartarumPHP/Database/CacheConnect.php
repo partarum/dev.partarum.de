@@ -1,11 +1,11 @@
 <?php
-namespace Partarum\Database {
+namespace Partarum\PartarumPHP\Database {
 
     use mysqli;
-    use Partarum\Security\SessionWorker;
-    use Partarum\Service\Binary\FlagWorker;
-    use Partarum\Database\DatabaseData;
-    use Partarum\Database\DatabaseDataObject;
+    use Partarum\PartarumPHP\Security\SessionWorker;
+    use Partarum\PartarumPHP\Service\Binary\FlagWorker;
+    use Partarum\PartarumPHP\Database\DatabaseData;
+    use Partarum\PartarumPHP\Database\DatabaseDataObject;
 
     class CacheConnect extends FlagWorker {
 

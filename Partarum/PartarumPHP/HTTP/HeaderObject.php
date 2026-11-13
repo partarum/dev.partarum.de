@@ -1,9 +1,9 @@
 <?php
-namespace Partarum\HTTP {
+namespace Partarum\PartarumPHP\HTTP {
 
     use ArrayIterator;
-    use Partarum\HTTP\Header\Entity\ContentType;
-    use Partarum\HTTP\Header\HeaderField;
+    use Partarum\PartarumPHP\HTTP\Header\Entity\ContentType;
+    use Partarum\PartarumPHP\HTTP\Header\HeaderField;
 
     class HeaderObject {
 

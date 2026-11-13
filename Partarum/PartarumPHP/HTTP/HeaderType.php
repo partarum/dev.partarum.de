@@ -1,5 +1,5 @@
 <?php
-namespace Partarum\HTTP\Response {
+namespace Partarum\PartarumPHP\HTTP\Response {
 
     class HeaderType {
 

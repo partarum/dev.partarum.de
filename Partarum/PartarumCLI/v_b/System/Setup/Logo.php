@@ -8,7 +8,7 @@ namespace Partarum\PartarumCLI\v_b\System\Setup {
         public function getASCII() : string {
 
             return match($this){
-                Logo::START => file_get_contents("Partarum/PartarumCLI/ASCII/start.txt"),
+                Logo::START => file_get_contents("Partarum/PartarumCLI/v_b/ASCII/start.txt"),
                 default => ""
             };
         }

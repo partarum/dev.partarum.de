@@ -4,8 +4,8 @@ namespace app\src\Befragung {
 
     use DateTime;
     use IntlDateFormatter;
-    use Partarum;
-    use Partarum\HTTP\API;
+    use Partarum\Partarum;
+    use Partarum\PartarumPHP\HTTP\API;
 
     enum Surface {
 

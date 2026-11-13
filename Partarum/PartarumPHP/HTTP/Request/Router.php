@@ -8,9 +8,9 @@
 namespace Partarum\PartarumPHP\HTTP\Request {
 
     use JsonException;
-    use Partarum;
-    use Partarum\HTTP\Request\Material\Extension;
-    use Partarum\HTTP\Request\Routes\Manifest;
+    use Partarum\Partarum;
+    use Partarum\PartarumPHP\HTTP\Request\Material\Extension;
+    use Partarum\PartarumPHP\HTTP\Request\Routes\Manifest;
     use PHPMailer\PHPMailer\Exception;
     use Predis\Client;
 

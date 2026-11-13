@@ -1,5 +1,5 @@
 <?php
-namespace Partarum\Document {
+namespace Partarum\PartarumPHP\Traits\Document {
 
         trait FeatHTMLAttributes
         {

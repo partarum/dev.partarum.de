@@ -1,7 +1,7 @@
 <?php
-namespace Partarum\Test {
+namespace Partarum\PartarumPHP\Test {
 
-    use Partarum\Design\TraidChain\Factory;
+    use Partarum\PartarumPHP\Design\TraidChain\Factory;
 
     class APIFactory extends Factory{
 

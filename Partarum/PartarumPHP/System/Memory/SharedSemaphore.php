@@ -1,5 +1,5 @@
 <?php
-namespace Partarum\System\Memory {
+namespace Partarum\PartarumPHP\System\Memory {
 
     use SysvSemaphore;
 

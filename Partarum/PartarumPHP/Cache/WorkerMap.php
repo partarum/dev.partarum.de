@@ -1,5 +1,5 @@
 <?php
-namespace Partarum\Cache {
+namespace Partarum\PartarumPHP\Cache {
 
     class WorkerMap {
 

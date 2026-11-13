@@ -5,14 +5,14 @@ namespace Partarum\PartarumPHP\Filesystem {
 
         require_once "Partarum/PartarumPHP/Service/Binary/FlagWorker.php";
         require_once "Partarum/PartarumPHP/Traits/Filesystem/FeatFilesystem.php";
-        require_once "Partarum/PartarumCLI/System/Root.php";
+        require_once "Partarum/PartarumCLI/v_b/System/Root.php";
     }
 
 
     use FilesystemIterator;
     use Partarum\PartarumPHP\Traits\Filesystem\FeatFilesystem;
     use Partarum\PartarumCLI\v_b\System\Root;
-    use Partarum\Service\Binary\FlagWorker;
+    use Partarum\PartarumPHP\Service\Binary\FlagWorker;
     use SplFileInfo;
 
     class Filesystem extends FlagWorker {

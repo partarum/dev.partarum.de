@@ -1,5 +1,5 @@
 <?php
-namespace Partarum\Document {
+namespace Partarum\PartarumPHP\Document {
 
     use \DOMText as DOMText;
 

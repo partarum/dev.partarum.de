@@ -1,12 +1,12 @@
 <?php
 namespace app\src\Befragung {
 
-    if (!class_exists('Partarum')) {
+    use Partarum\Partarum;
+    use Partarum\PartarumPHP\HTTP\API;
+
+    if (!class_exists(Partarum::class)) {
         require_once $_SERVER["DOCUMENT_ROOT"] . "/Partarum/Partarum.php";
     }
-
-    use Partarum;
-    use Partarum\HTTP\API;
     use Medoo\Medoo;
     use app\src\Befragung\SurfaceInitialStage;
     use app\src\Befragung\SurfaceSetupStage;

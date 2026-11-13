@@ -1,9 +1,9 @@
 <?php
-namespace Partarum\Service\Binary {
+namespace Partarum\PartarumPHP\Service\Binary {
 
 
     use JetBrains\PhpStorm\Pure;
-    use Partarum\Service\Factory;
+    use Partarum\PartarumPHP\Service\Factory;
 
     class FlagFactory extends Factory{
 

@@ -4,12 +4,13 @@ ini_set("display_errors", "1");
 
 session_start();
 
-if (!class_exists('Partarum')) {
+if (!class_exists(\Partarum\Partarum::class)) {
     require_once $_SERVER["DOCUMENT_ROOT"] . "/Partarum/Partarum.php";
 }
+use Partarum\Partarum;
 
-use Partarum\HTTP\API;
-use Partarum\Security\Token\JWT;
+use Partarum\PartarumPHP\HTTP\API;
+use Partarum\PartarumPHP\Security\Token\JWT;
 
 $backend = new Partarum("getToken");
 

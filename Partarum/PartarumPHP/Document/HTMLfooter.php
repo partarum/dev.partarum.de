@@ -1,7 +1,7 @@
 <?php
-namespace Partarum\Document {
+namespace Partarum\PartarumPHP\Document {
 
-    use Partarum\Document\HTMLetcElementInfo;
+    use Partarum\PartarumPHP\Document\HTMLetcElementInfo;
 
     class HTMLfooter {
 

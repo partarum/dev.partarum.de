@@ -1,8 +1,8 @@
 <?php
-namespace Partarum\Test {
+namespace Partarum\PartarumPHP\Test {
 
-    use Partarum\HTTP\Header;
-    use Partarum\Design\TraidChain\Agent;
+    use Partarum\PartarumPHP\HTTP\Header;
+    use Partarum\PartarumPHP\Design\TraidChain\Agent;
     
     class API extends Agent{
 

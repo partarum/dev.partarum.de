@@ -1,8 +1,8 @@
 <?php
 require "../System/Root.php";
 
-use Partarum\Filesystem\Filesystem;
-use PartarumCLI\v_a\System\Root;
+use Partarum\PartarumPHP\Filesystem\Filesystem;
+use Partarum\PartarumCLI\v_a\System\Root;
 
 Root::setRootObject();
 

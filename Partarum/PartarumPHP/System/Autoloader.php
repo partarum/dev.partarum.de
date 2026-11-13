@@ -4,7 +4,7 @@
  *            Developed by Alexander Bombis.
  *            Email: email@alexander-bombis.de
  */
-namespace Partarum\System {
+namespace Partarum\PartarumPHP\System {
 
     require "Root.php";
     require "AutoloadObject.php";
@@ -13,8 +13,8 @@ namespace Partarum\System {
     use RuntimeException;
     use SplFileObject;
     use stdClass;
-    use Partarum\System\Root as Root;
-    use Partarum\System\AutoloadObject;
+    use Partarum\PartarumPHP\System\Root as Root;
+    use Partarum\PartarumPHP\System\AutoloadObject;
 
     class Autoloader {
 
@@ -112,7 +112,7 @@ namespace Partarum\System {
 
                 //echo PHP_EOL . "ROOT = " . ROOT . PHP_EOL;
 
-                self::$partarumRootPath = self::$partarumRootPath ?? AutoloadObject::setNamespaceRoot("Partarum", ROOT . "Partarum" . SLASH . "PartarumPHP");
+                self::$partarumRootPath = self::$partarumRootPath ?? AutoloadObject::setNamespaceRoot("Partarum", ROOT . "Partarum");
 
                 self::$baseSettled = TRUE;
 
@@ -142,13 +142,7 @@ namespace Partarum\System {
 
         private static function isPartarum(string $class) : string {
 
-            $isTrait = strrpos($class, "\Feat");
-
-            $traitsPath = self::$partarumRootPath . SLASH . "Traits";
-
             $classesPath = self::$partarumRootPath;
-
-            $typPath = ($isTrait !== FALSE) ? $traitsPath : $classesPath;
 
             $changeNsToPath = str_replace('\\', SLASH, $class);
 
@@ -156,7 +150,7 @@ namespace Partarum\System {
 
             $startPos = strpos($changeNsToPath, $needle);
 
-            return $typPath . SLASH . substr_replace($changeNsToPath, "", $startPos, strlen($needle)) . '.php';
+            return $classesPath . SLASH . substr_replace($changeNsToPath, "", $startPos, strlen($needle)) . '.php';
         }
 
         public static function addIntoManifest(){

@@ -1,5 +1,5 @@
 <?php
-namespace Partarum\Database {
+namespace Partarum\PartarumPHP\Database {
 
     class DatabaseDataObject {
 

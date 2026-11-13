@@ -1,8 +1,8 @@
 <?php
 namespace Partarum\PartarumPHP\Service {
 
-    use Partarum\Cache\WorkerMap;
-    use Partarum\Service\Binary\FlagWorker;
+    use Partarum\PartarumPHP\Cache\WorkerMap;
+    use Partarum\PartarumPHP\Service\Binary\FlagWorker;
     use WeakMap;
 
     // TODO Abändern - eigentlich ist das eine große globale Storage - Klasse - auch eine Fabrik, aber auch nur eine Ableitung !!!!!!

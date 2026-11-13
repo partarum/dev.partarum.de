@@ -1,5 +1,5 @@
 <?php
-namespace Partarum\HTTP\Header {
+namespace Partarum\PartarumPHP\HTTP\Header {
 
     interface HeaderField {
 

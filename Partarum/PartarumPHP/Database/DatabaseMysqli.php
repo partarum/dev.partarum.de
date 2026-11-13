@@ -1,9 +1,9 @@
 <?php
-namespace Partarum\Database {
+namespace Partarum\PartarumPHP\Database {
 
     use Generator;
     use mysqli as mysqli;
-    //use Partarum\Database\FeatDatabase;
+    use Partarum\PartarumPHP\Traits\Database\FeatDatabase;
 
     /*
      *  Read und Write auf prepare umschreiben!!!!

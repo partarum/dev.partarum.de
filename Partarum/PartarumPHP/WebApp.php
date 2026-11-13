@@ -1,9 +1,9 @@
 <?php
-namespace Partarum {
+namespace Partarum\PartarumPHP {
 
-    use Partarum\Office;
-    use Partarum\Config\GlobalConfig;
-    use Partarum\Security\SafetyService;
+    use Partarum\PartarumPHP\Office;
+    use Partarum\PartarumPHP\Config\GlobalConfig;
+    use Partarum\PartarumPHP\Security\SafetyService;
 
 
     class WebApp {

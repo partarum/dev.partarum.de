@@ -1,10 +1,10 @@
 <?php
 namespace Partarum\PartarumPHP\HTTP\Response {
 
-    use Partarum\HTTP\Header;
-    use Partarum\HTTP\Header\Entity;
-    use Partarum\HTTP\HeaderObject;
-    use Partarum\HTTP\Response\BodyObject;
+    use Partarum\PartarumPHP\HTTP\Header;
+    use Partarum\PartarumPHP\HTTP\Header\Entity;
+    use Partarum\PartarumPHP\HTTP\HeaderObject;
+    use Partarum\PartarumPHP\HTTP\Response\BodyObject;
 
     class Channel {
 

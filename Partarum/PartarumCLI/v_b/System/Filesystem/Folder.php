@@ -1,7 +1,7 @@
 <?php
 namespace Partarum\PartarumCLI\v_b\System\Filesystem {
 
-    require_once "Partarum/PartarumCLI/System/Filesystem/FolderPath.php";
+    require_once "Partarum/PartarumCLI/v_b/System/Filesystem/FolderPath.php";
 
     use Partarum\PartarumCLI\v_b\System\Filesystem\FolderPath;
 

@@ -2,11 +2,11 @@
 // In den Hauptpfad wechseln
 chdir("..");
 
-require_once "Partarum/PartarumCLI/System/Setup/Show.php";
-require_once "Partarum/PartarumCLI/System/Setup/Logo.php";
-require_once "Partarum/PartarumCLI/System/Setup/Read.php";
-require_once "Partarum/PartarumCLI/System/Setup/Input.php";
-require_once "Partarum/PartarumCLI/System/Setup/ConfigLoader.php";
+require_once "Partarum/PartarumCLI/v_b/System/Setup/Show.php";
+require_once "Partarum/PartarumCLI/v_b/System/Setup/Logo.php";
+require_once "Partarum/PartarumCLI/v_b/System/Setup/Read.php";
+require_once "Partarum/PartarumCLI/v_b/System/Setup/Input.php";
+require_once "Partarum/PartarumCLI/v_b/System/Setup/ConfigLoader.php";
 
 use Partarum\PartarumCLI\v_b\System\Setup\Input;
 use Partarum\PartarumCLI\v_b\System\Setup\ConfigLoader;
@@ -60,7 +60,7 @@ if($config !== NULL) {
     // ! So wie es jetzt ist wird die Config geladen und kein einzelner Wert etc übergeben
 
     $executive = match ($config["type"]) {
-        "1", "websocket", "ws" => "php Partarum/PartarumCLI/PartarumServer/buildWebsocket.php",
+        "1", "websocket", "ws" => "php Partarum/PartarumCLI/v_b/PartarumServer/buildWebsocket.php",
         default => ""
     };
 

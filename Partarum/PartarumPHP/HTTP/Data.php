@@ -2,7 +2,7 @@
 namespace Partarum\PartarumPHP\HTTP {
 
     use JsonException;
-    use Partarum\HTTP\HTTPHeaderObject;
+    use Partarum\PartarumPHP\HTTP\HTTPHeaderObject;
     use RuntimeException;
 
     class Data {

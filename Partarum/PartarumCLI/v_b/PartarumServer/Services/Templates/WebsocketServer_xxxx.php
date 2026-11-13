@@ -1,6 +1,6 @@
 <?php
 
-require_once "Partarum/PartarumCLI/PartarumServer/Services/Websocket.php";
+require_once "Partarum/PartarumCLI/v_b/PartarumServer/Services/Websocket.php";
 
 use Partarum\PartarumCLI\v_b\PartarumServer\Services\Websocket;
 

@@ -42,7 +42,7 @@ namespace Partarum\PartarumCLI\v_b\PartarumServer\System {
 
                 echo getcwd() . "\n";
 
-                $file = "Partarum/PartarumCLI/PartarumServer/Services/Websocket/Executive/startServer.php {$ip} {$port}";
+                $file = "Partarum/PartarumCLI/v_b/PartarumServer/Services/Websocket/Executive/startServer.php {$ip} {$port}";
 
                 echo $file . "\n";
 

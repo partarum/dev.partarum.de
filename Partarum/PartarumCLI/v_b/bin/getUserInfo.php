@@ -1,9 +1,9 @@
 <?php
 require_once "setRoot.php";
 
-require_once "Partarum/PartarumCLI/System/Base/Handle.php";
-require_once "Partarum/PartarumCLI/System/Base/User.php";
-require_once "Partarum/PartarumCLI/System/Base/UserType.php";
+require_once "Partarum/PartarumCLI/v_b/System/Base/Handle.php";
+require_once "Partarum/PartarumCLI/v_b/System/Base/User.php";
+require_once "Partarum/PartarumCLI/v_b/System/Base/UserType.php";
 
 use Partarum\PartarumCLI\v_b\System\Base\Handle as System;
 use Partarum\PartarumCLI\v_b\System\Base\User;

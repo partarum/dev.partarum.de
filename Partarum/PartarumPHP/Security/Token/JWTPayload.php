@@ -1,5 +1,5 @@
 <?php
-namespace Partarum\Security\Token {
+namespace Partarum\PartarumPHP\Security\Token {
 
     use Exception;
 

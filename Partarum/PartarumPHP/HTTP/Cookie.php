@@ -1,7 +1,7 @@
 <?php
-namespace Partarum\HTTP {
+namespace Partarum\PartarumPHP\HTTP {
 
-    use Partarum\Library\typeArray;
+    use Partarum\PartarumPHP\Service\typeArray;
 
     class Cookie {
 

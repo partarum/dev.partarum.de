@@ -1,6 +1,6 @@
 <?php
 
-namespace Partarum\Security {
+namespace Partarum\PartarumPHP\Security {
 
 
     class UUID

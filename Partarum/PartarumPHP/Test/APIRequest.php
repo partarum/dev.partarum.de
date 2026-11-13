@@ -1,5 +1,5 @@
 <?php 
-namespace Partarum\Test {
+namespace Partarum\PartarumPHP\Test {
     
     class APIRequest extends Factory {
         

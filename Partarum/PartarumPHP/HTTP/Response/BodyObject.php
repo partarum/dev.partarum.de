@@ -1,10 +1,10 @@
 <?php
-namespace Partarum\HTTP\Response {
+namespace Partarum\PartarumPHP\HTTP\Response {
 
 
     use ArrayIterator;
     use JsonException;
-    use Partarum\HTTP\Header;
+    use Partarum\PartarumPHP\HTTP\Header;
 
     class BodyObject {
 

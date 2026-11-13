@@ -10,7 +10,7 @@
  *           and also modified for their use.
  */
 
-namespace Partarum\HTTP\Request {
+namespace Partarum\PartarumPHP\HTTP\Request {
 
     use JsonException;
     use stdClass;

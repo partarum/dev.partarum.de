@@ -1,9 +1,9 @@
 <?php
-namespace Partarum\Document {
+namespace Partarum\PartarumPHP\Document {
 
     use \DOMElement as DOMElement;
     use \DOMText as DOMText;
-    use Partarum\Document\HTMLAttribute;
+    use Partarum\PartarumPHP\Document\HTMLAttribute;
 
     class HTMLElement extends DOMElement{
         

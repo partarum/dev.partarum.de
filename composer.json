@@ -5,7 +5,9 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Partarum\\": "Partarum/"
+            "Partarum\\": "Partarum/",
+            "app\\": "app/",
+            "Cordes\\": "Partarum/PartarumWorkspace/app/src/php/Cordes/"
         }
     },
     "authors": [

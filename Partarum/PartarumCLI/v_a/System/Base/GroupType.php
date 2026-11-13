@@ -1,5 +1,5 @@
 <?php
-namespace PartarumCLI\v_a\System\Base {
+namespace Partarum\PartarumCLI\v_a\System\Base {
 
     enum GroupType : int {
 

@@ -1,7 +1,7 @@
 <?php
-namespace Partarum\Filesystem {
+namespace Partarum\PartarumPHP\Filesystem {
 
-    use Partarum\Filesystem\FilesystemGenerator;
+    use Partarum\PartarumPHP\Filesystem\FilesystemGenerator;
 
     /*
      *  Generator 3

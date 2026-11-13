@@ -1,7 +1,7 @@
 <?php
-namespace PartarumCLI\v_a\System\Filesystem {
+namespace Partarum\PartarumCLI\v_a\System\Filesystem {
 
-    require_once "Partarum/PartarumCLI/System/Filesystem/FolderPath.php";
+    require_once "Partarum/PartarumCLI/v_a/System/Filesystem/FolderPath.php";
 
     enum Folder : int {
 

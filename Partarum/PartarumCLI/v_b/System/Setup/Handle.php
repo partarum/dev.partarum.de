@@ -26,7 +26,7 @@ namespace Partarum\PartarumCLI\v_b\System\Setup {
 
                         $config = [];
 
-                        $config["type"] = Read::andGetInput(file("Partarum/PartarumCLI/ASCII/serverType.txt"));
+                        $config["type"] = Read::andGetInput(file("Partarum/PartarumCLI/v_b/ASCII/serverType.txt"));
 
                         var_dump($config);
 

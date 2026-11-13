@@ -1,7 +1,7 @@
 <?php
-namespace Partarum\Document {
+namespace Partarum\PartarumPHP\Document {
 
-    use Partarum\Document\{HTMLhead, HTMLheader, HTMLmain, HTMLfooter};
+    use Partarum\PartarumPHP\Document\{HTMLhead, HTMLheader, HTMLmain, HTMLfooter};
 
     class HTMLObject {
 

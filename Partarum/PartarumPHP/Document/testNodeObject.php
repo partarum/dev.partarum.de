@@ -9,7 +9,7 @@ include 'HTMLAttribute.php';
 include 'HTMLDocument.php';
 include 'HTMLElement.php';
 include 'HTMLSeries.php';
-include 'HTMLFamily.class.php';
+include 'HTMLFamily.php';
 
 $html = new HTMLDocument();
 

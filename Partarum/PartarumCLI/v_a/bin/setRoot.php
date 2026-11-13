@@ -4,7 +4,7 @@ echo __DIR__ . PHP_EOL;
 
 require "../System/Root.php";
 
-use PartarumCLI\v_a\System\Root;
+use Partarum\PartarumCLI\v_a\System\Root;
 
 Root::setRootObject();
 

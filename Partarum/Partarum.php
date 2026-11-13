@@ -1,18 +1,21 @@
 <?php
+namespace Partarum;
 
 require_once "vendor/autoload.php" ?? $_SERVER["DOCUMENT_ROOT"] . "/vendor/autoload.php";
 
 require_once "Partarum/PartarumPHP/System/Autoloader.php" ?? $_SERVER["DOCUMENT_ROOT"] . "/Partarum/PartarumPHP/System/Autoloader.php";
 
-use Partarum\System\Autoloader;
+use Partarum\PartarumPHP\System\Autoloader;
 
 spl_autoload_register([Autoloader::class, "autoload"]);
 
-use Partarum\Security\Token\UUID;
-use Partarum\HTTP\Request\Switcher;
-use Partarum\HTTP\Request\Router;
-use Partarum\System\Root;
+use Partarum\PartarumPHP\Security\Token\UUID;
+use Partarum\PartarumPHP\HTTP\Request\Switcher;
+use Partarum\PartarumPHP\HTTP\Request\Router;
+use Partarum\PartarumPHP\System\Root;
 
+use Exception;
+use JsonException;
 use Predis\Client;
 use Dotenv\Dotenv;
 use Medoo\Medoo;

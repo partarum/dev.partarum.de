@@ -75,7 +75,7 @@ namespace Partarum\PartarumCLI\v_b\System {
         
         public static function getDocumentRoot(){
             
-            $basePath = "Partarum/PartarumCLI/System";
+            $basePath = "Partarum/PartarumCLI/v_b/System";
 
             //echo __DIR__ . PHP_EOL;
 
