@@ -1,19 +1,12 @@
 <?php
+declare(strict_types=1);
+
 namespace Partarum\PartarumPHP\Filesystem {
 
-    if(php_sapi_name() === "cli"){
-
-        require_once "Partarum/PartarumPHP/Service/Binary/FlagWorker.php";
-        require_once "Partarum/PartarumPHP/Traits/Filesystem/FeatFilesystem.php";
-        require_once "Partarum/PartarumCLI/v_b/System/Root.php";
-    }
-
-
     use FilesystemIterator;
-    use Partarum\PartarumPHP\Traits\Filesystem\FeatFilesystem;
     use Partarum\PartarumCLI\v_b\System\Root;
     use Partarum\PartarumPHP\Service\Binary\FlagWorker;
-    use SplFileInfo;
+    use Partarum\PartarumPHP\Traits\Filesystem\FeatFilesystem;
 
     class Filesystem extends FlagWorker {
 
@@ -27,59 +20,63 @@ namespace Partarum\PartarumPHP\Filesystem {
 
         public const DOCUMENT_ROOT = 16;
 
-        static public array $allFiles = [];
+        public static array $allFiles = [];
 
-        static public array $allIterators = [];
+        public static array $allIterators = [];
 
-
-
-        public function __construct(?string $path = NULL, int $flag = Filesystem::ONLY) {
+        public function __construct(?string $path = null, int $flag = Filesystem::ONLY) {
 
             parent::__construct();
 
             $this->setFlags($flag, true);
 
-            $aktVer = $path ?? getcwd();
+            $aktVer = ($path !== null && $path !== "") ? $path : (getcwd() ?: ".");
+
+            if (!is_dir($aktVer)) {
+                return;
+            }
 
             $iterator = new FilesystemIterator(
                 $aktVer,
-                FilesystemIterator::KEY_AS_PATHNAME | FilesystemIterator::CURRENT_AS_SELF
+                FilesystemIterator::KEY_AS_PATHNAME | FilesystemIterator::CURRENT_AS_SELF | FilesystemIterator::SKIP_DOTS
             );
 
+            $docRoot = Root::$DOCUMENT_ROOT
+                ?? (defined("ROOT") ? (string)ROOT : (string)($_SERVER["DOCUMENT_ROOT"] ?? ""));
 
-            foreach ($iterator as $fileInform => $wtf) {
+            foreach ($iterator as $fileInform => $current) {
 
-                $type = ($iterator->isDir()) ? "folder" : "file";
+                $filePath = (string)$fileInform;
+                $type = $iterator->isDir() ? "folder" : "file";
 
-                if($type === "file"){
+                if ($type === "file") {
 
-                    self::$allFiles[] = ($this->isFlagSet(self::DOCUMENT_ROOT)) ? str_replace(Root::$DOCUMENT_ROOT, "", $fileInform) : $fileInform;
+                    self::$allFiles[] = ($this->isFlagSet(self::DOCUMENT_ROOT) && $docRoot !== "")
+                        ? str_replace($docRoot, "", $filePath)
+                        : $filePath;
 
-                    self::$allIterators[] = pathinfo($fileInform);
+                    self::$allIterators[] = pathinfo($filePath);
                 }
 
                 self::setFileFolder([
-                                        $fileInform,
-                                        $iterator->getFilename(),
-                                        $iterator->getATime(),
-                                        $iterator->getMTime()
-                                    ], $type, $path, ($this->isFlagSet(self::ABSOLUTE) ? self::ABSOLUTE : self::DOCUMENT_ROOT)
-                );
+                    $filePath,
+                    $iterator->getFilename(),
+                    $iterator->getATime(),
+                    $iterator->getMTime()
+                ], $type, $path ?? $aktVer, ($this->isFlagSet(self::ABSOLUTE) ? self::ABSOLUTE : self::DOCUMENT_ROOT));
 
-
-
-                if($this->isFlagSet(self::RECURSIVE)){
-
-                    ($type === "folder") && $this->nextRound($iterator->getRealPath());
+                if ($this->isFlagSet(self::RECURSIVE) && $type === "folder") {
+                    $realPath = $iterator->getRealPath();
+                    if (is_string($realPath) && $realPath !== "") {
+                        $this->nextRound($realPath);
+                    }
                 }
             }
         }
 
-        private function nextRound($path){
+        private function nextRound(string $path): void {
 
-
-            $next = new Filesystem($path, $this->flags);
-
+            new Filesystem($path, (int)$this->flags);
         }
 
         public function getAllFiles(): array {
@@ -92,7 +89,7 @@ namespace Partarum\PartarumPHP\Filesystem {
             return self::$allIterators;
         }
 
-        public static function clearCache() : void {
+        public static function clearCache(): void {
 
             self::$allFiles = [];
             self::$allIterators = [];

@@ -1,18 +1,11 @@
 <?php
+declare(strict_types=1);
+
 namespace app\src\Befragung {
 
     use Partarum\Partarum;
     use Partarum\PartarumPHP\HTTP\API;
-
-    if (!class_exists(Partarum::class)) {
-        require_once $_SERVER["DOCUMENT_ROOT"] . "/Partarum/Partarum.php";
-    }
     use Medoo\Medoo;
-    use app\src\Befragung\SurfaceInitialStage;
-    use app\src\Befragung\SurfaceSetupStage;
-    use app\src\Befragung\SurfaceTransitionStage;
-    use app\src\Befragung\SurfaceExecutionStage;
-    use app\src\Befragung\SurfaceFinalStage;
 
     class SurfaceApp {
 
@@ -20,17 +13,17 @@ namespace app\src\Befragung {
 
         public string $stage;
 
-        public SurfaceInitialStage | SurfaceSetupStage | SurfaceTransitionStage | SurfaceExecutionStage | SurfaceFinalStage $case;
+        public null | SurfaceInitialStage | SurfaceSetupStage | SurfaceTransitionStage | SurfaceExecutionStage | SurfaceFinalStage $case = null;
 
-        public string $caseName;
+        public ?string $caseName = null;
 
-        public string $appName;
+        public string $appName = "";
 
-        public string $topic;
+        public string $topic = "";
 
         public API $api;
 
-        public array $env;
+        public array $env = [];
 
         public array $config;
 
@@ -41,18 +34,18 @@ namespace app\src\Befragung {
         public string $url;
 
         /**
-         * @var null|string         */
-
-        public null | string $ref;
+         * @var null|string
+         */
+        public null | string $ref = null;
 
 
         public function __construct(array $config) {
 
             $this->config = $config;
 
-            $this->stage = $config["stage"];
+            $this->stage = $config["stage"] ?? "";
 
-            $this->app =  new Partarum($this->stage);
+            $this->app = new Partarum($this->stage ?: "Partarum");
 
             $this->api = new API();
 
@@ -60,9 +53,9 @@ namespace app\src\Befragung {
 
             $this->initDB();
 
-            $this->uri = $_SERVER["REQUEST_URI"];
-            $this->url = $_SERVER["REDIRECT_URL"];
-            $this->ref = $_SERVER["HTTP_REFERER"] ?? NULL;
+            $this->uri = $_SERVER["REQUEST_URI"] ?? "/";
+            $this->url = $_SERVER["REDIRECT_URL"] ?? (parse_url($this->uri, PHP_URL_PATH) ?: "/");
+            $this->ref = $_SERVER["HTTP_REFERER"] ?? null;
         }
 
         private function loadENV(): void {
@@ -75,11 +68,11 @@ namespace app\src\Befragung {
             $this->db = $this->app->createDBConnection();
         }
 
-        public function initCase(SurfaceInitialStage | SurfaceSetupStage | SurfaceTransitionStage | SurfaceExecutionStage | SurfaceFinalStage $case): void {
+        public function initCase(null | SurfaceInitialStage | SurfaceSetupStage | SurfaceTransitionStage | SurfaceExecutionStage | SurfaceFinalStage $case): void {
 
             $this->case = $case;
 
-            $this->caseName = $case->name;
+            $this->caseName = $case?->name;
         }
     }
 }

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Partarum\PartarumPHP\HTTP\Request\Routes {
 
     class ManifestProxy{
@@ -12,45 +14,7 @@ namespace Partarum\PartarumPHP\HTTP\Request\Routes {
             "error" => "config/error-manifest.json"
         ];
 
-        public static function getPath($needle, $manifest) : string {
-
-            echo "ManifestProxy: getPath:\n";
-            echo "needle: " . $needle . "\n";
-            echo "partarum_proxy_path: " . PARTARUM_PROXY_PATH . "\n";
-            echo "<pre>";
-            print_r($needle);
-            print_r($manifest);
-            print_r($needle);
-
-            /*
-             partarum_proxy_path: /home/users/cs23-0089-gx/www/new/Partarum/PartarumWorkspace
-             */
-
-            /*
-             Array
-            (
-                [0] =>
-                [1] => Partarum
-                [2] => Workspace
-            )
-             */
-
-            /*
-             stdClass Object
-            (
-                [Partarum/Workspace] => /home/users/cs23-0089-gx/www/new/Partarum/PartarumWorkspace/config/routes-manifest.json
-            )
-             */
-
-            /*
-             Array
-            (
-                [0] =>
-                [1] => Partarum
-                [2] => Workspace
-            )
-
-             */
+        public static function getPath(array | string $needle, null | object $manifest = null) : string {
 
             /*
              *  Es benötigt hier etwas Ordnung !
@@ -58,9 +22,11 @@ namespace Partarum\PartarumPHP\HTTP\Request\Routes {
              *  Was wird benötigt um den Proxy unbestimmt auszuführen - so das der Proxy die Hand auf hat.
              */
 
-            $key = strtolower($needle);
+            $target = is_array($needle) ? ($needle[1] ?? "app") : (string)$needle;
 
-            return self::PATH[$key];
+            $key = strtolower($target);
+
+            return self::PATH[$key] ?? self::PATH["app"];
         }
     }
 }

@@ -1,35 +1,35 @@
 <?php
+declare(strict_types=1);
+
 namespace Partarum\PartarumPHP\Traits\Document {
 
-
+    use DOMDocument;
+    use Generator;
     use Partarum\PartarumPHP\Config\GlobalConfig;
-    use Partarum\PartarumPHP\Document\HTMLElement as HTMLElement;
-    use Partarum\PartarumPHP\Document\HTMLSeries as HTMLSeries;
-    use Partarum\PartarumPHP\Document\HTMLService;
     use Partarum\PartarumPHP\Document\HTMLArticle;
-    use Partarum\PartarumPHP\Document\HTMLAttribute;
-    use Exception;
+    use Partarum\PartarumPHP\Document\HTMLElement;
+    use Partarum\PartarumPHP\Document\HTMLSeries;
+    use Partarum\PartarumPHP\Document\HTMLService;
     use stdClass;
 
+    trait FeatHTMLPage {
 
-    trait FeatHTMLPage
-    {
-        public $head;
-        public $body;
-        public $wrapper;
-        public $header;
-        public $main;
-        public $footer;
-        public $etc;
-        public $user = [];
-        public $metaUTF8;
-        public $config;
-        public $tagID = [];
-        public $theme;
-        
-        public $fixed = [
+        public mixed $head = null;
+        public mixed $body = null;
+        public mixed $wrapper = null;
+        public mixed $header = null;
+        public mixed $main = null;
+        public mixed $footer = null;
+        public mixed $etc = null;
+        public array $user = [];
+        public mixed $metaUTF8 = null;
+        public mixed $config = null;
+        public array $tagID = [];
+        public ?string $theme = null;
+
+        public array $fixed = [
             "surface",
-        	"surface\\html",
+            "surface\\html",
             "surface\\html\\head",
             "surface\\html\\body",
             "surface\\html\\body\\header",
@@ -37,7 +37,16 @@ namespace Partarum\PartarumPHP\Traits\Document {
             "surface\\html\\body\\footer"
         ];
 
-        public function setWrapperToParentObject(){
+        protected static function ensureUtf8(string $text): string {
+
+            if (mb_check_encoding($text, "UTF-8")) {
+                return $text;
+            }
+
+            return mb_convert_encoding($text, "UTF-8", "ISO-8859-1");
+        }
+
+        public function setWrapperToParentObject(): void {
 
             $this->path["header"] = $this->fixed[4];
             $this->path["main"] = $this->fixed[5];
@@ -50,60 +59,16 @@ namespace Partarum\PartarumPHP\Traits\Document {
             ];
 
             foreach ($wrapper as $path) {
-
                 $this->dom->$path = new stdClass();
             }
-
         }
 
-        public function getDOM()
-        {
+        public function getDOM(): DOMDocument {
+
             return $this->dom->dom;
         }
 
-        public function setWrapper($etc = TRUE)
-        {
-           /*
-            * Parent:
-            * $this->parentObject->"surface/html"->"surface/html/body"
-            *
-            * 1. $this->parentObject->
-            * 2. $this->html->
-            * 3. $this->body
-            * #
-            * 1. $this->dom->
-            * 2. $this->path::html;
-            *
-            * Node: 
-            * $this->parentObject->"surface/html/body"->"surface/html/body/wrapper"
-            *
-            * 1. $this->parentObject->
-            * 2. $this->body->
-            * 3. $this->wrapper
-            *
-            * eigener Path für Childs:
-            * $this->parentObject->"surface/html/body/wrapper"
-            *
-            * 1. $this->parentObject->
-            * 2. $this->wrapper
-            *
-            *
-            * 1.$this->path = [
-            	"surface" => "surface",
-            	"html" => "surface".DIRECTORY_SEPARATOR."html",
-            	"body" => "surface".DIRECTORY_SEPARATOR."html".DIRECTORY_SEPARATOR."body"
-             	];
-            *
-            * 2. $this->dom
-            *
-            * $home = new Office();
-            * $home->page; is like Office::$page = HTMLPage Object
-            * $home->page->parentObject; // deprecated
-            *
-            * $home->page->dom->{path["html]}; return DOMElement Object für <html></html>
-            * #finish
-            *
-            */
+        public function setWrapper(bool $etc = true): void {
 
             $path = $this->path;
             $html = $path["html"];
@@ -112,37 +77,28 @@ namespace Partarum\PartarumPHP\Traits\Document {
             $main = $path["main"];
             $footer = $path["footer"];
 
+            if (!isset($this->dom->$body->$header) || !($this->dom->$body->$header instanceof HTMLElement)) {
+                $this->dom->$body->$header = new HTMLElement("header", $this->dom->$html->$body);
+                $this->dom->$body->$header->id = "globalHeader";
+            }
 
-            /*
-            echo "<pre>";
-            print_r($this->path);
-            print_r($this->dom);
-            */
+            if (!isset($this->dom->$body->$main) || !($this->dom->$body->$main instanceof HTMLElement)) {
+                $this->dom->$body->$main = new HTMLElement("main", $this->dom->$html->$body);
+                $this->dom->$body->$main->id = "content";
+            }
 
-            $this->dom->$body->$header = new HTMLElement("header", $this->dom->$html->$body);
+            if (!isset($this->dom->$body->$footer) || !($this->dom->$body->$footer instanceof HTMLElement)) {
+                $this->dom->$body->$footer = new HTMLElement("footer", $this->dom->$html->$body);
+                $this->dom->$body->$footer->id = "globalFooter";
+            }
 
-            $this->dom->$body->$header->id = "globalHeader";
-
-
-            $this->dom->$body->$main = new HTMLElement("main", $this->dom->$html->$body);
-
-            $this->dom->$body->$main->id = "content";
-
-
-            $this->dom->$body->$footer = new HTMLElement("footer", $this->dom->$html->$body);
-
-            $this->dom->$body->$footer->id = "globalFooter";
-
-
-            if($etc !== FALSE) {
+            if ($etc !== false) {
 
                 $this->dom->$html->$body->class = "flexibal flexColumn allScreen";
 
                 $this->dom->$body->$header->class = "notOverTheLine flexibal flexRow flexWrap";
 
-                //echo GlobalConfig::$theme;
-
-                if(class_exists("Partarum\GlobalConfig")) {
+                if (class_exists(GlobalConfig::class)) {
 
                     if (GlobalConfig::$theme !== "theOffice") {
 
@@ -162,242 +118,171 @@ namespace Partarum\PartarumPHP\Traits\Document {
 
                 $this->dom->$body->$footer->class = "wrapperFooter";
             }
-
         }
 
-        public function setScript($fileName){
+        public function setScript(string $fileName): HTMLElement {
 
             $script = new HTMLElement("script", $this->head);
             $script->setAttribute("src", $fileName);
+            return $script;
         }
 
-        public function setLink($fileName){
+        public function setLink(string $fileName): HTMLElement {
 
             $link = new HTMLElement("link", $this->head);
             $link->setAttribute("href", $fileName);
             $link->setAttribute("rel", "stylesheet");
             $link->setAttribute("type", "text/css");
+            return $link;
         }
 
-        public function setTitle($text){
+        public function setTitle(string $text): HTMLElement {
 
-            $title = new HTMLElement("title", $this->dom->{"surface\html"}->{"surface\html\head"});
-            $title->text = utf8_encode($text);
+            $title = new HTMLElement("title", $this->dom->{"surface\\html"}->{"surface\\html\\head"});
+            $title->text = self::ensureUtf8($text);
+            return $title;
         }
 
-        public function positionNeedle($string){
+        public function positionNeedle(string $string): Generator {
 
             $needle = "surface";
-
             $positionNeedle = stripos($string, $needle);
 
-            yield substr($string, $positionNeedle);
-
+            yield $positionNeedle !== false ? substr($string, $positionNeedle) : $string;
         }
 
-        public function has_string_keys(array $array) {
+        public function has_string_keys(array $array): bool {
 
-            return count(array_filter(array_keys($array), 'is_string')) > 0;
+            return count(array_filter(array_keys($array), "is_string")) > 0;
         }
 
-        public function isAssoc(array $arr)
-        {
-            if (array() === $arr) return false;
+        public function isAssoc(array $arr): bool {
+
+            if ([] === $arr) {
+                return false;
+            }
+
             return array_keys($arr) !== range(0, count($arr) - 1);
         }
 
+        public function getEtcKeys(iterable $etc): Generator {
 
-        public function getEtcKeys($etc){
-        
-       
-
-            foreach($etc as $key => $value){
-
+            foreach ($etc as $key => $value) {
                 yield $key;
             }
         }
 
-        public function getAttributeValue($value){
+        public function getAttributeValue(mixed $value): Generator {
 
-            if ((gettype($value) === "array") && ($this->isAssoc($value) != 1)) {
-
+            if (is_array($value) && !$this->isAssoc($value)) {
                 yield implode(" ", $value);
-
             } else {
-
                 yield $value;
             }
         }
 
-        public function setTextValue($attribute, $loged){
-
-            // loged = angemeldet; logged = protokoliert;
+        public function setTextValue(mixed $attribute, bool $loged): Generator {
 
             if (is_array($attribute)) {
 
-                if ((isset($attribute["member"])) && ($loged === true)) {
-
+                if (isset($attribute["member"]) && ($loged === true)) {
                     yield $attribute["member"];
-
-                } elseif ((isset($attribute["public"])) && ($loged === false)) {
-
+                } elseif (isset($attribute["public"]) && ($loged === false)) {
                     yield $attribute["public"];
-
                 }
-
-                /*
-                 *
-                 * Hier kommt dann noch ein "else" hin für Textarrays, wo jeder Arraywert ein Textteil darstellt!!!
-                 *
-                 * z.B.: mit Schlüssel die ein Element vorschreiben
-                 *
-                 *  const TEXT = [
-                 *  "p" => "Hallo",
-                 *  "small" => "Welt"
-                 * ];
-                 *
-                 */
             }
         }
 
-        /*
-         *  setEtc muss noch angepasst werden !!!
-         *
-         */
+        public function setEtc(string $parentPath, string $domPath, array $etc, string $tagName): void {
 
-        public function setEtc($parentPath, $domPath, $etc, $tagName){
+            if (isset($this->dom->$parentPath)) {
 
-            /*
-             *  $node = string =
-             *  $nodeName =
-             *  $tagName =
-             *  $etc = etc - Array
-             */
-            //$nodeException = new Exception("No Node by path");
-
-            //echo "<br>".$domPath;
-
-            /*
-            echo "<pre>";
-            echo "<br> etc = ";
-            print_r($etc);
-            */
-
-            // muss abgeändert werden!!!
-
-            if ((is_string($parentPath) && (isset($this->dom->$parentPath))) && (is_array($etc))) {
-
-
-                $node = (isset($this->dom->$parentPath->$domPath)) ? $this->dom->$parentPath->$domPath : false;
+                $node = $this->dom->$parentPath->$domPath ?? false;
 
                 $loged = false;
 
                 $etcID = $etc["ID"] ?? false;
 
-                /*
-                echo "<br> etc =";
-                echo "<pre>";
-                print_r($etc);
-                */
-
-                $etcKeys = $this->getEtcKeys($etc); // Generator
+                $etcKeys = $this->getEtcKeys($etc);
 
                 foreach ($etcKeys as $value) {
 
-                    if ($value != "COUNT") {
+                    if ($value !== "COUNT") {
 
-                        // Kleinschreibung erzeugen
-                        $little = ($value == "CLASSNAMES") ? "class" : strtolower($value);
-                        
-                        $getAttrValue = $this->getAttributeValue($etc[$value]); // Generator
+                        $little = ($value === "CLASSNAMES") ? "class" : strtolower((string)$value);
+
+                        $getAttrValue = $this->getAttributeValue($etc[$value]);
 
                         $attribute = $getAttrValue->current();
 
-                        if ($value == "TEXT") {
+                        if ($value === "TEXT") {
 
-                            $getTextValue = $this->setTextValue($attribute, $loged); // Generator
+                            $getTextValue = $this->setTextValue($attribute, $loged);
 
-                            foreach( $getTextValue as $attr){
-
+                            foreach ($getTextValue as $attr) {
                                 $attribute = $attr;
                             }
                         }
-                        
-                        if (($value == "TEXTFILE") || ($value == "TEMPLATE")){
 
-                            // absolute Pfadangabe - SplFileObject !!!
-                            /*
-                            echo "<pre>";
-                            print_r($this->etc->templatePaths);
-                            */
+                        if (($value === "TEXTFILE") || ($value === "TEMPLATE")) {
 
-                            if(isset($this->etc->templatePaths->$domPath)) {
+                            if (isset($this->etc->templatePaths->$domPath)) {
 
-                                //echo "<br>featHTMLPage extension = ".$this->etc->extension;
+                                if (in_array($this->etc->extension, ["txt", "plain", "html"], true)) {
 
-                                if(in_array($this->etc->extension, ["txt", "plain", "html"])) {
-
-                                    $articel = new HTMLArticle(
+                                    new HTMLArticle(
                                         $this->etc->templatePaths->$domPath,
                                         $this->dom->$parentPath->$domPath
                                     );
-                                }elseif($this->etc->extension == "js"){
+                                } elseif ($this->etc->extension === "js" && isset($etc["TEMPLATE"])) {
 
                                     $script = new HTMLElement("script", $this->dom->$parentPath->$domPath);
                                     $script->type = "module";
-
-                                    $script->src = $etc["TEMPLATE"];
+                                    $script->src = (string)$etc["TEMPLATE"];
                                 }
+                            } elseif (isset($etc["TEMPLATE"])) {
+
+                                $script = new HTMLElement("script", $this->dom->$parentPath->$domPath);
+                                $script->type = "module";
+                                $script->src = (string)$etc["TEMPLATE"];
                             }
-                           // echo "<br> TEMPLATE = ".$etc[$value];
-
-                            $script = new HTMLElement("script", $this->dom->$parentPath->$domPath);
-                            $script->type = "module";
-
-                            $script->src = $etc["TEMPLATE"];
                         }
 
-                        if (!is_array($attribute) && (get_class($node) == "Partarum\Document\HTMLSeries")) {
+                        if (!is_array($attribute) && ($node instanceof HTMLSeries)) {
 
-                            if ($value !== "ID"){
+                            if ($value !== "ID") {
 
-                                /*
-                                echo "<pre>";
-                                print_r($node);
-                                */
+                                $node->$little = array_fill(
+                                    0,
+                                    count($node->elements),
+                                    self::ensureUtf8((string)$attribute)
+                                );
 
-                                $node->$little = array_fill(0, count($node->elements), utf8_encode($attribute));
+                            } elseif ($etcID === true) {
 
-                            } elseif (($value === "ID") && ($etcID === true)) {
+                                $getID = HTMLService::createID($tagName, count($node->elements));
 
-                               // echo "<br>etcID = ".$etcID;
-
-                                $getID = HTMLService::createID($tagName, count($node->elements)); // $tagName statt $etc !!
-
-                                foreach($node->elements as $partNode) {
-
+                                foreach ($node->elements as $partNode) {
                                     $partNode->id = $getID->current();
                                     $getID->next();
                                 }
-                            } elseif(($value == "ID") && (is_string($attribute))){
-
-                                //echo "<br> attribute FeatHTMLPage 350 = ".$attribute;
+                            } elseif (is_string($attribute) && isset($node->elements[0])) {
 
                                 $node->elements[0]->$little = $attribute;
                             }
-                        } elseif ((is_array($attribute)) && (get_class($node) == "Partarum\Document\HTMLSeries")) {
+                        } elseif (is_array($attribute) && ($node instanceof HTMLSeries)) {
 
                             $counter = 1;
 
-                            foreach ($node->elements as $key => $partNode) {
+                            foreach ($node->elements as $partNode) {
 
                                 if (isset($attribute[$counter])) {
-
                                     $partNode->$little = $attribute[$counter];
                                 }
                                 $counter++;
                             }
                         }
+
                         $getAttrValue->next();
                     }
                 }

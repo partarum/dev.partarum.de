@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Partarum\PartarumPHP\HTTP\Response {
 
     use Partarum\PartarumPHP\HTTP\Header;
@@ -19,49 +21,42 @@ namespace Partarum\PartarumPHP\HTTP\Response {
             $this->bodyObject = new BodyObject();
         }
 
-
         /*
          *  immer Generel oder Response - Header
          */
 
-        public function addHeader(array $value, int $type){
+        public function addHeader(array $value, int $type): void {
 
+            switch ($type) {
 
-            switch($type){
-
-                case Header::TYPE_GENEREL | Header::TYPE_RESPONSE :
-
-                    break;
-
+                case Header::TYPE_GENEREL | Header::TYPE_RESPONSE:
                 case Header::TYPE_ENTITY:
 
                     $this->headerObject->addHeader($value);
                     break;
             }
-
         }
 
-
         /**
-         * @param     $body
+         * @param mixed $body
          */
-        public function addBody($body){
+        public function addBody(mixed $body): void {
 
             $this->bodyObject->addBody($body);
         }
 
-        public function open($status = 200){
+        public function open(int $status = 200): void {
 
             http_response_code($status);
 
-            $this->headerObject->setHeader();
-
-            if(!isset($this->headerObject->contentType)){
+            if (!isset($this->headerObject->contentType)) {
 
                 $this->headerObject->addHeader([Entity::CONTENT_TYPE => "json"]);
             }
 
-            $this->bodyObject->setType($this->headerObject->contentType);
+            $this->headerObject->setHeader();
+
+            $this->bodyObject->setType((string)$this->headerObject->contentType);
 
             $this->bodyObject->setBody();
         }

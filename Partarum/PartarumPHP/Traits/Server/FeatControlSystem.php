@@ -1,62 +1,54 @@
 <?php
+declare(strict_types=1);
+
 namespace Partarum\PartarumPHP\Traits\Server;
 
-trait FeatControlSystem
-{
-    public static $slash;
+trait FeatControlSystem {
 
-    public static function getLocation()
-    {
-        $host = $_SERVER["HTTP_HOST"];
+    public static ?string $slash = null;
 
-        if($host == "localhost")
-        {
+    public static function getLocation(): string {
+
+        $host = (string)($_SERVER["HTTP_HOST"] ?? "");
+
+        if ($host === "localhost") {
             return "C:\\inetpub\\wwwroot\\";
         }
-        else if($host == "bombis.lacerta.uberspace.de")
-        {
+
+        if ($host === "bombis.lacerta.uberspace.de") {
             return "/var/www/virtual/bombis/html";
         }
 
-        exit();
+        return defined("ROOT") ? (string)ROOT : (string)($_SERVER["DOCUMENT_ROOT"] ?? "");
     }
 
-    public static function setLocation($item="index.php")
-    {
-        $host = $_SERVER["HTTP_HOST"];
+    public static function setLocation(string $item = "index.php"): void {
 
-        if($host == "localhost")
-        {
-            header("Location: http://localhost/html/".$item);
-            exit();
-        }
-        else if($host == "bombis.lacerta.uberspace.de")
-        {
-            header("Location: http://bombis.lacerta.uberspace.de/".$item);
-            exit();
+        $host = (string)($_SERVER["HTTP_HOST"] ?? "");
+
+        if (!headers_sent()) {
+            if ($host === "localhost") {
+                header("Location: http://localhost/html/" . $item);
+                exit();
+            }
+
+            if ($host === "bombis.lacerta.uberspace.de") {
+                header("Location: http://bombis.lacerta.uberspace.de/" . $item);
+                exit();
+            }
         }
     }
 
-    public static function getSystem()
-    {
+    public static function getSystem(): string {
 
-        switch (preg_match("/\//", $_SERVER["DOCUMENT_ROOT"], $result, PREG_OFFSET_CAPTURE)){
+        $docRoot = (string)($_SERVER["DOCUMENT_ROOT"] ?? __DIR__);
 
-            case 1:
-
-                self::$slash = "/";
-                return "/";
-                break;
-
-            case 0:
-
-                self::$slash = "\\";
-                return "\\";
-                break;
+        if (preg_match("/\//", $docRoot) === 1) {
+            self::$slash = "/";
+            return "/";
         }
 
-        exit();
+        self::$slash = "\\";
+        return "\\";
     }
 }
-
-?>

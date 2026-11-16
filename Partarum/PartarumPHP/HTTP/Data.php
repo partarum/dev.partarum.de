@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Partarum\PartarumPHP\HTTP {
 
     use JsonException;
@@ -11,124 +13,136 @@ namespace Partarum\PartarumPHP\HTTP {
 
         public const RESPONSE = 4;
 
-        public static $header;
-        
-        
-        public static function __callStatic($name, $arg){
-            
-            switch($name) {
-                    
-                case "fromGET":
-                    
-                    //return self::fromGET($arg);
-                    return "static Pups";
-                    break;
-            }
-        }
-        
-        public function __call($name, $arg){
-            
-            switch($name) {
-                    
-                case "fromGET":
-                    
-                    //return self::fromGET($arg);
-                    return "non static Pups";
-                    break;
-            }
-        }
+        public static mixed $header = null;
 
-        
-        public static function fromGET(?string $needle = NULL) : null | string | array {
-            
-            if(count($_GET) > 0){
+        public static function fromGET(?string $needle = null): null | string | array {
 
-                if(isset($needle)){
+            if (count($_GET) > 0) {
 
-                    return $_GET[$needle] ?? NULL;
-                } else {
+                if (isset($needle)) {
 
-                    return $_GET;
+                    return $_GET[$needle] ?? null;
                 }
+
+                return $_GET;
             }
 
-            return NULL;
+            return null;
         }
-
 
         /**
          * @param string|null $needle
          * @return string|array|null
          */
-        public static function fromPOST(?string $needle = NULL) : null | string | array {
+        public static function fromPOST(?string $needle = null): null | string | array {
 
-            $post = NULL;
-
-            if(count($_POST) > 0){
-
-                $post = $_POST;
-
-            }
+            $post = (count($_POST) > 0) ? $_POST : null;
 
             try {
 
                 $postData = file_get_contents("php://input");
 
-                try {
+                if (is_string($postData) && trim($postData) !== "") {
+                    try {
 
-                    $post = json_decode($postData, TRUE, 512, JSON_THROW_ON_ERROR);
+                        $decoded = json_decode($postData, true, 512, JSON_THROW_ON_ERROR);
 
-                } catch (JsonException $e) {
+                        if (is_array($decoded)) {
+                            $post = ($post !== null) ? array_merge($post, $decoded) : $decoded;
+                        } elseif ($needle === null && is_string($decoded)) {
+                            $post = $decoded;
+                        }
 
+                    } catch (JsonException $e) {
+                        error_log("[Partarum][Data] JSON decode error in fromPOST: " . $e->getMessage());
+                    }
                 }
-            } catch(RuntimeException $e){
-
+            } catch (RuntimeException $e) {
+                error_log("[Partarum][Data] Failed reading php://input: " . $e->getMessage());
             }
 
-            if(isset($post)){
+            if (isset($post)) {
 
-                if(isset($needle)){
+                if (isset($needle)) {
 
-                    return $post[$needle] ?? NULL;
-                } else {
-
-                    return $post;
+                    return is_array($post) ? ($post[$needle] ?? null) : null;
                 }
+
+                return $post;
             }
 
-            return NULL;
+            return null;
         }
 
-        public static function fromHeader(?string $needle = NULL, ?int $flag = NULL) {
+        public static function fromHeader(?string $needle = null, ?int $flag = null): mixed {
 
             $headerObject = new HTTPHeaderObject();
 
-            if(isset($flag)){
+            if (isset($flag)) {
 
-                switch($flag) {
+                switch ($flag) {
 
-                    case DATA::REQUEST:
+                    case Data::REQUEST:
 
-                        $headerObject->request = apache_request_headers();
+                        $headerObject->request = self::readRequestHeaders();
 
-                        return (isset($needle)) ? $headerObject->request[$needle] ?? NULL : $headerObject;
+                        return (isset($needle)) ? ($headerObject->request[$needle] ?? null) : $headerObject;
 
-                    case DATA::RESPONSE:
+                    case Data::RESPONSE:
 
-                        $headerObject->response = apache_response_headers();
+                        $headerObject->response = self::readResponseHeaders();
 
-                        return (isset($needle)) ? $headerObject->response[$needle] ?? NULL : $headerObject;
+                        return (isset($needle)) ? ($headerObject->response[$needle] ?? null) : $headerObject;
                 }
             }
 
-            $headerObject->request = apache_request_headers();
+            $headerObject->request = self::readRequestHeaders();
+            $headerObject->response = self::readResponseHeaders();
 
-            if(function_exists("apache_response_headers")) {
-                $headerObject->response = apache_response_headers();
+            return (isset($needle)) ? (($headerObject->response[$needle] ?? $headerObject->request[$needle]) ?? null) : $headerObject;
+        }
+
+        private static function readRequestHeaders(): array {
+
+            if (function_exists("apache_request_headers")) {
+                $headers = apache_request_headers();
+                if (is_array($headers)) {
+                    return $headers;
+                }
             }
 
-            return (isset($needle)) ? ($headerObject->response[$needle] ?? $headerObject->request[$needle]) ?? NULL : $headerObject;
+            $headers = [];
+            foreach ($_SERVER as $key => $value) {
+                if (str_starts_with((string)$key, "HTTP_")) {
+                    $headerName = str_replace(" ", "-", ucwords(strtolower(str_replace("_", " ", substr((string)$key, 5)))));
+                    $headers[$headerName] = $value;
+                } elseif (in_array($key, ["CONTENT_TYPE", "CONTENT_LENGTH", "CONTENT_MD5"], true)) {
+                    $headerName = str_replace(" ", "-", ucwords(strtolower(str_replace("_", " ", (string)$key))));
+                    $headers[$headerName] = $value;
+                }
+            }
 
+            return $headers;
+        }
+
+        private static function readResponseHeaders(): array {
+
+            if (function_exists("apache_response_headers")) {
+                $headers = apache_response_headers();
+                if (is_array($headers)) {
+                    return $headers;
+                }
+            }
+
+            $headers = [];
+            foreach (headers_list() as $rawHeader) {
+                $parts = explode(":", $rawHeader, 2);
+                if (count($parts) === 2) {
+                    $headers[trim($parts[0])] = trim($parts[1]);
+                }
+            }
+
+            return $headers;
         }
     }
 }

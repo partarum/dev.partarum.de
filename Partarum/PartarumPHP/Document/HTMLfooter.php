@@ -1,16 +1,12 @@
 <?php
+declare(strict_types=1);
+
 namespace Partarum\PartarumPHP\Document {
 
-    use Partarum\PartarumPHP\Document\HTMLetcElementInfo;
+    use AllowDynamicProperties;
 
+    #[AllowDynamicProperties]
     class HTMLfooter {
 
-        /*
-        public function __set($name, $value){
-
-            $this->$name = new HTMLetcElementInfo();
-            $this->$name->$value = $value;
-        }
-        */
     }
 }

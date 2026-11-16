@@ -1,41 +1,40 @@
 <?php
+declare(strict_types=1);
+
 namespace Partarum\PartarumPHP\Document {
 
-    use Partarum\PartarumPHP\Document\HTMLSeries;
+    class HTMLFamily extends HTMLElement {
 
-    class HTMLFamily extends HTMLElement
-    {
+        public function setChild(object|string $name): HTMLElement {
 
-        public function setChild($name)
-        {
-            /*
-                Wird automatisch zu children hinzugefügt
-            */
-            $el = new HTMLElement($name, $this);
+            return new HTMLElement($name, $this);
         }
 
-        public function setChildren($name, $quantity = 1)
-        {
-            $el = new HTMLSeries($name, $this, $quantity);
+        public function setChildren(object|string $name, int $quantity = 1): HTMLSeries {
+
+            return new HTMLSeries($name, $this, $quantity);
         }
 
-        public function setGrandChild($name, $parent = 0)
-        {
-            $el = new HTMLElement($name, $this->children[$parent]);
+        public function setGrandChild(object|string $name, int $parent = 0): ?HTMLElement {
+
+            if (!isset($this->children[$parent])) {
+                return null;
+            }
+
+            return new HTMLElement($name, $this->children[$parent]);
         }
 
-        public function setGrandChildren($name, $parent = 0, $quantity = 1)
-        {
-            $el = new HTMLSeries($name, $this->children[$parent], $quantity);
+        public function setGrandChildren(object|string $name, int $parent = 0, int $quantity = 1): ?HTMLSeries {
+
+            if (!isset($this->children[$parent])) {
+                return null;
+            }
+
+            return new HTMLSeries($name, $this->children[$parent], $quantity);
         }
 
-        public function __construct($name, $parent)
-        {
-            /*
-                $name ist der Elementname
+        public function __construct(object|string $name, mixed $parent) {
 
-                $parent ist das Elternobject
-            */
             parent::__construct($name, $parent);
         }
     }

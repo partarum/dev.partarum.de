@@ -1,65 +1,59 @@
 <?php
+declare(strict_types=1);
+
 namespace Partarum\PartarumPHP\System\Memory {
 
-    use JsonException;
     use Shmop;
 
     class SharedFactory {
 
-        protected static function getOwnCache($ownCacheInstance, $key, $size ) : array | bool {
+        protected static function getOwnCache(?Shmop $ownCacheInstance, int $key, int $size): array | bool {
 
-            $ownInstance = NULL;
-
-            $ownCache = NULL;
-
-            if($ownCacheInstance === NULL){
-
-               $ownInstance =  self::getOwnCacheInstance($key, $size);
-
-               $ownCache = SharedHelper::jsonToArray(shmop_read($ownInstance, 0, $size));
-
-            } else {
-
-                return TRUE;
+            if ($ownCacheInstance !== null) {
+                return true;
             }
 
-            return (isset($ownInstance, $ownCache)) ? ["instance" => $ownInstance, "cache" => $ownCache] : FALSE;
-        }
+            $ownInstance = self::getOwnCacheInstance($key, $size);
 
-        private static function getOwnCacheInstance($key, $size) : Shmop | null {
-
-            return self::getCacheInstance($key,$size) ?? self::createCacheInstance($key, $size);
-        }
-
-        protected static function createCacheInstance(int $key, int $size = 1024) : Shmop | null {
-
-            echo "<p>create Cache Instance</p>";
-
-            $cacheInstance = shmop_open($key, "c", 0644, $size);
-
-            return ($cacheInstance !== false) ? $cacheInstance : NULL;
-        }
-
-        protected static function getCacheInstance(int $key, int $size = 1024) : Shmop | null {
-
-            echo "<pre>";
-
-            var_dump($size);
-
-            var_dump(dechex($key));
-
-            debug_print_backtrace();
-
-            $cacheInstance = FALSE;
-
-            if($testInstance = shmop_open($key, "a", 0644, $size)) {
-
-                $cacheInstance = shmop_open($key, "w", 0644, $size);
-
-                var_dump($cacheInstance);
+            if ($ownInstance === null) {
+                return false;
             }
 
-            return ($cacheInstance !== FALSE) ? $cacheInstance : NULL;
+            $raw = shmop_read($ownInstance, 0, $size);
+            $ownCache = is_string($raw) ? (SharedHelper::jsonToArray($raw) ?? []) : [];
+
+            return ["instance" => $ownInstance, "cache" => $ownCache];
+        }
+
+        private static function getOwnCacheInstance(int $key, int $size): ?Shmop {
+
+            return self::getCacheInstance($key, $size) ?? self::createCacheInstance($key, $size);
+        }
+
+        protected static function createCacheInstance(int $key, int $size = 1024): ?Shmop {
+
+            if (!function_exists("shmop_open")) {
+                return null;
+            }
+
+            $cacheInstance = @shmop_open($key, "c", 0644, $size);
+
+            return ($cacheInstance !== false) ? $cacheInstance : null;
+        }
+
+        protected static function getCacheInstance(int $key, int $size = 1024): ?Shmop {
+
+            if (!function_exists("shmop_open")) {
+                return null;
+            }
+
+            $cacheInstance = false;
+
+            if (@shmop_open($key, "a", 0, 0) !== false) {
+                $cacheInstance = @shmop_open($key, "w", 0, 0);
+            }
+
+            return ($cacheInstance !== false) ? $cacheInstance : null;
         }
     }
 }

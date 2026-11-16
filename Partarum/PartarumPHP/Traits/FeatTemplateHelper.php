@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  *          Copyright 2020 © Alexander Bombis. All rights reserved.
  *          Developed by Alexander Bombis.
@@ -11,44 +12,33 @@
  */
 namespace Partarum\PartarumPHP\Traits;
 
-trait FeatTemplateHelper
-{
+trait FeatTemplateHelper {
 
-    protected function setListOfLinks($array, $language = FALSE)
-    {
+    protected function setListOfLinks(iterable $array, string | false $language = false): void {
 
-        foreach ($array as $element => $value) {
+        foreach ($array as $value) {
+            if (!is_object($value)) {
+                continue;
+            }
 
             if (empty($value->display)) {
+                $href = isset($value->href) ? (string)$value->href : "";
+                $navOne = "<li><a href='{$href}' ";
 
-                $navOne = "<li>";
-                $navOne .= "<a ";
-                $navOne .= "href='{$value->href}' ";
-
-                if ($props = get_object_vars($value)) {
-
-                    if (count($props) > 2) {
-
-                        foreach ($props as $nextAttr => $nextAttrValue) {
-
-                            if (($nextAttr !== "href") && ($nextAttr !== "text")) {
-
-                                $navOne .= $nextAttr . "='" . $nextAttrValue . "'";
-                            }
+                $props = get_object_vars($value);
+                if (count($props) > 2) {
+                    foreach ($props as $nextAttr => $nextAttrValue) {
+                        if (($nextAttr !== "href") && ($nextAttr !== "text") && is_scalar($nextAttrValue)) {
+                            $navOne .= $nextAttr . "='" . $nextAttrValue . "'";
                         }
                     }
                 }
                 $navOne .= " >";
 
-                if(is_string($value->text)) {
-
+                if (isset($value->text) && is_string($value->text)) {
                     $navOne .= $value->text;
-                } else {
-
-                    if($language !== FALSE){
-
-                        $navOne .= $value->text->{$language};
-                    }
+                } elseif ($language !== false && isset($value->text) && is_object($value->text) && isset($value->text->{$language})) {
+                    $navOne .= (string)$value->text->{$language};
                 }
 
                 $navOne .= "</a></li>";
@@ -58,24 +48,19 @@ trait FeatTemplateHelper
         }
     }
 
-    protected function setHeadline($text, $size, $language){
+    protected function setHeadline(string | object $text, int | string $size = 5, string $language = "de"): void {
 
         $textValue = $this->setLanguage($text, $language);
 
-        $headline = "<h5>".$textValue."</h5>";
-        echo $headline;
+        echo "<h5>" . $textValue . "</h5>";
     }
 
-    protected function setLanguage($item, $language = "de"){
+    protected function setLanguage(string | object $item, string $language = "de"): string {
 
-        if(is_string($item)) {
-
-            $string = $item;
-        } else {
-
-            $string = $item->{$language};
+        if (is_string($item)) {
+            return $item;
         }
 
-        return $string;
+        return isset($item->{$language}) ? (string)$item->{$language} : "";
     }
 }

@@ -1,16 +1,16 @@
 <?php
-namespace Partarum\PartarumPHP\HTTP\Response {
+declare(strict_types=1);
 
+namespace Partarum\PartarumPHP\HTTP\Response {
 
     use ArrayIterator;
     use JsonException;
-    use Partarum\PartarumPHP\HTTP\Header;
 
     class BodyObject {
 
         public ArrayIterator $cache;
 
-        public string $type;
+        public string $type = "JSON";
 
         private array $outputJSON = [];
 
@@ -21,27 +21,31 @@ namespace Partarum\PartarumPHP\HTTP\Response {
             $this->cache = new ArrayIterator([]);
         }
 
-        public function addBody($body) : void {
+        public function addBody(mixed $body): void {
 
             $this->cache->append($body);
-
         }
 
-        public function setType($contentType) {
+        public function setType(string $contentType): void {
 
-            $this->type = match($contentType){
+            $this->type = match (strtolower($contentType)) {
                 "json" => "JSON",
+                "text", "html", "xml" => "Text",
                 default => $contentType
             };
         }
 
-        public function setBody(){
+        public function setBody(): void {
 
             $method = "add_" . $this->type;
 
-            while($this->cache->valid()){
+            $this->cache->rewind();
 
-                $this->$method($this->cache->current());
+            while ($this->cache->valid()) {
+
+                if (method_exists($this, $method)) {
+                    $this->$method($this->cache->current());
+                }
 
                 $this->cache->next();
             }
@@ -49,36 +53,38 @@ namespace Partarum\PartarumPHP\HTTP\Response {
             $this->sendOutput();
         }
 
-        private function sendOutput() : void {
+        private function sendOutput(): void {
 
             $method = "send_" . $this->type;
 
-            $this->$method();
+            if (method_exists($this, $method)) {
+                $this->$method();
+            }
         }
 
-        private function add_JSON($content){
+        private function add_JSON(mixed $content): void {
 
             $this->outputJSON[] = $content;
         }
 
-        private function send_JSON(){
+        private function send_JSON(): void {
 
             try {
 
                 echo json_encode($this->outputJSON, JSON_THROW_ON_ERROR);
 
-            } catch(JsonException $je){
-
+            } catch (JsonException $je) {
+                error_log("[Partarum][BodyObject] JSON encode failed: " . $je->getMessage());
                 echo '{"error": "Output not produce"}';
             }
         }
 
-        private function add_Text($content){
+        private function add_Text(mixed $content): void {
 
-            $this->outputTEXT .= $content . PHP_EOL;
+            $this->outputTEXT .= (string)$content . PHP_EOL;
         }
 
-        private function send_Text(){
+        private function send_Text(): void {
 
             echo $this->outputTEXT;
         }

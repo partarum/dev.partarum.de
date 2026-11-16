@@ -1,7 +1,8 @@
 <?php
+declare(strict_types=1);
+
 namespace Partarum\PartarumPHP\HTTP {
 
-    use JsonException;
     use Partarum\PartarumPHP\HTTP\Header;
     use Partarum\PartarumPHP\HTTP\Header\Entity;
     use Partarum\PartarumPHP\Security\Token\UUID;
@@ -17,11 +18,10 @@ namespace Partarum\PartarumPHP\HTTP {
 
         public function __construct() {
 
-            $this->id = UUID::v4()->current();
+            $this->id = (string)UUID::v4()->current();
             
             $this->channel = new Channel();
         }
-        
 
         /*
          *  Generel and Response - Header !!!!
@@ -30,7 +30,7 @@ namespace Partarum\PartarumPHP\HTTP {
          *
          *  oder Strings im Array
          */
-        public function setHeader( string|array $value) : void {
+        public function setHeader(string | array $value): void {
 
             $header = is_string($value) ? [$value] : $value;
 
@@ -39,19 +39,18 @@ namespace Partarum\PartarumPHP\HTTP {
             $this->isHeader = true;
         }
 
-        public function setBody($body){
+        public function setBody(mixed $body): void {
 
             $this->channel->addBody($body);  // Entity - Header
-
         }
 
-        public function setStatus($status): void {
+        public function setStatus(int $status): void {
             http_response_code($status);
         }
 
-        public function run($status = 200): void {
+        public function run(int $status = 200): void {
 
-            if(!isset($this->channel->headerObject->contentType)){
+            if (!isset($this->channel->headerObject->contentType)) {
 
                 $this->channel->addHeader([Entity::CONTENT_TYPE => "json"], Header::TYPE_ENTITY);
 
@@ -61,19 +60,19 @@ namespace Partarum\PartarumPHP\HTTP {
             $this->channel->open($status);
         }
 
-        public function getPostFromRequest(){
+        public function getPostFromRequest(): null | string | array {
+            return Data::fromPOST();
+        }
+
+        public function getHeaderFromRequest(?string $needle = null): mixed {
+            return Data::fromHeader($needle, Data::REQUEST);
+        }
+
+        public function getRequestInfo(): void {
 
         }
 
-        public function getHeaderFromRequest(){
-
-        }
-
-        public function getRequestInfo(){
-
-        }
-
-        public function createUUID() : array {
+        public function createUUID(): array {
             return ["v4" => UUID::v4()->current()];
         }
     }

@@ -1,8 +1,12 @@
 <?php
+declare(strict_types=1);
+
 namespace Partarum\PartarumPHP\Document {
 
-    class HTMLCollection
-    {
+    use AllowDynamicProperties;
+
+    #[AllowDynamicProperties]
+    class HTMLCollection {
 
     }
 }

@@ -1,19 +1,19 @@
 <?php
-error_reporting(-1);
-ini_set("display_errors", "1");
+declare(strict_types=1);
 
-session_start();
-
-if (!class_exists(\Partarum\Partarum::class)) {
-    require_once $_SERVER["DOCUMENT_ROOT"] . "/Partarum/Partarum.php";
+if (session_status() === PHP_SESSION_NONE && !headers_sent()) {
+    session_start();
 }
-use Partarum\Partarum;
 
+use Partarum\Partarum;
 use Partarum\PartarumPHP\Helper\Date\DateFormatter;
 use Partarum\PartarumPHP\HTTP\API;
-use Partarum\PartarumPHP\Security\Token\JWT;
 
-$backend = new Partarum("getToken");
+if (!class_exists(Partarum::class)) {
+    require_once dirname(__DIR__, 3) . "/Partarum/Partarum.php";
+}
+
+$backend = new Partarum("stopSurvey");
 
 $api = new API();
 
@@ -27,9 +27,9 @@ $postKeys = [
     "RHD" => $api->fromPOST("rhd")
 ];
 
-$bearer = explode("Bearer ", $api->fromHeader("Authorization", API::REQUEST));
+$bearerToken = $api->fromBearerToken();
 
-if($backend->isIntoCache("Bearer:" . $bearer[1])){
+if ($bearerToken !== null && $backend->isIntoCache("Bearer:" . $bearerToken)) {
 
     $db = $backend->createDBConnection();
 
@@ -37,37 +37,22 @@ if($backend->isIntoCache("Bearer:" . $bearer[1])){
 
     foreach ($postKeys as $key => $value) {
 
-        if ($postKeyCheckALL !== NULL) {
-
+        if ($postKeyCheckALL !== null || $value !== null) {
             $resultDB[$key] = $db->get("survey_dashboard", "survey_start", [
                 "topic" => $key
             ]);
-
-        } else {
-
-            if ($value !== null) {
-
-                $resultDB[$key] = $db->get("survey_dashboard", "survey_start", [
-                    "topic" => $key
-                ]);
-            } else {
-
-                unset($resultDB[$key]);
-            }
         }
     }
 
     $updateArrayResult = [];
-
     $countArrayResult = [];
-
     $deleteArrayResult = [];
 
     foreach ($resultDB as $key => $value) {
 
-        $now = ($value !== null) ? DateFormatter::format_DE(time(), null, "yyyy-MM-dd") : null;
+        $now = ($value !== null) ? (string)DateFormatter::format_DE(time(), null, "yyyy-MM-dd") : null;
 
-        $countArrayResult[$key] = $db->count("survey", [
+        $countArrayResult[$key] = (int)$db->count("survey", [
             "topic" => $key
         ]);
 
@@ -88,7 +73,7 @@ if($backend->isIntoCache("Bearer:" . $bearer[1])){
             "topic" => $key
         ]);
 
-        $deleteArrayResult[$key] = $deletedResult->rowCount();
+        $deleteArrayResult[$key] = ($deletedResult instanceof \PDOStatement) ? $deletedResult->rowCount() : 0;
     }
 
     $statusArrayResult = [];
@@ -100,9 +85,14 @@ if($backend->isIntoCache("Bearer:" . $bearer[1])){
         ]);
     }
 
-    $api->createJSONResponse(["stopped" => $updateArrayResult, "status" => $statusArrayResult, "stoppedCount" => $countArrayResult, "deletedCount" => $deleteArrayResult])->run();
+    $api->createJSONResponse([
+        "stopped" => $updateArrayResult,
+        "status" => $statusArrayResult,
+        "stoppedCount" => $countArrayResult,
+        "deletedCount" => $deleteArrayResult
+    ])->run();
 
 } else {
 
-    $api->createJSONResponse(["status" => "Your beer is stale", "beer" => $bearer])->run(403);
+    $api->createJSONResponse(["status" => "Your beer is stale", "beer" => $bearerToken])->run(403);
 }

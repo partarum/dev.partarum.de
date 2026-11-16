@@ -1,47 +1,32 @@
 <?php
+declare(strict_types=1);
+
 namespace Partarum\PartarumPHP\Filesystem {
 
+    use FilesystemIterator;
+    use Generator;
 
-    use \FilesystemIterator;
+    class DirectoryGenerator {
 
-    class DirectoryGenerator
-    {
-        public $path;
+        public string $path;
 
-        public function __construct($path)
-        {
-           // echo "<br> Generator1 __construct path = ".$path;
+        public function __construct(string $path) {
+
             $this->path = $path;
         }
 
-        public function getFilesystem()
-        {
+        public function getFilesystem(): Generator {
 
-            //echo "<br> Generator 1 time: ".microtime();
-
-            if ($this->path !== "") {
-                $result = new FilesystemIterator($this->path,
+            if ($this->path !== "" && is_dir($this->path)) {
+                $result = new FilesystemIterator(
+                    $this->path,
                     FilesystemIterator::CURRENT_AS_SELF |
                     FilesystemIterator::SKIP_DOTS |
-                    FilesystemIterator::FOLLOW_SYMLINKS);  //Iterator
-
-
-                /*
-                echo "<br> Start Ausgabe Generator 1 getFilesystem() result = ".$result->hasChildren();
-                echo "<pre>";
-                print_r($result);
-                echo "<br> Ende Ausgabe Generator 1 getFilesystem() result !";
-                */
+                    FilesystemIterator::FOLLOW_SYMLINKS
+                );
 
                 foreach ($result as $file) {
-
-                    /*
-                    echo "<br> Generator 1 result = ";
-                    echo "<pre>";
-                    print_r($file);
-                    */
-
-                    yield $file;    // Generator SPLFileInfo-Object
+                    yield $file;
                 }
             }
         }

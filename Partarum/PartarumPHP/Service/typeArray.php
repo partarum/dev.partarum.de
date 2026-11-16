@@ -1,22 +1,25 @@
 <?php
+declare(strict_types=1);
+
 namespace Partarum\PartarumPHP\Service {
 
     class typeArray {
 
-        public static function is_Assoc(array &$array ) : bool {
+        public static function is_Assoc(array $array): bool {
 
-            return is_array($array) and (array_values($array) !== $array);
+            return $array !== [] && (array_values($array) !== $array);
         }
 
-        public static function every(array &$array, $function)  : bool {
+        public static function every(array $array, callable $function): bool {
 
-            foreach($array as $key => $value){
+            foreach ($array as $value) {
 
-                if(!$function($value)){ return FALSE;}
+                if (!$function($value)) {
+                    return false;
+                }
             }
 
-            return TRUE;
-
+            return true;
         }
 
     }

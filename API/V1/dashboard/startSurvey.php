@@ -1,18 +1,14 @@
 <?php
-//error_reporting(-1);
-//ini_set("display_errors", "1");
+declare(strict_types=1);
 
-//session_start();
-
-if (!class_exists(\Partarum\Partarum::class)) {
-    require_once $_SERVER["DOCUMENT_ROOT"] . "/Partarum/Partarum.php";
-}
-
-use Carbon\Carbon;
 use Partarum\Partarum;
-use Partarum\PartarumPHP\HTTP\API;
-use Partarum\PartarumPHP\Helper\Date\DateFormatter;
 use Partarum\PartarumPHP\Helper\Date\DateCalculator;
+use Partarum\PartarumPHP\Helper\Date\DateFormatter;
+use Partarum\PartarumPHP\HTTP\API;
+
+if (!class_exists(Partarum::class)) {
+    require_once dirname(__DIR__, 3) . "/Partarum/Partarum.php";
+}
 
 $backend = new Partarum("startSurvey");
 
@@ -28,11 +24,11 @@ $postKeys = [
     "RHD" => $api->fromPOST("rhd")
 ];
 
-$invalidPostValues =  ["", null];
+$invalidPostValues = ["", null];
 
-$bearer = explode("Bearer ", $api->fromHeader("Authorization", API::REQUEST));
+$bearerToken = $api->fromBearerToken();
 
-if($backend->isIntoCache("Bearer:" . $bearer[1])){
+if ($bearerToken !== null && $backend->isIntoCache("Bearer:" . $bearerToken)) {
 
     $db = $backend->createDBConnection();
 
@@ -40,41 +36,45 @@ if($backend->isIntoCache("Bearer:" . $bearer[1])){
 
     foreach ($postKeys as $key => $value) {
 
-        if (!in_array($postKeyCheckALL, $invalidPostValues)) {
-
+        if (!in_array($postKeyCheckALL, $invalidPostValues, true) && is_string($postKeyCheckALL)) {
             $surveysArray[$key] = $postKeyCheckALL;
-
         } else {
-
-            $surveysArray[$key] = (in_array($value, $invalidPostValues)) ? null : $value;
+            $surveysArray[$key] = (!in_array($value, $invalidPostValues, true) && is_string($value)) ? $value : null;
         }
     }
 
     $updateArrayResult = [];
-
     $diffArray = [];
-
-    $formatArray = [];
 
     foreach ($surveysArray as $key => $value) {
 
-        $now = ($value !== null) ? DateFormatter::format_DE(time(), null, "yyyy-MM-dd") : null;
+        $now = ($value !== null) ? (string)DateFormatter::format_DE(time(), null, "yyyy-MM-dd") : null;
 
-        $diffInDays = ($value !== null) ? DateCalculator::parse($now)->diffInDays($value, false) : null;
+        $diffInDays = ($value !== null && $now !== null)
+            ? (int)DateCalculator::parse($now)->diffInDays($value, false)
+            : null;
 
         $actData = $db->get("survey_dashboard", ["survey_start", "survey_has_been_set", "survey_max_diff"], ["topic" => $key]);
+        $actDataArray = is_array($actData) ? $actData : [];
 
-        $actStartSet = $actData["survey_has_been_set"] ?? $now;
+        $actStartSet = $actDataArray["survey_has_been_set"] ?? $now;
+        $maxDiff = is_numeric($actDataArray["survey_max_diff"] ?? null) ? (int)$actDataArray["survey_max_diff"] : 0;
 
-        $maxDiff = $actData["survey_max_diff"];
+        $status = (
+            $value !== null
+            && $diffInDays !== null
+            && $diffInDays > -$maxDiff
+            && $diffInDays <= 0
+        );
 
-        $status = (($value !== null) && (($diffInDays > -$maxDiff) && ($diffInDays <= 0)));
-
-        $stop = ($value !== null) ? DateCalculator::createFromFormat("Y-m-d", $value)->addDays($maxDiff) : null;
+        $stopDateObj = ($value !== null) ? DateCalculator::createFromFormat("Y-m-d", $value) : false;
+        $stop = ($stopDateObj instanceof DateCalculator || $stopDateObj instanceof \Carbon\Carbon)
+            ? $stopDateObj->copy()->addDays($maxDiff)->format("Y-m-d")
+            : null;
 
         $dbUpdate = [
             "survey_start" => $value,
-            "survey_stop" => ($stop !== null) ? $stop->format("Y-m-d") : null,
+            "survey_stop" => $stop,
             "survey_has_been_set" => (($now !== null) && ($actStartSet !== $now)) ? $actStartSet : $now,
             "survey_has_been_stopped" => null,
             "survey_status" => $status,
@@ -99,9 +99,13 @@ if($backend->isIntoCache("Bearer:" . $bearer[1])){
         ]);
     }
 
-    $api->createJSONResponse(["started" => $updateArrayResult, "status" => $statusArrayResult, "diff" => $diffArray])->run();
+    $api->createJSONResponse([
+        "started" => $updateArrayResult,
+        "status" => $statusArrayResult,
+        "diff" => $diffArray
+    ])->run();
 
 } else {
 
-    $api->createJSONResponse(["status" => "Your beer is stale", "beer" => $bearer])->run(403);
+    $api->createJSONResponse(["status" => "Your beer is stale", "beer" => $bearerToken])->run(403);
 }

@@ -1,266 +1,231 @@
 <?php
+declare(strict_types=1);
+
 namespace Partarum\PartarumPHP\Traits\Database {
 
+    use Generator;
 
-    trait FeatDatabase{
+    trait FeatDatabase {
 
-        public function getTableMission($item, $mission)
+        public function getTableMission(array|string $item, ?string $mission = "base"): string
         {
+            $tableName = "";
+            $setSelect = "*";
+            $sqlMission = "";
 
-            if ((isset($mission)) && ($mission != "self")) {
+            if (($mission !== null) && ($mission !== "self") && is_array($item)) {
 
                 if (isset($item["table"])) {
-                    $tableName = $item["table"];
+                    $tableName = $this->sanitizeIdentifier((string)$item["table"]);
                 }
 
                 if (isset($item["select"])) {
-                    $setSelect = $item["select"];
+                    $setSelect = (string)$item["select"];
                 }
             }
 
             switch ($mission) {
                 case "base":
-                    $sqlMission = "SELECT $setSelect FROM $tableName";
+                    $sqlMission = "SELECT {$setSelect} FROM {$tableName}";
                     break;
-                    /*
-                case "newSelect":
-                    $sqlMission = "SELECT $setSelect AS $setNewSelect FROM $tableName";
-                    break;
-                    */
+
                 case "self":
-                    $sqlMission = $item;
+                    $sqlMission = is_string($item) ? $item : "";
                     break;
             }
+
             return $sqlMission;
         }
 
-        public function mysqlBase(){
+        public function mysqlBase(): ?string {
 
-            // SQL-Befehl ausf�hren
-            $version = $this->dbase->query("SELECT version() AS version");
-            $tables = $this->dbase->query("SHOW  FULL TABLES FROM ");
-            //$info = $this->dbase->query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA LIKE bombisa;");
-
-            //var_dump($tables);
-
-            //$list_tables_sql = "SHOW TABLES FROM usr_web832_1";
-            //$result = self::$dbase->query($list_tables_sql);
-            //$tables = array($result->num_rows);
-            //echo "Enthaltene Tabellen: ".array_sum($tables)."\n";
-            //var_dump($result);
-            // Antwort der Datenbank in ein Objekt �bergeben
-            $resultVersion = $version->fetch_object();
-            //$resultTables	= $info->fetch_object();
-            //$resultTables	= json_encode($resultTables);
-            $resultVersion = json_encode($resultVersion);
-            //var_dump($resultVersion);
-            //var_dump($resultTables);
-            //return $result;
-        }
-
-        public function createUser($item)
-        {
-            $user = $item[0];
-            $password = $item[1];
-            $sql_befehl = "GRANT ALL PRIVILEGES ON *.* TO '" . $user . "'@'localhost' IDENTIFIED BY '" . $password . "' WITH GRANT OPTION";
-            if ($this->dbase->query($sql_befehl)) {
-                $result = true;
-            } else {
-                $result = false;
+            if (!isset($this->dbase) || $this->dbase === null) {
+                return null;
             }
-            return $result;
+
+            $version = $this->dbase->query("SELECT version() AS version");
+
+            if ($version === false) {
+                return null;
+            }
+
+            $resultVersion = method_exists($version, "fetch_object")
+                ? $version->fetch_object()
+                : (method_exists($version, "fetchObject") ? $version->fetchObject() : null);
+
+            if (method_exists($version, "close")) {
+                $version->close();
+            }
+
+            return json_encode($resultVersion) ?: null;
         }
 
-        public function createDatabase($item)
+        public function createUser(array $item): bool
         {
-            $sql_befehl = "CREATE DATABASE IF NOT EXISTS $item";
-
-            if ($this->dbase->query($sql_befehl)) {
-                // Meldung bei erfolgreicher Erstellung der Datenbank
-                echo "Datenbank erfolgreich angelegt.";
-                return true;
-            } else {
-                // Meldung bei Fehlschlag
-                echo "Datenbank konnte nicht angelegt werden!";
+            if (!isset($this->dbase, $item[0], $item[1]) || $this->dbase === null) {
                 return false;
             }
+
+            $user = $this->sanitizeIdentifier((string)$item[0]);
+            $password = addslashes((string)$item[1]);
+            $sql = "GRANT ALL PRIVILEGES ON *.* TO '{$user}'@'localhost' IDENTIFIED BY '{$password}' WITH GRANT OPTION";
+
+            return (bool)$this->dbase->query($sql);
         }
 
-        public function showDatabase($item = true)
+        public function createDatabase(string $item): bool
         {
-            /*
-            true == alle Datenbanken, ist immer, auch ohne Angabe
-            false == keine systembezogenen Datenbanken, muss angegeben werden
-            string == suchen nach einer bestimmten Datenbank, muss mitgegeben werden
-            array mit strings == suchen bestimmter Datenbanken, muss mitgegeben werden
-            */
-
-            $mysqlSystemDatabases = ["information_schema", "cdcol", "mysql", "performance_schema", "phpmyadmin"];
-            $databases = $this->read("SHOW DATABASES");
-
-            $GLOBALS["argument"] = $item;
-
-
-            if (($item === true) && (is_bool($item) === true))        // wenn true
-            {
-                $result = array_map(function ($x) {
-                    return $x[0];
-                }, $databases);
-            } else {
-                if (($item === false) && (is_bool($item) === true))        // wenn false
-                {
-                    $result = array_values(array_diff(array_map(function ($x) {
-                        return $x[0];
-                    }, $databases), $mysqlSystemDatabases));
-                } else {
-                    if (is_string($item) === true)        // wenn String
-                    {
-                        $getResult = array_filter($databases, function ($x) {
-                            if ($x[0] == $GLOBALS["argument"]) {
-                                return $x[0];
-                            }
-                        });
-
-                        if (count($getResult) > 0) {
-                            $result = array_values($getResult)[0][0];
-                        } else {
-                            $result = false;
-                        }
-                    } elseif (is_array($item) === true)    // wenn Array
-                    {
-                        $getResult = array_filter($databases, function ($x) {
-                            if (in_array($x[0], $GLOBALS["argument"])) {
-                                return $x[0];
-                            }
-                        });
-                        $result = array_values(array_map(function ($x) {
-                            return $x[0];
-                        }, $getResult));
-                    }
-                }
+            if (!isset($this->dbase) || $this->dbase === null) {
+                return false;
             }
 
-            return $result;
+            $dbName = $this->sanitizeIdentifier($item);
+            if ($dbName === "") {
+                return false;
+            }
+
+            $sql = "CREATE DATABASE IF NOT EXISTS `{$dbName}`";
+
+            return (bool)$this->dbase->query($sql);
         }
 
-        public function getUser($itemUser = TRUE, $itemRow = TRUE)
+        public function showDatabase(bool|string|array $item = true): array|string|false
         {
-            /*only root!!!!*/
             /*
-            true, true = alle User und alle dazugeh�rigen Spalten
-            true, false = alle User, aber keine weiteren Spalten
-            string, true = ein User, alle dazugeh�rigen Hosts und alle Spalten
-            string, false = selbst geschriebenes SQL
-            string, string = ein User und eine auserw�hlte Spalte
-            string, array = ein User und mehrere auserw�hlte Spalten
-            array, true = mehrere User und alle Spalten
-            array, false = check ob es die User gibt
-            array, string = mehrere User und auserw�hlte Spalte
-            array, array = mehrere User und mehrere auserw�hlte Spalten
+             * true == alle Datenbanken, ist immer, auch ohne Angabe
+             * false == keine systembezogenen Datenbanken, muss angegeben werden
+             * string == suchen nach einer bestimmten Datenbank, muss mitgegeben werden
+             * array mit strings == suchen bestimmter Datenbanken, muss mitgegeben werden
+             */
 
-            */
-            if (($itemUser === true) && (is_bool($itemUser) === true)) {
+            $mysqlSystemDatabases = ["information_schema", "cdcol", "mysql", "performance_schema", "phpmyadmin", "sys"];
+            $rawResult = $this->read("SHOW DATABASES");
+            $databases = ($rawResult instanceof Generator) ? $rawResult->current() : $rawResult;
 
-                if (($itemRow === true) && (is_bool($itemRow) === true)) {
+            if (!is_array($databases)) {
+                return false;
+            }
 
-                    $getUser = $this->read("SELECT * FROM  user");
+            if (is_array($databases) && isset($databases[0]) && !is_array($databases[0])) {
+                $databases = [$databases];
+            }
 
-                } elseif (($itemRow === false) && (is_bool($itemRow) === true)) {
+            $allNames = array_map(static fn($x) => is_array($x) ? (string)($x[0] ?? reset($x)) : (string)$x, $databases);
+
+            if ($item === true) {
+                return array_values($allNames);
+            }
+
+            if ($item === false) {
+                return array_values(array_diff($allNames, $mysqlSystemDatabases));
+            }
+
+            if (is_string($item)) {
+                $filtered = array_values(array_filter($allNames, static fn(string $db): bool => $db === $item));
+
+                return count($filtered) > 0 ? $filtered[0] : false;
+            }
+
+            $filtered = array_values(array_filter($allNames, static fn(string $db): bool => in_array($db, $item, true)));
+
+            return $filtered;
+        }
+
+        public function getUser(bool|string|array $itemUser = true, bool|string|array $itemRow = true): mixed
+        {
+            /* only root!!!! */
+            $getUser = null;
+
+            if (is_bool($itemUser) && $itemUser === true) {
+
+                if (is_bool($itemRow) && $itemRow === true) {
+
+                    $getUser = $this->read("SELECT * FROM user");
+
+                } elseif (is_bool($itemRow) && $itemRow === false) {
 
                     $getUser = $this->read("SELECT user FROM user");
                 }
-            } elseif (is_string($itemUser) === true) {
+            } elseif (is_string($itemUser)) {
 
-                if (($itemRow === true) && (is_bool($itemRow))) {
+                $table = $this->sanitizeIdentifier($itemUser);
 
-                    $getUser = $this->read("SELECT * FROM '" . $itemUser . "'");
+                if (is_bool($itemRow) && $itemRow === true) {
 
-                } elseif (($itemRow === false) && (is_bool($itemRow))) {
+                    $getUser = $this->read("SELECT * FROM `{$table}`");
+
+                } elseif (is_bool($itemRow) && $itemRow === false) {
 
                     $getUser = $this->read($itemUser);
 
-                } elseif (is_string($itemRow) === true) {
+                } elseif (is_string($itemRow)) {
 
-                    $getUser = $this->read("SELECT '" . $itemRow . "' FROM '" . $itemUser . "'");
+                    $col = $this->sanitizeIdentifier($itemRow);
+                    $getUser = $this->read("SELECT `{$col}` FROM `{$table}`");
 
-                } elseif (is_array($itemRow) === true) {
+                } elseif (is_array($itemRow)) {
 
-                    $rowString = implode(", ", $itemRow);
-                    $getUser = $this->read("SELECT '" . $rowString . "' FROM '" . $itemUser . "'");
+                    $cols = array_map(fn($c) => "`" . $this->sanitizeIdentifier((string)$c) . "`", $itemRow);
+                    $rowString = implode(", ", $cols);
+                    $getUser = $this->read("SELECT {$rowString} FROM `{$table}`");
                 }
-            } elseif (is_array($itemUser) === true) {
+            } elseif (is_array($itemUser)) {
 
-                $userString = implode(", ", $itemUser);
+                $tables = array_map(fn($t) => "`" . $this->sanitizeIdentifier((string)$t) . "`", $itemUser);
+                $userString = implode(", ", $tables);
 
-                if (($itemRow === true) && (is_bool($itemRow))) {
+                if (is_bool($itemRow) && $itemRow === true) {
 
-                    $getUser = $this->read("SELECT * FROM '" . $userString . "'");
+                    $getUser = $this->read("SELECT * FROM {$userString}");
 
-                } elseif (($itemRow === false) && (is_bool($itemRow) === false)) {
+                } elseif (is_bool($itemRow) && $itemRow === false) {
 
-                    $getUser = $this->read();
+                    $getUser = $this->read("SELECT user FROM user");
 
-                } elseif (is_string($itemRow) === true) {
+                } elseif (is_string($itemRow)) {
 
-                    $getUser = $this->read("SELECT '" . $itemRow . "' FROM '" . $userString . "'");
+                    $col = $this->sanitizeIdentifier($itemRow);
+                    $getUser = $this->read("SELECT `{$col}` FROM {$userString}");
 
-                } elseif (is_array($itemRow) === true) {
+                } elseif (is_array($itemRow)) {
 
-                    $rowString = implode(", ", $itemRow);
-                    $getUser = $this->read("SELECT '" . $rowString . "' FROM '" . $userString . "'");
+                    $cols = array_map(fn($c) => "`" . $this->sanitizeIdentifier((string)$c) . "`", $itemRow);
+                    $rowString = implode(", ", $cols);
+                    $getUser = $this->read("SELECT {$rowString} FROM {$userString}");
                 }
             }
-            /*
-            $sqlUsers = "SELECT user FROM user WHERE Host = 'localhost'";
-            $getUsers = parent::read($sqlUsers);
-            $getSvenskandaUser = self::filterSvenskanda($getUsers);
 
-                if(count($getSvenskandaUser) == 0)
-                {
-                $createUserSvenskanda = parent::createUser([""]);
-                $getNewUsers = parent::read($sqlUsers);
-                }
-            */
             return $getUser;
         }
 
-        /*
-       $sql = "CREATE TABLE user (\n"
-           . " user_id INT NOT NULL auto_increment,\n"
-           . " firstName CHAR(100) NOT NULL,\n"
-           . " lastName CHAR(100) NOT NULL,\n"
-           . " startDateComplete TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, \n"
-           . " startDate DATE NOT NULL, \n"
-           . " startTime TIME NOT NULL,\n"
-           . " PRIMARY KEY(user_id)) ENGINE=InnoDB DEFAULT CHARSET=latin1";
-
-       */
-
-        public function createTable($item)
+        public function createTable(array $item = []): string|false
         {
-            if (true === isset($item["name"])) {
-
-                $tableName = $item["name"];
+            if (!isset($this->dbase) || $this->dbase === null) {
+                return json_encode(["Tabelle konnte nicht angelegt werden!"]);
             }
 
-            $sql_befehl = "CREATE TABLE IF NOT EXISTS anders (
+            $rawName = isset($item["name"]) ? (string)$item["name"] : "anders";
+            $tableName = $this->sanitizeIdentifier($rawName);
+            if ($tableName === "") {
+                $tableName = "anders";
+            }
+
+            $sql = "CREATE TABLE IF NOT EXISTS `{$tableName}` (
                         id INT(11) NOT NULL AUTO_INCREMENT,
                         name VARCHAR(50) DEFAULT NULL,
                         bevdichte FLOAT DEFAULT NULL,
                         PRIMARY KEY (id))";
 
-            if ($this->dbase->query($sql_befehl)) {
-
-                // Meldung bei erfolgreicher Erstellung der Datenbanktabelle
-                $result = json_encode(["Tabelle wurde angelegt"]);
-                return $result;
-
-            } else {
-
-                // Meldung bei Fehlschlag
-                $result = json_encode(["Tabelle konnte nicht angelegt werden!"]);
-                return $result;
+            if ($this->dbase->query($sql)) {
+                return json_encode(["Tabelle wurde angelegt"]);
             }
+
+            return json_encode(["Tabelle konnte nicht angelegt werden!"]);
+        }
+
+        protected function sanitizeIdentifier(string $identifier): string
+        {
+            return preg_replace('/[^a-zA-Z0-9_]/', '', $identifier) ?? "";
         }
     }
 }

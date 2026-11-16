@@ -1,76 +1,74 @@
 <?php
+declare(strict_types=1);
+
 namespace Partarum\PartarumPHP\Cache {
 
     use Partarum\PartarumPHP\System\Memory\SharedHelper;
     use Partarum\PartarumPHP\System\Memory\SharedManager;
     use Shmop;
 
-
     class SharedMemory {
 
-        private $id;
+        private mixed $id = null;
 
         private int $key;
 
-        private Shmop $memory;
+        private ?Shmop $memory = null;
 
-
-        public function __construct(int | null $key = NULL) {
+        public function __construct(int | string | null $key = null) {
 
             $attach = SharedManager::attach($key);
 
-            $this->memory = $attach["memory"];
-
-            $this->key = $attach["key"];
+            $this->memory = $attach["memory"] instanceof Shmop ? $attach["memory"] : null;
+            $this->key = (int)$attach["key"];
         }
 
-        public function open(){
-
+        public function open(): void {
         }
 
-        public function close(){
-
+        public function close(): void {
         }
 
-        public function read($offset = 0, $size = 0) : null | array {
+        public function read(int $offset = 0, int $size = 0): ?array {
 
-            return SharedHelper::jsonToArray(shmop_read($this->memory, $offset, $size));
+            if ($this->memory === null) {
+                return null;
+            }
 
+            $raw = shmop_read($this->memory, $offset, $size);
+            return is_string($raw) ? SharedHelper::jsonToArray($raw) : null;
         }
 
-        public function write($data) : null | bool | int {
+        public function write(mixed $data): null | bool | int {
+
+            if ($this->memory === null) {
+                return null;
+            }
 
             $json = SharedHelper::dataToJSON($data);
 
-            if($json !== NULL){
-
+            if ($json !== null) {
                 return shmop_write($this->memory, $json, 0);
             }
 
-            return NULL;
-
+            return null;
         }
 
-        public function add(){
-
+        public function add(): void {
         }
 
-        public function get(){
-
+        public function get(): void {
         }
 
-        public function remove(){
+        public function remove(): void {
 
-            SharedManager::remove($this->memory, $this->key, $this->id); // muss natürlich noch aus dem Manager !!!
-
-            $this->__destruct();
+            if ($this->memory !== null) {
+                SharedManager::remove($this->memory, $this->key, $this->id);
+                $this->memory = null;
+            }
         }
 
         public function __destruct() {
-
-
         }
-
-
     }
 }

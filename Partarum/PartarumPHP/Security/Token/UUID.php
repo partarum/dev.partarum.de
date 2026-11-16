@@ -1,28 +1,25 @@
 <?php
+declare(strict_types=1);
 
 namespace Partarum\PartarumPHP\Security\Token {
 
-
     use Generator;
 
-    class UUID
-    {
+    class UUID {
 
-        public static function randomByte($item){
+        public static function randomByte(iterable $item): Generator {
 
-            foreach($item as $value){
-
-                yield bin2hex(random_bytes($value));
+            foreach ($item as $value) {
+                $length = max(1, (int)$value);
+                yield bin2hex(random_bytes($length));
             }
         }
 
-        public static function v3($namespace, $name){
+        public static function v3(string $namespace, string $name): string | false {
 
-            /*
-             *  abändern
-             */
-
-            if (!self::is_valid($namespace)) return false;
+            if (!self::is_valid($namespace)) {
+                return false;
+            }
 
             // Get hexadecimal components of namespace
             $nhex = str_replace(['-', '{', '}'], '', $namespace);
@@ -32,58 +29,60 @@ namespace Partarum\PartarumPHP\Security\Token {
 
             // Convert Namespace UUID to bits
             for ($i = 0, $iMax = strlen($nhex); $i < $iMax; $i += 2) {
-                $nstr .= chr(hexdec($nhex[$i] . $nhex[$i + 1]));
+                $nstr .= chr((int)hexdec($nhex[$i] . $nhex[$i + 1]));
             }
 
             // Calculate hash value
             $hash = md5($nstr . $name);
 
-            return sprintf('%08s-%04s-%04x-%04x-%12s',
-
+            return sprintf(
+                '%08s-%04s-%04x-%04x-%12s',
                 // 32 bits for "time_low"
                 substr($hash, 0, 8),
-
                 // 16 bits for "time_mid"
                 substr($hash, 8, 4),
-
                 // 16 bits for "time_hi_and_version",
                 // four most significant bits holds version number 3
-                (hexdec(substr($hash, 12, 4)) & 0x0fff) | 0x3000,
-
+                ((int)hexdec(substr($hash, 12, 4)) & 0x0fff) | 0x3000,
                 // 16 bits, 8 bits for "clk_seq_hi_res",
                 // 8 bits for "clk_seq_low",
                 // two most significant bits holds zero and one for variant DCE1.1
-                (hexdec(substr($hash, 16, 4)) & 0x3fff) | 0x8000,
-
+                ((int)hexdec(substr($hash, 16, 4)) & 0x3fff) | 0x8000,
                 // 48 bits for "node"
                 substr($hash, 20, 12)
             );
         }
 
-        public static function v4() : Generator {
-            $getRandomByte = self::randomByte([4,2,2,2,6]);
+        public static function v4(): Generator {
+
+            $getRandomByte = self::randomByte([4, 2, 2, 2, 6]);
 
             $string = "";
 
-            foreach($getRandomByte as $hex){
+            foreach ($getRandomByte as $hex) {
+                $key = $getRandomByte->key();
 
-                if($getRandomByte->key() !== 4) {
+                if ($key === 2) {
+                    $hex = sprintf('%04x', ((int)hexdec($hex) & 0x0fff) | 0x4000);
+                } elseif ($key === 3) {
+                    $hex = sprintf('%04x', ((int)hexdec($hex) & 0x3fff) | 0x8000);
+                }
+
+                if ($key !== 4) {
                     $string .= $hex . "-";
-
-                }elseif($getRandomByte->key() === 4){
+                } else {
                     $string .= $hex;
                 }
             }
+
             yield $string;
         }
 
-        public static function v5($namespace, $name){
+        public static function v5(string $namespace, string $name): string | false {
 
-            /*
-             *  abändern
-             */
-
-            if (!self::is_valid($namespace)) return false;
+            if (!self::is_valid($namespace)) {
+                return false;
+            }
 
             // Get hexadecimal components of namespace
             $nhex = str_replace(['-', '{', '}'], '', $namespace);
@@ -93,38 +92,36 @@ namespace Partarum\PartarumPHP\Security\Token {
 
             // Convert Namespace UUID to bits
             for ($i = 0, $iMax = strlen($nhex); $i < $iMax; $i += 2) {
-                $nstr .= chr(hexdec($nhex[$i] . $nhex[$i + 1]));
+                $nstr .= chr((int)hexdec($nhex[$i] . $nhex[$i + 1]));
             }
 
             // Calculate hash value
             $hash = sha1($nstr . $name);
 
-            return sprintf('%08s-%04s-%04x-%04x-%12s',
-
+            return sprintf(
+                '%08s-%04s-%04x-%04x-%12s',
                 // 32 bits for "time_low"
                 substr($hash, 0, 8),
-
                 // 16 bits for "time_mid"
                 substr($hash, 8, 4),
-
                 // 16 bits for "time_hi_and_version",
                 // four most significant bits holds version number 5
-                (hexdec(substr($hash, 12, 4)) & 0x0fff) | 0x5000,
-
+                ((int)hexdec(substr($hash, 12, 4)) & 0x0fff) | 0x5000,
                 // 16 bits, 8 bits for "clk_seq_hi_res",
                 // 8 bits for "clk_seq_low",
                 // two most significant bits holds zero and one for variant DCE1.1
-                (hexdec(substr($hash, 16, 4)) & 0x3fff) | 0x8000,
-
+                ((int)hexdec(substr($hash, 16, 4)) & 0x3fff) | 0x8000,
                 // 48 bits for "node"
                 substr($hash, 20, 12)
             );
         }
 
-        public static function is_valid($uuid)
-        {
-            return preg_match('/^\{?[0-9a-f]{8}\-?[0-9a-f]{4}\-?[0-9a-f]{4}\-?' .
-                    '[0-9a-f]{4}\-?[0-9a-f]{12}\}?$/i', $uuid) === 1;
+        public static function is_valid(string $uuid): bool {
+
+            return preg_match(
+                '/^\{?[0-9a-f]{8}\-?[0-9a-f]{4}\-?[0-9a-f]{4}\-?[0-9a-f]{4}\-?[0-9a-f]{12}\}?$/i',
+                $uuid
+            ) === 1;
         }
     }
 }

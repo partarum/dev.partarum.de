@@ -8,59 +8,10 @@
 error_reporting(-1);
 ini_set("display_errors", "1");
 
-require $_SERVER["DOCUMENT_ROOT"] . "/Partarum/Partarum.php";
+require __DIR__ . "/Partarum/Partarum.php";
 
 use Partarum\Partarum;
-use Partarum\PartarumPHP\System\Autoloader;
 use Partarum\PartarumPHP\HTTP\API;
-
-//***********************
-/*
- *  Eine Funktion schreiben, welche überprüft, wie weit runter der User gehen darf, und auf welche Ordner er Zugriff hat
- *  Das wird einmal ausgeführt und dann in Redis gespeichert
- */
-$nowDir = getcwd();
-function goDown(): bool
-{
-
-    $dir = false;
-
-    try {
-        $dir = @chdir("..");
-    } catch( Exception $err) {
-
-    }
-
-    return $dir;
-}
-
-$scanArray = [[]];
-
-$stopArea = [
-  "bin",
-  "boot",
-  "dev",
-  "etc"
-];
-
-while(goDown() === true) {
-
-    $scan = scandir(getcwd());
-
-    if(array_intersect($stopArea, $scan) === $stopArea ){
-        break;
-    }
-
-    if($scanArray[array_key_last($scanArray)] !== $scan){
-        $scanArray[] = $scan;
-    } else {
-        break;
-    }
-}
-
-chdir($nowDir);
-
-//***********************
 
 /*
  *  ! Routing an die Anforderung
@@ -80,30 +31,24 @@ function apiResponse(): void{
 
 function phpPage($uri): void{
 
-    //echo $uri;
-
     $app = new Partarum("cs23-0089-gx_new");
 
     // TODO: Unterscheidung zwischen goDev() und goPublic()
-
-    $app->addAutoloader(["app" => ROOT . "app"], Autoloader::FOLDER);
 
     $app->goDev()->with($uri);
 }
 
 function jsPage($uri): void{
 
-    $headers = getallheaders();
+    $headers = function_exists("getallheaders") ? getallheaders() : [];
 
-    $url = "http://localhost:50201" . $uri;
+    $url = ($_ENV["JS_SERVER_URL"] ?? "http://localhost:50201") . $uri;
     $data = [
-        "token" => "a1b2c3",
+        "token" => $_ENV["JS_SERVER_TOKEN"] ?? $_ENV["TOKEN"] ?? "",
         "post" => $_POST,
         "get" => $_GET,
         "headers" => $headers
     ];
-
-
 
     $options = array(
         CURLOPT_URL => $url,
@@ -122,14 +67,9 @@ function jsPage($uri): void{
     echo $response;
 }
 
-//$token = $_GET['token']  ?? "123456";
-
-
-//if((isset($token)) && ($token === "123456")) {
-
 // TODO: In Partarum die Prüfung auf Querys durchführen
 
-$uri = (!str_contains($_SERVER["REQUEST_URI"], "?")) ? $_SERVER["REQUEST_URI"] : $_SERVER["REDIRECT_URL"]; // $_SERVER["REDIRECT_URL"] ist ohne Query
+$uri = (!str_contains($_SERVER["REQUEST_URI"], "?")) ? $_SERVER["REQUEST_URI"] : ($_SERVER["REDIRECT_URL"] ?? parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH));
 
 switch ($uri) {
     case "/testDashboard":
@@ -143,4 +83,3 @@ switch ($uri) {
     default:
         phpPage($uri);
 }
-//}

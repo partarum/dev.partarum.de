@@ -1,32 +1,43 @@
 <?php
-error_reporting(-1);
-ini_set("display_errors", "1");
+declare(strict_types=1);
 
-if(!class_exists(\Partarum\Partarum::class)){
-    require_once $_SERVER["DOCUMENT_ROOT"] . "/Partarum/Partarum.php";
-}
 use Partarum\Partarum;
-
 use Partarum\PartarumPHP\HTTP\API;
 use Partarum\PartarumPHP\Security\Token\JWT;
-use Partarum\PartarumPHP\System\Autoloader;
+
+if (!class_exists(Partarum::class)) {
+    require_once dirname(__DIR__, 2) . "/Partarum/Partarum.php";
+}
 
 $backend = new Partarum();
-
-$backend->addAutoloader( ["Partarum\\PartarumIntern" => $_SERVER["DOCUMENT_ROOT"] . "/Partarum/PartarumIntern"], Autoloader::FOLDER);
 
 $api = new API();
 
 $jwt = new JWT();
 
 $post = $api->fromPOST("jwt");
+$header = $api->fromHeader("Partarum-Token", API::REQUEST);
+$secretKey = is_string($header) && $header !== ""
+    ? $header
+    : (string)($_ENV["JWT_SECRET_KEY"] ?? "pups");
 
-if($token = $post->jwt ?? NULL) {
+$token = null;
+if (is_string($post) && $post !== "") {
+    $token = $post;
+} elseif (is_array($post) && isset($post["jwt"]) && is_string($post["jwt"])) {
+    $token = $post["jwt"];
+} elseif (is_object($post) && isset($post->jwt) && is_string($post->jwt)) {
+    $token = $post->jwt;
+}
 
-    $check = ($hash = $jwt->checkToken($token, "pups", TRUE)) ? 1 : 0;
+if ($token !== null && $token !== "") {
+    $hash = $jwt->checkToken($token, $secretKey, true);
 
-    ($check === 1) && $api->createJSONResponse($hash)->run();
+    if ($hash !== false) {
+        $api->createJSONResponse($hash)->run();
+    } else {
+        $api->createJSONResponse("invalid token")->run(403);
+    }
 } else {
-
-    $api->createJSONResponse("wrong parameter")->run();
+    $api->createJSONResponse("wrong parameter")->run(400);
 }

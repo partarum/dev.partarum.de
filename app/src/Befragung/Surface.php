@@ -1,11 +1,9 @@
 <?php
+declare(strict_types=1);
 
 namespace app\src\Befragung {
 
-    use DateTime;
     use IntlDateFormatter;
-    use Partarum\Partarum;
-    use Partarum\PartarumPHP\HTTP\API;
 
     enum Surface {
 
@@ -19,12 +17,12 @@ namespace app\src\Befragung {
 
         case FinalStage;
 
-        public static function getCase($stage, string $theme): null | SurfaceInitialStage | SurfaceSetupStage | SurfaceTransitionStage | SurfaceExecutionStage | SurfaceFinalStage {
+        public static function getCase(Surface $stage, string $theme): null | SurfaceInitialStage | SurfaceSetupStage | SurfaceTransitionStage | SurfaceExecutionStage | SurfaceFinalStage {
 
             return match($stage) {
                 Surface::SetupStage => SurfaceSetupStage::tryFrom($theme),
                 Surface::TransitionStage => SurfaceTransitionStage::tryFrom($theme),
-                //Surface::ExecutionStage => SurfaceExecutionStage::tryFrom($theme),
+                Surface::ExecutionStage => method_exists(SurfaceExecutionStage::class, "tryFrom") ? SurfaceExecutionStage::tryFrom($theme) : null,
                 Surface::FinalStage => SurfaceFinalStage::tryFrom($theme),
                 default => SurfaceInitialStage::tryFrom($theme)
             };
@@ -39,6 +37,10 @@ namespace app\src\Befragung {
                 $formatter->setPattern("yyyy-MM-dd");
 
                 $dateObject = $formatter->parse($dbDate);
+
+                if($dateObject === false) {
+                    return null;
+                }
 
                 $date = $formatter->format($dateObject);
 
@@ -56,7 +58,7 @@ namespace app\src\Befragung {
             return null;
         }
 
-        public function init( null | array $configArray = NULL) : SurfaceApp {
+        public function init(null | array $configArray = null): SurfaceApp {
 
             $config = (isset($configArray)) ? [...$configArray, "stage" => $this->name] : ["stage" => $this->name];
 
@@ -64,7 +66,9 @@ namespace app\src\Befragung {
 
             $case = Surface::getCase($this, $app->url);
 
-            $app->initCase($case);
+            if($case !== null) {
+                $app->initCase($case);
+            }
 
             return $app;
         }

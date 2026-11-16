@@ -1,146 +1,131 @@
 <?php
+declare(strict_types=1);
+
 namespace Partarum\PartarumPHP\Document {
 
     use Partarum\PartarumPHP\Config\GlobalConfig;
-    use Partarum\PartarumPHP\Service\TheOffice;
-    use Partarum\PartarumPHP\Traits\Document\FeatHTMLgetEtc;
-    use Partarum\PartarumPHP\Document\HTMLObject;
-    use Partarum\PartarumPHP\Document\HTMLetcElementInfo;
-    use ReflectionClass;
     use Partarum\PartarumPHP\Filesystem\FilesystemGenerator;
+    use Partarum\PartarumPHP\Traits\Document\FeatHTMLgetEtc;
+    use stdClass;
 
     class HTMLgetEtc {
 
         use FeatHTMLgetEtc;
 
-        const HTML_PATH = "/partarum/etc/";
+        public const HTML_PATH = "/Partarum/etc/";
 
-        const DASHBOARD_PATH = "/partarum/src/php/classes/DASHBOARD/surface/html";
+        public const DASHBOARD_PATH = "/Partarum/src/php/classes/DASHBOARD/surface/html";
 
-        const DS = DIRECTORY_SEPARATOR;
+        public const DS = DIRECTORY_SEPARATOR;
 
-        public $extension;
+        public ?string $extension = null;
 
-        public $templateExtension = [
+        public array $templateExtension = [
             "txt",
             "plain",
             "html",
             "js"
         ];
 
-        public $etc;
+        public HTMLObject $etc;
 
-        public $templatePaths;
+        public object $templatePaths;
 
-        public $mainTags = [
-          "head" => "head",
-          "header" => "1#header",
-          "main" => "2#main",
-          "footer" => "3#footer"
+        public array $mainTags = [
+            "head" => "head",
+            "header" => "1#header",
+            "main" => "2#main",
+            "footer" => "3#footer"
         ];
 
-        public $paths = [
-            "head" => "surface\html\head",
-            "header" => "surface\html\body\wrapper\1#header",
-            "main" => "surface\html\body\wrapper\2#main",
-            "footer" => "surface\html\body\wrapper\3#footer"
+        public array $paths = [
+            "head" => "surface\\html\\head",
+            "header" => "surface\\html\\body\\wrapper\\1#header",
+            "main" => "surface\\html\\body\\wrapper\\2#main",
+            "footer" => "surface\\html\\body\\wrapper\\3#footer"
         ];
 
-        public $pattern;
+        public array $pattern = [];
 
-        public $iterator;
-        public $theme;
+        public ?FilesystemGenerator $iterator = null;
 
-        public function __construct($theme){
+        public string $theme;
+
+        public function __construct(string $theme) {
+
             $this->theme = $theme;
+            $this->etc = new HTMLObject();
+            $this->templatePaths = new stdClass();
             $this->setPattern();
             $this->getIterator();
             $this->getEtc();
         }
 
+        public function getEtc(): void {
 
+            if ($this->iterator === null) {
+                return;
+            }
 
-        /*
-         * jedes Element aus $this->iterator
-         */
-
-        public function getEtc() {
-
-            //$wwwRoot = $_SERVER["DOCUMENT_ROOT"];
-
-            $wwwRoot = TheOffice::backslashRoot();
-
-            $slash = DIRECTORY_SEPARATOR;
+            $wwwRoot = str_replace("/", "\\", $this->resolveRootPath());
 
             $this->etc = new HTMLObject();
-            $this->templatePaths = new class {};     // eigene Klasse schreiben!!
+            $this->templatePaths = new stdClass();
 
             $pattern = $this->pattern;
 
-            //$filterDOMPathNeedle = TheOffice::getEtcPath();
-
-            if($this->theme !== "theOffice"){
-
-                $filterDOMPathNeedle = $wwwRoot."\\partarum\\etc\\".$this->theme ."\\";
-
-            }else{
-
-                $filterDOMPathNeedle = $wwwRoot."\\partarum\\src\\php\\classes\\DASHBOARD\\";
-
+            if ($this->theme !== "theOffice") {
+                $filterDOMPathNeedle = $wwwRoot . "\\Partarum\\etc\\" . $this->theme . "\\";
+            } else {
+                $filterDOMPathNeedle = $wwwRoot . "\\Partarum\\src\\php\\classes\\DASHBOARD\\";
             }
 
             $directory = $this->iterator->getFile();
 
-            foreach($directory as $file){
+            foreach ($directory as $file) {
 
                 $fileName = $file->getBasename();
-
                 $fileExtension = $file->getExtension();
 
-                if (!in_array($fileExtension, $this->templateExtension)) {
+                if (!in_array($fileExtension, $this->templateExtension, true)) {
 
                     $path = $file->getPath();
-                    //$pathName = $file->getPathname();
 
                     $tagName = $file->getBasename(".php");
-                    $elementName = preg_replace("![^a-z]!", "", $tagName);
+                    $elementName = (string)preg_replace("![^a-z]!", "", $tagName);
 
                     $filePath = $file->getPathname();
 
-                    //echo "<br> HTMLgetEtc line 135 includePath = ".$filePath;
+                    if (is_file($filePath)) {
+                        include_once $filePath;
+                    }
 
-                    include $filePath; //autoloader_regestrie !!!
+                    $filterNamespaceNeedle = (GlobalConfig::$theme !== "theOffice")
+                        ? $wwwRoot . "\\Partarum\\"
+                        : $wwwRoot . "\\Partarum\\src\\php\\classes\\";
 
-
-                    $filterNamespaceNeedle = (GlobalConfig::$theme !== "theOffice") ? $wwwRoot."\\partarum\\" : $wwwRoot."\\partarum\\src\\php\\classes\\";
-
-                    $filePathWithBackslash = str_replace("/", "\\",str_replace(["1#", "2#", "3#"], "", $filePath));
+                    $filePathWithBackslash = str_replace("/", "\\", str_replace(["1#", "2#", "3#"], "", $filePath));
                     $filterDOMPath = str_replace($filterDOMPathNeedle, "", $filePathWithBackslash);
 
                     $domPath = str_replace($fileName, $tagName, $filterDOMPath);
                     $slashPosParentPath = strrpos($domPath, "\\");
-                    $domParentPath = substr( $domPath, 0, $slashPosParentPath);
-
-                    //$domParentPath = str_replace("\\".$tagName,"", $domPath);
+                    $domParentPath = $slashPosParentPath !== false ? substr($domPath, 0, $slashPosParentPath) : $domPath;
 
                     $slashPos = strrpos($domParentPath, "\\");
-                    $domParentParentPath = substr( $domParentPath, 0, $slashPos);
+                    $domParentParentPath = $slashPos !== false ? substr($domParentPath, 0, $slashPos) : $domParentPath;
 
                     $filterNamespacePath = str_replace($filterNamespaceNeedle, "", $filePathWithBackslash);
-                    $namespacePath = str_replace($fileName, $tagName,$filterNamespacePath);
-
-                    //echo "<br> namespacePath HTMLgetEtc = ".$namespacePath."<br>";
+                    $namespacePath = str_replace($fileName, $tagName, $filterNamespacePath);
 
                     foreach ($pattern as $key => $patt) {
 
-                        if (preg_match($patt, $path, $result)) {
+                        if (preg_match($patt, $path)) {
 
                             $newPath = $key;
 
-                            $objectLevelOnePos = strrpos( $filePath, $this->mainTags[$key]);
-                            $objectLevelOne = substr($filePath, $objectLevelOnePos);
-                            $objectLevelOnePath = preg_replace("![0-9]#!", "", $objectLevelOne);
-
+                            $objectLevelOnePos = strrpos($filePath, $this->mainTags[$key]);
+                            $objectLevelOne = $objectLevelOnePos !== false ? substr($filePath, $objectLevelOnePos) : $filePath;
+                            $objectLevelOnePath = (string)preg_replace("![0-9]#!", "", $objectLevelOne);
 
                             $this->etc->$newPath->$objectLevelOnePath = new HTMLetcElementInfo();
                             $this->etc->$newPath->$objectLevelOnePath->tagName = $elementName;
@@ -148,41 +133,17 @@ namespace Partarum\PartarumPHP\Document {
                             $this->etc->$newPath->$objectLevelOnePath->domParentPath = $domParentPath;
                             $this->etc->$newPath->$objectLevelOnePath->domParentParentPath = $domParentParentPath;
                             $this->etc->$newPath->$objectLevelOnePath->namespacePath = $namespacePath;
-
                         }
                     }
-                } elseif (in_array($fileExtension, $this->templateExtension)){
-
-                    /*
-                     *  .txt
-                     *  .plain
-                     *      parsen
-                     *  .html
-                     *      echo file_get_content || selbst parsen
-                     *  .js
-                     *      Datei in <script> einbinden
-                     *  .php
-                     *      schwierig.....
-                     */
-
+                } else {
 
                     $filterPropPath = str_replace("/", "\\", $file->getPath());
-
-                    //echo "<br> filterPropPath = ".$filterPropPath;
-
-                    $propPath= str_replace($filterDOMPathNeedle, "", $filterPropPath);
-
+                    $propPath = str_replace($filterDOMPathNeedle, "", $filterPropPath);
                     $textFilePath = $file->getPathname();
-
-                    $prop = preg_replace("/[0-9]#/", "", $propPath);
-
-                    //echo "<br> prop = ".$prop;
+                    $prop = (string)preg_replace("/[0-9]#/", "", $propPath);
 
                     $this->templatePaths->$prop = $textFilePath;
-
                     $this->extension = $fileExtension;
-
-                    //echo "<br>HTMLgetEtc extension = ".$this->extension;
                 }
             }
         }

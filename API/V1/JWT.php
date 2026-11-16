@@ -1,29 +1,27 @@
 <?php
+declare(strict_types=1);
 
-if(!class_exists(\Partarum\Partarum::class)){
-    require_once $_SERVER["DOCUMENT_ROOT"] . "/Partarum/Partarum.php";
-}
 use Partarum\Partarum;
-
 use Partarum\PartarumPHP\HTTP\API;
 use Partarum\PartarumPHP\Security\Token\JWT;
-use Partarum\PartarumPHP\System\Autoloader;
+
+if (!class_exists(Partarum::class)) {
+    require_once dirname(__DIR__, 2) . "/Partarum/Partarum.php";
+}
 
 $backend = new Partarum();
-
-$backend->addAutoloader( ["Partarum\\PartarumIntern" => $_SERVER["DOCUMENT_ROOT"] . "/Partarum/PartarumIntern"], Autoloader::FOLDER);
 
 $api = new API();
 
 $post = $api->fromPOST("hallo");
-
 $header = $api->fromHeader("Partarum-Token", API::REQUEST);
 
+$secretKey = is_string($header) && $header !== ""
+    ? $header
+    : (string)($_ENV["JWT_SECRET_KEY"] ?? "pups");
 
 $jwt = new JWT();
+$jwt->setSecretKey($secretKey);
+$jwt->setPayload(is_array($post) ? $post : ($post !== null ? [$post] : []));
 
-$jwt->setSecretKey("pups"); // $header - der Partarum - Token welcher vergeben wird !!!!
-
-$jwt->setPayload($post);
-
-echo json_encode([$jwt->getToken()], JSON_THROW_ON_ERROR);
+$api->createJSONResponse([$jwt->getToken()])->run();

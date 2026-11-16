@@ -1,18 +1,19 @@
 <?php
+declare(strict_types=1);
+
 namespace Partarum\PartarumPHP\Database {
 
     class DatabaseDataObject {
 
-        private string $databaseType;
+        private string $databaseType = "MySQL";
 
-        private string $databaseName;
+        private string $databaseName = "";
 
-        private string $host;
+        private string $host = "localhost";
 
-        private string $username;
+        private string $username = "";
 
-        private string $password;
-
+        private string $password = "";
 
         public function __construct() {
 
@@ -21,15 +22,15 @@ namespace Partarum\PartarumPHP\Database {
         /**
          * @return string
          */
-        public function getDatabaseType() : string {
+        public function getDatabaseType(): string {
 
-            return $this->databaseType ?? "MySQL";
+            return $this->databaseType !== "" ? $this->databaseType : "MySQL";
         }
 
         /**
          * @param string $databaseType
          */
-        public function setDatabaseType(string $databaseType) : void {
+        public function setDatabaseType(string $databaseType): void {
 
             $this->databaseType = $databaseType;
         }
@@ -37,7 +38,7 @@ namespace Partarum\PartarumPHP\Database {
         /**
          * @return string
          */
-        public function getDatabaseName() : string {
+        public function getDatabaseName(): string {
 
             return $this->databaseName;
         }
@@ -45,7 +46,7 @@ namespace Partarum\PartarumPHP\Database {
         /**
          * @param string $databaseName
          */
-        public function setDatabaseName(string $databaseName) : void {
+        public function setDatabaseName(string $databaseName): void {
 
             $this->databaseName = $databaseName;
         }
@@ -53,7 +54,7 @@ namespace Partarum\PartarumPHP\Database {
         /**
          * @return string
          */
-        public function getHost() : string {
+        public function getHost(): string {
 
             return $this->host;
         }
@@ -61,7 +62,7 @@ namespace Partarum\PartarumPHP\Database {
         /**
          * @param string $host
          */
-        public function setHost(string $host) : void {
+        public function setHost(string $host): void {
 
             $this->host = $host;
         }
@@ -69,7 +70,7 @@ namespace Partarum\PartarumPHP\Database {
         /**
          * @return string
          */
-        public function getUsername() : string {
+        public function getUsername(): string {
 
             return $this->username;
         }
@@ -77,7 +78,7 @@ namespace Partarum\PartarumPHP\Database {
         /**
          * @param string $username
          */
-        public function setUsername(string $username) : void {
+        public function setUsername(string $username): void {
 
             $this->username = $username;
         }
@@ -85,7 +86,7 @@ namespace Partarum\PartarumPHP\Database {
         /**
          * @return string
          */
-        public function getPassword() : string {
+        public function getPassword(): string {
 
             return $this->password;
         }
@@ -93,7 +94,7 @@ namespace Partarum\PartarumPHP\Database {
         /**
          * @param string $password
          */
-        public function setPassword(string $password) : void {
+        public function setPassword(string $password): void {
 
             $this->password = $password;
         }

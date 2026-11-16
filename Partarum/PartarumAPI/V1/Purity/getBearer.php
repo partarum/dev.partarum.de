@@ -1,43 +1,46 @@
 <?php
-error_reporting(-1);
-ini_set("display_errors", "1");
+declare(strict_types=1);
 
-session_start();
+if (session_status() === PHP_SESSION_NONE && !headers_sent()) {
+    session_start();
+}
 
 use Partarum\Partarum;
 use Partarum\PartarumPHP\HTTP\API;
 use Partarum\PartarumPHP\Security\Token\JWT;
-use Partarum\PartarumPHP\System\Autoloader;
 
-if(!class_exists(Partarum::class)){
-    require_once $_SERVER["DOCUMENT_ROOT"] . "/Partarum/Partarum.php";
+if (!class_exists(Partarum::class)) {
+    require_once dirname(__DIR__, 3) . "/Partarum.php";
 }
 
 $backend = new Partarum("getBearer");
 
-$backend->addAutoloader( ["Partarum\\PartarumIntern" => $_SERVER["DOCUMENT_ROOT"] . "/Partarum/PartarumIntern"], Autoloader::FOLDER);
-
 $api = new API();
 
-$tokenArray = [$api->fromPOST("beer")];
+$beerPost = $api->fromPOST("beer");
+$tokenArray = ($beerPost !== null && $beerPost !== "") ? [$beerPost] : [];
 
-$expires = $api->fromPOST("expires") ?? 0;
+$expiresRaw = $api->fromPOST("expires");
+$expires = is_scalar($expiresRaw) && is_numeric((string)$expiresRaw) ? (int)$expiresRaw : 0;
 
 $result = [];
+$secretKey = (string)($_ENV["JWT_SECRET_KEY"] ?? "");
 
-if(count($tokenArray) !== 0){
+if (count($tokenArray) !== 0 && $secretKey !== "") {
 
-    foreach($tokenArray as $key => $value){
+    foreach ($tokenArray as $value) {
+        if (!is_string($value) && !is_int($value)) {
+            continue;
+        }
 
         $jwt = new JWT();
+        $jwt->setSecretKey($secretKey);
+        $jwt->setPayload([(string)$value, time()]);
 
-        $jwt->setSecretKey($_ENV["JWT_SECRET_KEY"]);
+        $token = $jwt->getToken();
+        $result[(string)$value] = $token;
 
-        $jwt->setPayload([$value, time()]);
-
-        $result[$value] = $jwt->getToken();
-
-        $backend->setToCache("Bearer:" . $result[$value], time(), $expires);
+        $backend->setToCache("Bearer:" . $token, time(), $expires);
     }
 }
 

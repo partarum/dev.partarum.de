@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Partarum\PartarumPHP\HTTP {
 
     use ArrayIterator;
@@ -16,47 +18,54 @@ namespace Partarum\PartarumPHP\HTTP {
             $this->cache = new ArrayIterator([]);
         }
 
-        public function addHeader(array $header){
+        public function addHeader(array $header): void {
 
-            foreach($header as $key => $value) {
+            foreach ($header as $key => $value) {
 
                 /*
                  *      Prüfen ob es eine Stringangabe ist oder ein String der eine Klasse angibt
                  *
                  *      -   ["Content-Type: application/json"]
                  *
-                 *      -   [Entity::CONTENT_TYPE => "json]
+                 *      -   [Entity::CONTENT_TYPE => "json"]
                  */
 
+                if (is_int($key)) {
 
-                if(is_int($key)) {
+                    $this->cache->append((string)$value);
 
-                    $this->cache->append($value);
-
-                } else if(class_exists($key)){
+                } elseif (class_exists($key)) {
 
                     $impl = class_implements($key);
 
-                    if(in_array(HeaderField::class, $impl, TRUE)){
+                    if (is_array($impl) && in_array(HeaderField::class, $impl, true)) {
 
                         $c = [$key, "getOutput"]($value);
 
-                        if(($key === ContentType::class) && (!isset($this->contentType))){
+                        if (($key === ContentType::class) && (!isset($this->contentType))) {
 
-                            $this->contentType = $value;
+                            $this->contentType = (string)$value;
                         }
 
-                        $this->cache->append($c);
+                        if (is_string($c) && $c !== "") {
+                            $this->cache->append($c);
+                        }
                     }
                 }
             }
         }
 
-        public function setHeader(){
+        public function setHeader(): void {
 
-            while($this->cache->valid()){
+            $this->cache->rewind();
 
-                header($this->cache->current());
+            while ($this->cache->valid()) {
+
+                $headerLine = (string)$this->cache->current();
+
+                if ($headerLine !== "" && !headers_sent()) {
+                    header($headerLine);
+                }
 
                 $this->cache->next();
             }

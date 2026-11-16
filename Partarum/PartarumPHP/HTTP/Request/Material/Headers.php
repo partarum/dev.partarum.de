@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  *   Copyright 2018- 2021 © Alexander Bombis. All rights reserved.
  *            Developed by Alexander Bombis.
@@ -12,7 +13,7 @@ namespace Partarum\PartarumPHP\HTTP\Request\Material {
         public array $headers = [
             "css" => [
                 "content" => "text/css"
-                ],
+            ],
             "js" => [
                 "content" => "application/javascript"
             ],
@@ -26,16 +27,25 @@ namespace Partarum\PartarumPHP\HTTP\Request\Material {
                 "content" => "image/png"
             ],
             "jpg" => [
-                "content" => "image/jpg"
+                "content" => "image/jpeg"
+            ],
+            "jpeg" => [
+                "content" => "image/jpeg"
             ],
             "webp" => [
                 "content" => "image/webp"
             ],
+            "svg" => [
+                "content" => "image/svg+xml"
+            ],
+            "ico" => [
+                "content" => "image/x-icon"
+            ],
             "woff" => [
-                "content" => "application/x-font-woff"
+                "content" => "font/woff"
             ],
             "woff2" => [
-                "content" => "application/x-font-woff"
+                "content" => "font/woff2"
             ],
             "zip" => [
                 "content" => "application/zip"
@@ -48,9 +58,9 @@ namespace Partarum\PartarumPHP\HTTP\Request\Material {
 
         public const CACHE_CONTROL = "Cache-Control: ";
 
-        public function __construct($ext){
+        public function __construct(string $ext){
 
-            $this->ext = $ext;
+            $this->ext = strtolower($ext);
 
             $this->setContent();
 
@@ -63,7 +73,7 @@ namespace Partarum\PartarumPHP\HTTP\Request\Material {
 
         protected function setContent(): void {
 
-            if($this->ext !== '') {
+            if($this->ext !== '' && !headers_sent()) {
 
                 if(array_key_exists($this->ext, $this->headers)) {
 
@@ -72,19 +82,27 @@ namespace Partarum\PartarumPHP\HTTP\Request\Material {
             }
         }
 
-        public function setCacheControl(string $type, $age): void {
+        public function setCacheControl(string $type, null | int $age): void {
+
+            if(headers_sent()) {
+                return;
+            }
 
             if($age === null) {
 
                 header(self::CACHE_CONTROL . $type);
 
-            } else if (is_int($age)){
+            } else {
 
                 header(self::CACHE_CONTROL . $type . ", max-age={$age}");
             }
         }
 
-        public function setContentDisposition($realURL): void {
+        public function setContentDisposition(string $realURL): void {
+
+            if(headers_sent()) {
+                return;
+            }
 
             header('Content-Disposition: inline; filename="'.basename($realURL).'"');
         }

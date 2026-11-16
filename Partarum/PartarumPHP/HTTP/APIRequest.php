@@ -1,6 +1,7 @@
 <?php
-namespace Partarum\PartarumPHP\HTTP {
+declare(strict_types=1);
 
+namespace Partarum\PartarumPHP\HTTP {
 
     use ArrayIterator;
     use JsonException;
@@ -10,15 +11,15 @@ namespace Partarum\PartarumPHP\HTTP {
 
     class APIRequest {
 
-         /*
+        /*
          *  Das REST - Object
          */
-        public object $rest;
+        public REST $rest;
 
         /*
          *  Adresse der API
          */
-        public string $url;
+        public string $url = "";
         
         public string $param = "?";
 
@@ -27,20 +28,19 @@ namespace Partarum\PartarumPHP\HTTP {
          */
         public string $method = Allow::GET;
 
-        
         /*
          *  HTTP - Authentifizierung
          */
-        public array $auth;
+        public array $auth = [];
 
         /*
          *  Content - Type
          */
-        public string $contentType;
+        public string $contentType = REST::JSON;
 
-        public $content;
+        public mixed $content = null;
 
-        public $result;
+        public mixed $result = null;
         
         public string $id;
 
@@ -48,67 +48,70 @@ namespace Partarum\PartarumPHP\HTTP {
 
         public function __construct() {
 
-            $this->id = UUID::v4()->current();
+            $this->id = (string)UUID::v4()->current();
             
             $this->rest = new REST();
         }
         
-        public function setURL(string $url){
+        public function setURL(string $url): void {
 
             $this->url = $url;
         }
         
-        public function setParams(array $params) {
+        public function setParams(array $params): void {
             
+            $this->params = "?";
+
             $iterator = new ArrayIterator($params);
             
-            while($iterator->valid()){
+            while ($iterator->valid()) {
                 
                 $this->params .= $iterator->key() . "=" . $iterator->current();
                 
                 $iterator->next();
                 
-                if($iterator->valid()){
+                if ($iterator->valid()) {
                     $this->params .= "&";
                 }
             }
         }
 
-        public function setMethod(string $method){
+        public function getParams(): string {
+            return $this->params;
+        }
+
+        public function setMethod(string $method): void {
             $this->method = $method;
         }
 
-        public function setBaseHeader(){
-            
-
+        public function setBaseHeader(): void {
 
         }
 
-        public function setPersonalHeader(array $header){
+        public function setPersonalHeader(array $header): void {
 
         }
 
-        public function setBody($content, int $flag){
-
+        public function setBody(mixed $content, int $flag = 0): void {
+            $this->content = $content;
         }
 
         // erwarte einen oder mehrere bestimmte MIME - Typen
-        public function expectContentType(string $type) : void{
+        public function expectContentType(string $type): void {
 
         }
 
         // erwarte bestimmte Bedingungen vom Header
-        public function expectStrictHeader(string | array $param) : void{
+        public function expectStrictHeader(string | array $param): void {
 
         }
 
         /**
          * @throws JsonException
          */
-        public function run() {
+        public function run(): mixed {
 
-           
-            if($this->method === Allow::GET){
+            if ($this->method === Allow::GET) {
                 
                 $this->rest->setURL(strlen($this->params) > 1 ? $this->url . $this->params : $this->url);
 
@@ -119,7 +122,7 @@ namespace Partarum\PartarumPHP\HTTP {
 
             $this->rest->setMethod($this->method);
 
-            if($this->method !== Allow::GET){
+            if ($this->method !== Allow::GET) {
                 
                 // baseHeader und personalHeader auswerten
                 $this->rest->setHeader([
@@ -135,22 +138,23 @@ namespace Partarum\PartarumPHP\HTTP {
 
             $this->rest->close();
 
+            if (!is_string($this->result) || trim($this->result) === "") {
+                return null;
+            }
 
             // ! muss noch auf den Content geprüft werden - es soll kein JSON - String zurückgegeben werden!!!
-            return json_decode($this->result, FALSE, 512, JSON_THROW_ON_ERROR);
+            return json_decode($this->result, false, 512, JSON_THROW_ON_ERROR);
         }
 
         /**
          * @return mixed
          */
-        public function getResult(){
+        public function getResult(): mixed {
             return $this->result;
         }
         
-        public function getBaseHeader(){
-            
-            
-            
+        public function getBaseHeader(): void {
+
         }
     }
 }

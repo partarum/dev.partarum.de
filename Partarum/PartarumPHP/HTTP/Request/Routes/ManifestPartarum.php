@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Partarum\PartarumPHP\HTTP\Request\Routes {
 
     class ManifestPartarum{
@@ -10,9 +12,9 @@ namespace Partarum\PartarumPHP\HTTP\Request\Routes {
 
         public static function getPath(array $needle) : string {
 
-            $key = strtolower($needle[1]);
+            $key = strtolower((string)($needle[1] ?? "partarum"));
 
-            return self::PATH[$key];
+            return self::PATH[$key] ?? self::PATH["partarum"];
         }
     }
 }

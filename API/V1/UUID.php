@@ -1,10 +1,12 @@
 <?php
+declare(strict_types=1);
 
-if(!class_exists(\Partarum\Partarum::class)){
-    require_once $_SERVER["DOCUMENT_ROOT"] . "src/Partarum.php";
-}
-
+use Partarum\Partarum;
 use Partarum\PartarumPHP\HTTP\API;
+
+if (!class_exists(Partarum::class)) {
+    require_once dirname(__DIR__, 2) . "/Partarum/Partarum.php";
+}
 
 $api = new API();
 

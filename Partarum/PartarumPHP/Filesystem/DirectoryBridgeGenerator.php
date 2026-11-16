@@ -1,7 +1,9 @@
 <?php
+declare(strict_types=1);
+
 namespace Partarum\PartarumPHP\Filesystem {
 
-    use Partarum\PartarumPHP\Filesystem\FilesystemGenerator;
+    use Generator;
 
     /*
      *  Generator 3
@@ -9,41 +11,23 @@ namespace Partarum\PartarumPHP\Filesystem {
 
     class DirectoryBridgeGenerator {
 
-        public $path;
+        public string $path;
 
-        public function __construct($path){
+        public function __construct(string $path) {
 
-            //echo "<br> Generator 3 __construct path = ".$path;
             $this->path = $path;
         }
 
-        public function getFile(){
-
-            //echo "<br> Generator 3 time: ".microtime();
+        public function getFile(): Generator {
 
             $fileObject = new FilesystemGenerator($this->path);
             $fileGenerator = $fileObject->getFile();
 
-            if($fileGenerator->valid() === TRUE) {
-
-                /*
-                echo "<br> Generator 3 getFile fileGenerator valid() = " . $fileGenerator->valid();
-                echo "<pre>";
-                print_r($fileGenerator->current());
-                */
-
+            if ($fileGenerator->valid() === true) {
                 foreach ($fileGenerator as $file) {
-
-
-                    /*
-                    echo "<br> Generator 3 Bridge->getFile() = ";
-                    print_r($file);
-                    */
-
                     yield $file;
                 }
             }
-
         }
     }
 }

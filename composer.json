@@ -34,6 +34,7 @@
         "ext-intl": "*"
     },
     "scripts": {
+        "test": "php cli/testKernel.php",
         "pre-install-cmd": [
             "echo 'pre-install-cmd'"
         ],

@@ -1,38 +1,37 @@
 <?php
-error_reporting(-1);
-ini_set("display_errors", "1");
+declare(strict_types=1);
 
-session_start();
-
-if (!class_exists(\Partarum\Partarum::class)) {
-    require_once $_SERVER["DOCUMENT_ROOT"] . "/Partarum/Partarum.php";
+if (session_status() === PHP_SESSION_NONE && !headers_sent()) {
+    session_start();
 }
-use Partarum\Partarum;
 
+use Partarum\Partarum;
 use Partarum\PartarumPHP\HTTP\API;
-use Partarum\PartarumPHP\Security\Token\JWT;
+
+if (!class_exists(Partarum::class)) {
+    require_once dirname(__DIR__, 3) . "/Partarum/Partarum.php";
+}
 
 $backend = new Partarum("getExcelData");
 
 $api = new API();
 
-$bearer = explode("Bearer ", $api->fromHeader("Authorization", API::REQUEST));
+$bearerToken = $api->fromBearerToken();
 
-if($backend->isIntoCache("Bearer:" . $bearer[1])){
+if ($bearerToken !== null && $backend->isIntoCache("Bearer:" . $bearerToken)) {
 
     $db = $backend->createDBConnection();
 
     $surveyKeys = ["KVH", "LSH", "NSH", "RHB", "RHD"];
 
     $result = [];
-
     $counter = 0;
 
-    foreach($surveyKeys as $value) {
+    foreach ($surveyKeys as $value) {
 
-        $result[$value] = $db->count("survey", ["topic" => $value]);
-
-        $counter = $counter + $result[$value];
+        $count = (int)$db->count("survey", ["topic" => $value]);
+        $result[$value] = $count;
+        $counter += $count;
     }
 
     $result["ALL"] = $counter;
@@ -41,5 +40,5 @@ if($backend->isIntoCache("Bearer:" . $bearer[1])){
 
 } else {
 
-    $api->createJSONResponse(["status" => "Your beer is stale", "beer" => $bearer])->run(403);
+    $api->createJSONResponse(["status" => "Your beer is stale", "beer" => $bearerToken])->run(403);
 }

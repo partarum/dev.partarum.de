@@ -1,22 +1,16 @@
 <?php
+declare(strict_types=1);
+
 namespace Partarum\PartarumPHP\Document {
 
-    use \DOMText as DOMText;
+    use DOMElement;
+    use DOMText;
 
     class HTMLText {
 
-        public function __construct($text, $element)
-        {
-            //print_r(gettype($text));
+        public function __construct(string|int|float $text, DOMElement $element) {
 
-
-                 $element->appendChild(new DOMText($text));
-
-
+            $element->appendChild(new DOMText((string)$text));
         }
     }
 }
-
-/*
- *  Hinzufügen von Elementen wie <i> und <span> und </br> usw.......Textelemente!!!
- */

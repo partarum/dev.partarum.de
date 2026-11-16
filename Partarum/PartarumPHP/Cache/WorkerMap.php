@@ -1,32 +1,45 @@
 <?php
+declare(strict_types=1);
+
 namespace Partarum\PartarumPHP\Cache {
 
     class WorkerMap {
 
-        public function setWorker(string $name, string $value) {
+        private array $workers = [];
 
-            echo "<pre>";
-            print_r($name);
-            echo PHP_EOL;
-            print_r($value);
-            echo PHP_EOL;
-            echo microtime();
+        public function setWorker(string $name, string $value): object {
 
+            $worker = new $value();
+            $this->workers[$name] = $worker;
 
-
-            $this->{$name} = new $value();
-            
-            return $this->{$name};
+            return $worker;
         }
 
-        public function getWorker(string $name) {
+        public function getWorker(string $name): ?object {
 
-            return $this->{$name};
+            return $this->workers[$name] ?? null;
         }
 
-        public function isWorker(string $name) : bool {
+        public function isWorker(string $name): bool {
 
-            return isset($this->{$name});
+            return isset($this->workers[$name]);
+        }
+
+        public function __set(string $name, mixed $value): void {
+
+            if (is_object($value)) {
+                $this->workers[$name] = $value;
+            }
+        }
+
+        public function __get(string $name): ?object {
+
+            return $this->workers[$name] ?? null;
+        }
+
+        public function __isset(string $name): bool {
+
+            return isset($this->workers[$name]);
         }
     }
 }

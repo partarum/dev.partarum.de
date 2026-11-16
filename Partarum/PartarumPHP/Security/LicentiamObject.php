@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Partarum\PartarumPHP\Security {
 
     class LicentiamObject {
@@ -14,9 +16,9 @@ namespace Partarum\PartarumPHP\Security {
          *      token sha256 to sha512 to sha256: EFD7821C25FA998DFF19463F024B5066086C5EF4E99C582811470D262E1B85E5
          */
 
-        const LOREM = "Test";
+        public const LOREM = "Test";
 
-        const PROJECT = [
+        public const PROJECT = [
             "verificationPage" => "EFD7821C25FA998DFF19463F024B5066086C5EF4E99C582811470D262E1B85E5"
         ];
     }

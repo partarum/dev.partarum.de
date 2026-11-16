@@ -1,24 +1,23 @@
 <?php
+declare(strict_types=1);
+
 namespace Partarum\PartarumPHP\Document {
 
-    use \DOMAttr as DOMAttr;
+    use DOMElement;
 
-	class HTMLAttribute{
+    class HTMLAttribute {
 
-		public function __construct($nodeObject, $element)
-		{
+        public function __construct(iterable|object $nodeObject, DOMElement $element) {
 
-            /*
-		    echo "<pre>";
-		    echo "nodeObject von HTMLAttribute : ";
-		    print_r($nodeObject);
-		    print_r($element);
-            */
+            $items = is_object($nodeObject) && !is_iterable($nodeObject)
+                ? get_object_vars($nodeObject)
+                : $nodeObject;
 
-			foreach ($nodeObject as $attribute => $value) {
-				(($attribute != "event") && ($value !== NULL)) && $element->appendChild(new DOMAttr($attribute, $value));
-			}
-
-		}
-	}
+            foreach ($items as $attribute => $value) {
+                if (!in_array((string)$attribute, ["event", "element", "text"], true) && ($value !== null)) {
+                    $element->setAttribute((string)$attribute, (string)$value);
+                }
+            }
+        }
+    }
 }

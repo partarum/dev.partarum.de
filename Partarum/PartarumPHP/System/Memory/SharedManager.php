@@ -1,21 +1,17 @@
 <?php
+declare(strict_types=1);
+
 namespace Partarum\PartarumPHP\System\Memory {
 
     use JsonException;
     use Partarum\PartarumPHP\System\Root;
+    use Shmop;
 
     class SharedManager extends SharedFactory {
 
-        /**
-         * @var array
-         */
         private static array $shmodCache = [];
 
-        /**
-         * @var string|null
-         */
-        private static string | null $root = NULL;
-
+        private static ?string $root = null;
 
         /**
          * Checks if there is an shmop instance with the key in the Cache
@@ -25,102 +21,107 @@ namespace Partarum\PartarumPHP\System\Memory {
          *
          * @return array An Array with the instance and the key
          */
-        public static function attach(null | string | int $key = null, null | int $size = 1024) : array {
+        public static function attach(null | string | int $key = null, null | int $size = 1024): array {
 
-            if(self::$root === NULL) {
+            if (self::$root === null) {
                 self::$root = Root::getPath();
             }
 
             $inode = self::createKey($key);
+            $segmentSize = $size ?? 1024;
 
-            if(!SharedKeyCache::has($inode)) {
-
+            if ($inode > 0 && !SharedKeyCache::has($inode)) {
                 SharedKeyCache::add($inode);
             }
 
-            if(!in_array($inode, self::$shmodCache, TRUE)){
-
-                self::$shmodCache[$inode] = shmop_open($inode, "c", 0644, $size);
+            if ($inode > 0 && !isset(self::$shmodCache[$inode]) && function_exists("shmop_open")) {
+                $opened = @shmop_open($inode, "c", 0644, $segmentSize);
+                self::$shmodCache[$inode] = ($opened !== false) ? $opened : null;
             }
 
-            return ["key" => $inode, "memory" => self::$shmodCache[$inode]];
+            return ["key" => $inode, "memory" => self::$shmodCache[$inode] ?? null];
         }
 
-        public static function detach(){
-
+        public static function detach(): void {
         }
 
-        public static function remove($instance, $key, $id){
+        public static function remove(?Shmop $instance, int $key, mixed $id = null): bool {
 
-        }
+            unset(self::$shmodCache[$key]);
 
-        private static function getKeyFromString(string | NULL $string = NULL) : int{
-
-            $key = 0;
-
-            if($string !== NULL){
-
-                $key = (file_exists($string)) ? fileinode($string) : 0;
-
-            } else {
-
-                $file = self::createFileForInode();
-
-                $key = $file["inode"]; // ! Key muss noch an den Programmierer zurückgegeben werden
-
+            if ($instance !== null && function_exists("shmop_delete")) {
+                return @shmop_delete($instance);
             }
 
-
-
-            return $key;
+            return false;
         }
 
-        private static function createKey($key) : int {
+        private static function getKeyFromString(?string $string = null): int {
 
-            return match(gettype($key)){
-                "string" => self::getKeyFromString($key), // überprüfen ob String ein Filepath ist oder ein String zum verhexen
-                "integer" => $key, // noch eine Testfunktion schreiben ob ein HEX-Wert (length: 2 || 4 || 6 ....) übergeben wurde
-                "NULL" => self::getKeyFromString()
+            if ($string !== null) {
+                return file_exists($string) ? (int)(fileinode($string) ?: 0) : 0;
+            }
+
+            $file = self::createFileForInode();
+
+            return is_array($file) ? (int)($file["inode"] ?? 0) : 0;
+        }
+
+        private static function createKey(null | string | int $key): int {
+
+            return match (gettype($key)) {
+                "string" => self::getKeyFromString($key),
+                "integer" => $key,
+                "NULL" => self::getKeyFromString(),
+                default => 0
             };
         }
 
-        private static function createFileForInode() : array | null {
+        private static function createFileForInode(): ?array {
 
             $timestamp = time();
-
-            $timeString = (string) $timestamp;
-
-            $date = getDate($timestamp);
-
+            $timeString = (string)$timestamp;
+            $date = getdate($timestamp);
             $fileName = date("Y_m_d", $timestamp) . "_" . $timeString;
 
             try {
-
                 $json = json_encode($date, JSON_THROW_ON_ERROR);
 
-                $path = ROOT . SLASH . "Partarum" . SLASH . "PartarumLorem" . SLASH . "SharedMemory" . SLASH . $fileName . ".json";
+                $baseRoot = defined("ROOT") ? (string)ROOT : (self::$root ?? Root::getPath());
+                $slash = defined("SLASH") ? (string)SLASH : DIRECTORY_SEPARATOR;
+                $dirPath = rtrim($baseRoot, "/\\") . $slash . "Partarum" . $slash . "PartarumLorem" . $slash . "SharedMemory";
+
+                if (!is_dir($dirPath) && !@mkdir($dirPath, 0775, true) && !is_dir($dirPath)) {
+                    return null;
+                }
+
+                $path = $dirPath . $slash . $fileName . ".json";
 
                 file_put_contents($path, $json);
 
-                $inode = fileinode($path);
+                $inode = (int)(fileinode($path) ?: 0);
 
-                $smPath = ROOT . SLASH . "Partarum" . SLASH . "PartarumLorem" . SLASH . "SharedMemory" . SLASH . ".SM.json";
+                $smPath = $dirPath . $slash . ".SM.json";
+                $smJSONArray = [];
 
-                $smJSON = file_get_contents($smPath);
-
-                $smJSONArray = json_decode($smJSON, TRUE, 512, JSON_THROW_ON_ERROR);
+                if (is_file($smPath)) {
+                    $smJSON = file_get_contents($smPath);
+                    if (is_string($smJSON) && trim($smJSON) !== "") {
+                        $decoded = json_decode($smJSON, true, 512, JSON_THROW_ON_ERROR);
+                        if (is_array($decoded)) {
+                            $smJSONArray = $decoded;
+                        }
+                    }
+                }
 
                 $smJSONArray[$fileName] = $inode;
 
                 file_put_contents($smPath, json_encode($smJSONArray, JSON_THROW_ON_ERROR));
 
                 return ["file" => $path, "inode" => $inode];
-
-            } catch(JSONException $jex){
-
-                return NULL;
+            } catch (JsonException) {
+                return null;
             }
         }
-
     }
 }

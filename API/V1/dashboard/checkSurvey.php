@@ -1,17 +1,18 @@
 <?php
-error_reporting(-1);
-ini_set("display_errors", "1");
+declare(strict_types=1);
 
-session_start();
-
-if (!class_exists(\Partarum\Partarum::class)) {
-    require_once $_SERVER["DOCUMENT_ROOT"] . "/Partarum/Partarum.php";
+if (session_status() === PHP_SESSION_NONE && !headers_sent()) {
+    session_start();
 }
-use Partarum\Partarum;
 
-use Partarum\PartarumPHP\HTTP\API;
-use Partarum\PartarumPHP\Helper\Date\DateFormatter;
+use Partarum\Partarum;
 use Partarum\PartarumPHP\Helper\Date\DateCalculator;
+use Partarum\PartarumPHP\Helper\Date\DateFormatter;
+use Partarum\PartarumPHP\HTTP\API;
+
+if (!class_exists(Partarum::class)) {
+    require_once dirname(__DIR__, 3) . "/Partarum/Partarum.php";
+}
 
 $backend = new Partarum("checkSurvey");
 
@@ -25,50 +26,69 @@ $postKeys = [
     "RHD" => $api->fromPOST("rhd")
 ];
 
-$bearer = explode("Bearer ", $api->fromHeader("Authorization", API::REQUEST));
+$bearerToken = $api->fromBearerToken();
 
-function validationDate(string $postDate) :  array {
+function validationDate(string $postDate): array {
 
-    return DateFormatter::format_DE($postDate, "yyyy-MM-dd", [
+    $formatted = DateFormatter::format_DE($postDate, "yyyy-MM-dd", [
         "date" => "yyyy-MM-dd",
         "datetime" => "yyyy-MM",
         "displayDate" => "MMMM yyyy"
     ]);
+
+    return is_array($formatted) ? $formatted : [];
 }
 
-if($backend->isIntoCache("Bearer:" . $bearer[1])){
+if ($bearerToken !== null && $backend->isIntoCache("Bearer:" . $bearerToken)) {
 
     $db = $backend->createDBConnection();
 
     $resultStart = [];
-
     $resultDisplayDate = [];
-
     $resultALL = [];
-
     $statusArray = [];
-
     $countArrayResult = [];
 
-    foreach($postKeys as $key => $value) {
+    $now = (string)DateFormatter::format_DE(time(), null, "yyyy-MM-dd");
 
-        $resultALL[$key] = $db->select("survey_dashboard", ["survey_start", "survey_stop", "survey_has_been_set", "survey_has_been_stopped", "survey_status", "survey_diff", "survey_max_diff"], ["topic" => $key]);
+    foreach ($postKeys as $key => $value) {
 
-        $resultStart[$key] = $resultALL[$key][0]["survey_start"];
+        $rows = $db->select("survey_dashboard", [
+            "survey_start",
+            "survey_stop",
+            "survey_has_been_set",
+            "survey_has_been_stopped",
+            "survey_status",
+            "survey_diff",
+            "survey_max_diff"
+        ], [
+            "topic" => $key
+        ]);
 
-        $now = DateFormatter::format_DE(time(), null, "yyyy-MM-dd");
+        $resultALL[$key] = is_array($rows) ? $rows : [];
+        $surveyStart = $resultALL[$key][0]["survey_start"] ?? null;
+        $resultStart[$key] = is_string($surveyStart) && $surveyStart !== "" ? $surveyStart : null;
 
-        $diffInDays = DateCalculator::parse($now)->diffInDays($resultStart[$key], false);
+        $diffInDays = ($resultStart[$key] !== null)
+            ? (int)DateCalculator::parse($now)->diffInDays($resultStart[$key], false)
+            : null;
 
+        $maxDiffRaw = $resultALL[$key][0]["survey_max_diff"]
+            ?? $db->get("survey_dashboard", "survey_max_diff", ["topic" => $key]);
+        $maxDiff = is_numeric($maxDiffRaw) ? (int)$maxDiffRaw : 0;
 
-        $maxDiff = $db->get("survey_dashboard", "survey_max_diff", ["topic" => $key]);
-
-        $status = (($resultStart[$key] !== null) && (($diffInDays >= -$maxDiff) && ($diffInDays <= $maxDiff)));
+        $status = (
+            $resultStart[$key] !== null
+            && $diffInDays !== null
+            && $diffInDays >= -$maxDiff
+            && $diffInDays <= $maxDiff
+        );
 
         $statusArray[$key] = $status;
 
-        $resultDisplayDate[$key] = ($resultStart[$key] !== null) ? validationDate($resultStart[$key]) : "0000-00-00";
-
+        $resultDisplayDate[$key] = ($resultStart[$key] !== null)
+            ? validationDate($resultStart[$key])
+            : "0000-00-00";
 
         $db->update("survey_dashboard", [
             "survey_status" => $status,
@@ -77,20 +97,27 @@ if($backend->isIntoCache("Bearer:" . $bearer[1])){
             "topic" => $key
         ]);
 
-        $resultAll[$key][0]["survey_status"] = $status;
+        if (!isset($resultALL[$key][0]) || !is_array($resultALL[$key][0])) {
+            $resultALL[$key][0] = [];
+        }
 
-        $resultAll[$key][0]["survey_diff"] = ($resultStart[$key] !== null) ? $diffInDays : null;
+        $resultALL[$key][0]["survey_status"] = $status;
+        $resultALL[$key][0]["survey_diff"] = $diffInDays;
 
-        $countArrayResult[$key] = $db->count("survey", [
+        $countArrayResult[$key] = (int)$db->count("survey", [
             "topic" => $key
         ]);
-
     }
 
-
-    $api->createJSONResponse(["survey_start" => $resultStart, "status" => $statusArray, "all" => $resultALL, "displayDate" => $resultDisplayDate, "surveyCount" => $countArrayResult])->run();
+    $api->createJSONResponse([
+        "survey_start" => $resultStart,
+        "status" => $statusArray,
+        "all" => $resultALL,
+        "displayDate" => $resultDisplayDate,
+        "surveyCount" => $countArrayResult
+    ])->run();
 
 } else {
 
-    $api->createJSONResponse(["status" => "Your beer is stale", "beer" => $bearer])->run(403);
+    $api->createJSONResponse(["status" => "Your beer is stale", "beer" => $bearerToken])->run(403);
 }

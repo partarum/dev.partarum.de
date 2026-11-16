@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  *           Copyright 2020 © Alexander Bombis. All rights reserved.
  *           Developed by Alexander Bombis.
@@ -130,11 +131,11 @@ namespace Partarum\PartarumPHP\HTTP\Request {
         }
 
         /**
-         * @param $type
+         * @param string $type
          *
          * @return string
          */
-        public function setContentType($type): string {
+        public function setContentType(string $type): string {
 
             if($type === self::JSON){
 
@@ -155,15 +156,13 @@ namespace Partarum\PartarumPHP\HTTP\Request {
         }
 
         /**
-         * @param $content
+         * @param mixed $content
          *
          * @throws JsonException
          */
-        public function setContent($content): void {
+        public function setContent(mixed $content): void {
 
             if(isset($this->cache->contentType)){
-
-                echo "isset Content - Type";
 
                 if($this->cache->contentType === self::JSON){
 
@@ -171,13 +170,11 @@ namespace Partarum\PartarumPHP\HTTP\Request {
 
                         $data = json_encode($content, JSON_THROW_ON_ERROR);
 
-                        $test = $this->setContentType(self::JSON);
-
-                        echo "test !!!!!! - ";
-                        print_r($test);
+                        $this->setContentType(self::JSON);
 
                     } catch (JsonException $e) {
 
+                        error_log("REST::setContent JsonException: " . $e->getMessage());
                         $data = json_encode([$e->getMessage()], JSON_THROW_ON_ERROR);
                     }
 
@@ -195,7 +192,7 @@ namespace Partarum\PartarumPHP\HTTP\Request {
         /**
          * @return bool|string
          */
-        public function exec(){
+        public function exec(): bool|string {
 
             $this->setReturnTransfer(); // ! muss ggf. noch abgeändert werden
 
@@ -211,12 +208,8 @@ namespace Partarum\PartarumPHP\HTTP\Request {
 
             $this->info = curl_getinfo($this->curl);
 
-            if(!curl_errno($this->curl)) {
-              //  echo 'Es wurden ' . $info['total_time'] . ' Sekunden benötigt für einen Request an ' . $info['url'];
-
-               echo "<pre>";
-               print_r($this->info);
-
+            if(curl_errno($this->curl)) {
+                error_log("REST::close cURL error (" . curl_errno($this->curl) . "): " . curl_error($this->curl));
             }
 
             curl_close($this->curl);
@@ -232,33 +225,38 @@ namespace Partarum\PartarumPHP\HTTP\Request {
 
 
         /**
-         * @param $string
+         * @param string $string
          *
          * @return string
          */
-        public static function sha256($string): string {
+        public static function sha256(string $string): string {
             return hash("sha256", $string);
         }
 
         /**
-         * @param $string
+         * @param string $string
          *
          * @return string
          */
-        public static function sha512($string): string {
+        public static function sha512(string $string): string {
             return hash("sha512", $string);
         }
 
         /**
-         * @param $request
+         * @param mixed $request
          *
          * @return false|mixed
          */
-        public static function convertData($request){
+        public static function convertData(mixed $request): mixed {
+
+            if(!is_string($request) || $request === "") {
+                return false;
+            }
 
             try {
                 return json_decode($request, false, 512, JSON_THROW_ON_ERROR);
             } catch (JsonException $e) {
+                error_log("REST::convertData JsonException: " . $e->getMessage());
                 return false;
             }
 
@@ -267,7 +265,7 @@ namespace Partarum\PartarumPHP\HTTP\Request {
         /**
          * @return false|mixed
          */
-        public static function getRequestData() : bool {
+        public static function getRequestData() : mixed {
 
             return self::convertData(file_get_contents(self::$post));
         }

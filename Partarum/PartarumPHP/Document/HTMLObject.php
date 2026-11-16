@@ -1,24 +1,24 @@
 <?php
-namespace Partarum\PartarumPHP\Document {
+declare(strict_types=1);
 
-    use Partarum\PartarumPHP\Document\{HTMLhead, HTMLheader, HTMLmain, HTMLfooter};
+namespace Partarum\PartarumPHP\Document {
 
     class HTMLObject {
 
-        public $head;
+        public HTMLhead $head;
 
-        public $header;
+        public HTMLheader $header;
 
-        public $main;
+        public HTMLmain $main;
 
-        public $footer;
+        public HTMLfooter $footer;
 
-        public function __construct(){
+        public function __construct() {
 
-           $this->setClasses();
+            $this->setClasses();
         }
 
-        public function setClasses(){
+        public function setClasses(): void {
 
             $this->head = new HTMLhead();
             $this->header = new HTMLheader();

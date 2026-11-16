@@ -1,32 +1,42 @@
 <?php
+declare(strict_types=1);
+
 namespace Partarum\PartarumPHP\Document {
 
+    use AllowDynamicProperties;
+
+    #[AllowDynamicProperties]
     class HTMLDom {
 
-        public static array $path;
+        public static array $path = [];
 
-        public static string $html;
+        public static string $html = "";
 
-        public function __construct(){
+        private array $properties = [];
 
-        self::$path["html"] = "surface/html";
+        public function __construct() {
 
+            self::$path["html"] = "surface/html";
         }
 
-        public function getPath($name){
+        public function getPath(string $name): mixed {
 
-            return $this->$name;
-
+            return $this->properties[$name] ?? null;
         }
 
-        public function __set($name, $value)
-        {
-            $this->$name = $value;
+        public function __set(string $name, mixed $value): void {
+
+            $this->properties[$name] = $value;
         }
 
-        public function __get($name)
-        {
-            return $this->$name;
+        public function __get(string $name): mixed {
+
+            return $this->properties[$name] ?? null;
+        }
+
+        public function __isset(string $name): bool {
+
+            return isset($this->properties[$name]);
         }
     }
 }

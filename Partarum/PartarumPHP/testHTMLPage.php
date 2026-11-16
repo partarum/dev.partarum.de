@@ -2,11 +2,7 @@
 error_reporting(-1);
 ini_set("display_errors", "1");
 
-include __DIR__ . "/System/Autoloader.php";
-
-use Partarum\PartarumPHP\System\Autoloader;
-
-spl_autoload_register([Autoloader::class, "autoload"]);
+require_once dirname(__DIR__, 2) . "/vendor/autoload.php";
 
 use Partarum\PartarumPHP\Document\HTMLPage;
 

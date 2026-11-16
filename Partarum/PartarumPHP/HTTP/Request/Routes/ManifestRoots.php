@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  *   Copyright 2018- 2021 © Alexander Bombis. All rights reserved.
  *            Developed by Alexander Bombis.
@@ -27,7 +28,7 @@ namespace Partarum\PartarumPHP\HTTP\Request\Routes {
             echo PHP_EOL;
             */
 
-            $key = strtolower($needle[1]);
+            $key = strtolower((string)($needle[1] ?? "app"));
 
             return self::PATH[$key] ?? self::PATH["app"];
         }

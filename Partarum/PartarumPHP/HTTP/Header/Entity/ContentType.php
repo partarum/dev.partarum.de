@@ -1,8 +1,8 @@
 <?php
+declare(strict_types=1);
+
 namespace Partarum\PartarumPHP\HTTP\Header\Entity {
 
-    use InvalidArgumentException;
-    use Partarum\PartarumPHP\HTTP\Header\Entity;
     use Partarum\PartarumPHP\HTTP\Header\HeaderField;
 
     class ContentType implements HeaderField {
@@ -17,13 +17,12 @@ namespace Partarum\PartarumPHP\HTTP\Header\Entity {
 
         public const XML = "text/xml";
 
+        public static function getOutput(string | int $field): string | int | bool {
 
+            $s = strtoupper((string)$field);
+            $constName = self::class . "::" . $s;
 
-        public static function getOutput($field) : string {
-
-            $s = strtoupper($field);
-
-            return (constant(self::class . "::$s")) !== NULL ? self::BASE . constant(self::class . "::$s") : false;
+            return defined($constName) ? self::BASE . (string)constant($constName) : false;
         }
 
     }

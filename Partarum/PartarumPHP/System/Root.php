@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Partarum\PartarumPHP\System {
 
     use SplFileInfo;
@@ -18,7 +20,7 @@ namespace Partarum\PartarumPHP\System {
          *
          * @return string
          */
-        private static function analyseRoot(string $needlePath, string $needleFile) : string {
+        private static function analyseRoot(string $needlePath, string $needleFile): string {
 
             $file = new SplFileInfo(__DIR__ . DIRECTORY_SEPARATOR . $needleFile);
 
@@ -26,13 +28,13 @@ namespace Partarum\PartarumPHP\System {
 
             $haystack = explode(DIRECTORY_SEPARATOR, $needlePath);
 
-            if($isSamePath === TRUE) {
+            if ($isSamePath === true) {
 
                 $pathArray = explode(DIRECTORY_SEPARATOR, __DIR__);
 
-                foreach($pathArray as $key => $needle){
+                foreach ($pathArray as $key => $needle) {
 
-                    if(in_array($needle, $haystack, TRUE)){
+                    if (in_array($needle, $haystack, true)) {
                         unset($pathArray[$key]);
                     }
                 }
@@ -46,9 +48,10 @@ namespace Partarum\PartarumPHP\System {
         /**
          * @return string|null
          */
-        private static function isENV_HOME() : ?string {
+        private static function isENV_HOME(): ?string {
 
-            return (getenv("HOME") !== false) ? getenv("HOME") : NULL;
+            $home = getenv("HOME");
+            return ($home !== false) ? $home : null;
         }
 
         /**
@@ -59,11 +62,9 @@ namespace Partarum\PartarumPHP\System {
          */
         public static function getPath(string $needlePath = "Partarum", string $needleFile = ".." . Root::SLASH . "WebApp.php"): string {
 
-            // TODO: zusätlich noch getcwd() auswerten
+            $root = (!empty($_SERVER["DOCUMENT_ROOT"])) ? (string)$_SERVER["DOCUMENT_ROOT"] : self::analyseRoot($needlePath, $needleFile);
 
-            $root = (!empty($_SERVER["DOCUMENT_ROOT"])) ? $_SERVER["DOCUMENT_ROOT"] : (self::analyseRoot($needlePath, $needleFile));
-
-            (!defined("ROOT")) && define("ROOT", (str_ends_with($root, DIRECTORY_SEPARATOR)) ? $root : $root . DIRECTORY_SEPARATOR);
+            (!defined("ROOT")) && define("ROOT", str_ends_with($root, DIRECTORY_SEPARATOR) ? $root : $root . DIRECTORY_SEPARATOR);
 
             (!defined("SLASH")) && define("SLASH", DIRECTORY_SEPARATOR);
 

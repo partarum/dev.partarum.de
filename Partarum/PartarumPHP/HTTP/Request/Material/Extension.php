@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  *   Copyright 2018- 2021 © Alexander Bombis. All rights reserved.
  *            Developed by Alexander Bombis.
@@ -10,36 +11,48 @@ namespace Partarum\PartarumPHP\HTTP\Request\Material {
 
     class Extension {
 
-        public $headers;
+        public const ALLOWED_EXTENSIONS = [
+            "js",
+            "css",
+            "html",
+            "txt",
+            "php",
+            "zip",
+            "jpg",
+            "jpeg",
+            "png",
+            "webp",
+            "svg",
+            "ico",
+            "woff",
+            "woff2"
+        ];
+
+        public Headers $headers;
 
         public string $realURL;
 
-        public $cacheTime;
+        public null | array $cacheTime;
 
-        public function __construct(string $realUrl, string $ext, $cacheTime = null){
+        public function __construct(string $realUrl, string $ext, null | array $cacheTime = null){
 
             $this->realURL = $realUrl;
 
             $this->cacheTime = $cacheTime;
 
-            $this->headers = Headers::setHeader($ext);
+            $normalizedExt = strtolower($ext);
 
-            if($ext !== '') {
-
-//                print_r($ext);
-//                print_r("---------");
-//                print_r($realUrl);
-
-                if(method_exists($this, $ext)) {
-                    $this->{$ext}();
-                } else {
-                    http_response_code(404);
-                }
-
+            if($normalizedExt === "" || !in_array($normalizedExt, self::ALLOWED_EXTENSIONS, true) || !is_file($this->realURL)) {
+                http_response_code(404);
+                return;
             }
+
+            $this->headers = Headers::setHeader($normalizedExt);
+
+            $this->{$normalizedExt}();
         }
 
-        public static function action(string $realUrl, string $ext, $cacheTime = null): void {
+        public static function action(string $realUrl, string $ext, null | array $cacheTime = null): void {
 
             (new Extension($realUrl, $ext, $cacheTime));
         }
@@ -67,29 +80,73 @@ namespace Partarum\PartarumPHP\HTTP\Request\Material {
             readfile($this->realURL);
         }
 
-        protected function txt(){
+        protected function txt(): void {
 
-        }
-
-        protected function php(): void {
-
-
-            if (file_exists($this->realURL)) {
-                require_once($this->realURL);
-
-            } else {
-                http_response_code(404);
-            }
-        }
-
-        protected function zip(): void {
-
-            //echo $this->realURL;
+            $this->headers->setContentDisposition($this->realURL);
 
             readfile($this->realURL);
         }
 
-        protected function jpg(){
+        protected function php(): void {
+
+            require_once($this->realURL);
+        }
+
+        protected function zip(): void {
+
+            $this->headers->setContentDisposition($this->realURL);
+
+            readfile($this->realURL);
+        }
+
+        protected function jpg(): void {
+
+            $this->headers->setContentDisposition($this->realURL);
+
+            readfile($this->realURL);
+        }
+
+        protected function jpeg(): void {
+
+            $this->jpg();
+        }
+
+        protected function png(): void {
+
+            $this->headers->setContentDisposition($this->realURL);
+
+            readfile($this->realURL);
+        }
+
+        protected function webp(): void {
+
+            $this->headers->setContentDisposition($this->realURL);
+
+            readfile($this->realURL);
+        }
+
+        protected function svg(): void {
+
+            $this->headers->setContentDisposition($this->realURL);
+
+            readfile($this->realURL);
+        }
+
+        protected function ico(): void {
+
+            $this->headers->setContentDisposition($this->realURL);
+
+            readfile($this->realURL);
+        }
+
+        protected function woff(): void {
+
+            $this->headers->setContentDisposition($this->realURL);
+
+            readfile($this->realURL);
+        }
+
+        protected function woff2(): void {
 
             $this->headers->setContentDisposition($this->realURL);
 

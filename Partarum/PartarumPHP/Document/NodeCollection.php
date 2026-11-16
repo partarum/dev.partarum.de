@@ -1,11 +1,14 @@
 <?php
+declare(strict_types=1);
+
 namespace Partarum\PartarumPHP\Document {
 
-    class NodeCollection
-    {
+    use AllowDynamicProperties;
 
-        public function __construct()
-        {
+    #[AllowDynamicProperties]
+    class NodeCollection {
+
+        public function __construct() {
 
         }
     }

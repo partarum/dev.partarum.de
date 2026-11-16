@@ -1,6 +1,9 @@
 <?php
+declare(strict_types=1);
+
 namespace Partarum\PartarumPHP\Security\Token {
 
+    use Generator;
     use JsonException;
 
     class JWT {
@@ -11,7 +14,7 @@ namespace Partarum\PartarumPHP\Security\Token {
          *  HS256 for secret key
          *  RS256 for privat 
          */
-        private $hash;
+        private ?string $hash = null;
 
 
         public function __construct() {
@@ -22,17 +25,17 @@ namespace Partarum\PartarumPHP\Security\Token {
 
         }
 
-        public function setPayload($payload) {
+        public function setPayload(mixed $payload): void {
 
             $this->object->setPayload($payload);
         }
 
-        public function getPayload() {
+        public function getPayload(): JWTPayload {
 
             return $this->object->payload;
         }
 
-        public function getToken(){
+        public function getToken(): string {
 
             $this->hash = $this->object->setSignature();
 
@@ -47,20 +50,20 @@ namespace Partarum\PartarumPHP\Security\Token {
             return $token;
         }
 
-        public function setSecretKey(string $key){
+        public function setSecretKey(string $key): void {
 
             $this->object->setSecretKey($key);
         }
 
-        public function encode(array $array)
+        public function encode(array $array): Generator
         {
             foreach ($array as $item) {
 
-                yield str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($item));
+                yield str_replace(['+', '/', '='], ['-', '_', ''], base64_encode((string)$item));
             }
         }
 
-        public function decode($token) : ?array {
+        public function decode(string | array $token) : ?array {
 
             $tokenArray = (is_array($token)) ? explode(".", $token[0]) : explode(".", $token);
 
@@ -91,11 +94,13 @@ namespace Partarum\PartarumPHP\Security\Token {
 
                         $this->object->setPayload(json_decode($stringArray[1], TRUE, 512, JSON_THROW_ON_ERROR));
 
-                        return hash_hmac('sha256', $stringArray[0] . "." . $stringArray[1], $key, TRUE) === $stringArray[2];
+                        $expectedSignature = hash_hmac('sha256', $stringArray[0] . "." . $stringArray[1], $key, TRUE);
+
+                        return hash_equals($expectedSignature, $stringArray[2]);
 
                     } catch (JsonException $e) {
 
-
+                        error_log("JWT::checkToken JsonException: " . $e->getMessage());
                     }
                 }
             }

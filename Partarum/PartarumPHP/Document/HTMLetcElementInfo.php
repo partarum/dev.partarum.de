@@ -1,24 +1,28 @@
 <?php
+declare(strict_types=1);
+
 namespace Partarum\PartarumPHP\Document {
 
+    use AllowDynamicProperties;
+
+    #[AllowDynamicProperties]
     class HTMLetcElementInfo {
 
-        public $tagName;
+        public ?string $tagName = null;
 
-        public $domPath;
+        public ?string $domPath = null;
 
-        public $domParentPath;
+        public ?string $domParentPath = null;
 
-        public $domParentParentPath;
+        public ?string $domParentParentPath = null;
 
-        public $namespacePath;
+        public ?string $namespacePath = null;
 
-        public $textPath;
+        public ?string $textPath = null;
 
-        public function __set($name, $value){
+        public function __set(string $name, mixed $value): void {
 
             $this->$name = $value;
         }
-
     }
 }

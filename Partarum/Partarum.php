@@ -1,23 +1,20 @@
 <?php
+declare(strict_types=1);
+
 namespace Partarum;
 
-require_once "vendor/autoload.php" ?? $_SERVER["DOCUMENT_ROOT"] . "/vendor/autoload.php";
+require_once dirname(__DIR__) . "/vendor/autoload.php";
 
-require_once "Partarum/PartarumPHP/System/Autoloader.php" ?? $_SERVER["DOCUMENT_ROOT"] . "/Partarum/PartarumPHP/System/Autoloader.php";
-
-use Partarum\PartarumPHP\System\Autoloader;
-
-spl_autoload_register([Autoloader::class, "autoload"]);
-
+use Partarum\PartarumPHP\Cache\RedisCache;
 use Partarum\PartarumPHP\Security\Token\UUID;
 use Partarum\PartarumPHP\HTTP\Request\Switcher;
 use Partarum\PartarumPHP\HTTP\Request\Router;
+use Partarum\PartarumPHP\System\EnvLoader;
 use Partarum\PartarumPHP\System\Root;
+use Partarum\PartarumPHP\System\SystemAccess;
 
-use Exception;
 use JsonException;
 use Predis\Client;
-use Dotenv\Dotenv;
 use Medoo\Medoo;
 use Predis\Response\Status;
 
@@ -70,8 +67,6 @@ class Partarum {
 
     private array $partarumENV;
 
-    //private null | ExtendedCacheItemPoolInterface $redisCache = NULL;
-
     private Client $redis;
 
     public string $topic;
@@ -93,15 +88,15 @@ class Partarum {
      * @param int $type
      * @param string|array|null $option
      */
-    public function __construct(string $name, int $type = Partarum::DOCUMENT, null | string | array $option = NULL) {
+    public function __construct(string $name = "Partarum", int $type = Partarum::DOCUMENT, null | string | array $option = NULL) {
 
         $this->topic = $name;
 
         $this->type = $type;
 
-        $this->loadENV();
-
         $this->defineConstants($type, $option);
+
+        $this->loadENV();
 
         $this->activateRedis();
 
@@ -118,10 +113,9 @@ class Partarum {
 
         $this->partarumKey = $this->id . Partarum::REDIS_KEY_BASE_PARTARUM;
 
-        $this->idKey = match($name){
-            str_starts_with("Partarum", $name) => $this->partarumKey,
-            default => $this->id . Partarum::REDIS_KEY_BASE_USER
-        };
+        $this->idKey = str_starts_with($name, "Partarum")
+            ? $this->partarumKey
+            : $this->id . Partarum::REDIS_KEY_BASE_USER;
 
         $idInfoArray = [
             "start" => date("Y-m-d H:i:s"),
@@ -129,49 +123,45 @@ class Partarum {
             "idKey" => $this->idKey,
             "partarumKey" => $this->partarumKey,
             "root" => ROOT,
-            "type" => (str_starts_with("Partarum", $name)) ? "partarum" : "user",
+            "type" => str_starts_with($name, "Partarum") ? "partarum" : "user",
             "manifests" => []
         ];
 
-        // ! json_decode(NULL) === deprecated
         $this->idInfo = json_decode($this->redis->get($this->idKey) ?? json_encode($idInfoArray), true) ?? $idInfoArray;
 
-        /* Prüfen und ggf. initialisieren des Routings im DOCUMENT_ROOT - damit ist noch nicht $name bezogene Routings gemeint
-         *
-         *  config/*-manifest.json
-         *  Partarum - Manifest sind globale Pfade für den ganzen DOCUMENT:ROOT
-         */
         if(!$this->redis->exists($this->idKey . ":initRoutes")) {
-
-            // User - Routing
-            $this->initRouting($this->idKey, [
-                "config/assets-manifest.json",
-                "config/error-manifest.json",
-                "config/fetch-manifest.json",
-                "config/routes-manifest.json",
-                "config/surface-manifest.json",
-                "config/text-manifest.json",
-            ]);
+            $this->initRouting($this->idKey, Router::DEFAULT_USER_MANIFESTS);
         }
 
         if(!$this->redis->exists($this->partarumKey . ":initRoutes")) {
-
-            // Partarum - Routing
-            $this->initRouting($this->partarumKey, [
-                "Partarum/PartarumConfig/partarum-manifest.json"
-            ]);
+            $this->initRouting($this->partarumKey, Router::DEFAULT_PARTARUM_MANIFESTS);
         }
+
+        $this->initSystemAccess();
 
         $this->redis->set($this->idKey, json_encode($this->idInfo));
 
         self::$inUse = true;
     }
 
-    /*
-     * Grundliegende Sachen aktivieren Constanten, Redis etc...
+    /**
+     * Wechselt eine Verzeichnisebene nach oben, solange Zugriffsrechte / open_basedir dies erlauben.
+     *
+     * @return bool
      */
-    private function init() {
+    private function goDown(): bool {
 
+        return SystemAccess::goDown();
+    }
+
+    /**
+     * Überprüft einmalig beim Systemstart, wie weit der PHP-User im Dateisystem nach oben sieht,
+     * auf welche Ordner er Zugriff hat und in welchem User-Kontext der Prozess läuft,
+     * und speichert das Ergebnis in Redis.
+     */
+    private function initSystemAccess(): void {
+
+        SystemAccess::init($this->redis, $this->partarumKey, __FILE__);
     }
 
     /*
@@ -179,41 +169,19 @@ class Partarum {
      */
     private function loadENV(): void {
 
-        /*
-         * Laden der .env Dateien aus PartarumLorem automatisieren
-         *
-         * ! In die Haupt-ENV sollten keine sensiblen Daten, da diese global in $_ENV, $_SERVER zu finden sind.
-         *
-         * ! Sensible Daten gehören in eine oder mehrfache .env Datei/en, welche dann speziell im Einsatz in ein eigenes Array geladen werden
-         *
-         * + .ghost (folder)
-         *       + .partarum (folder)
-         *       + .user (folder)
-         *          + .env (folder)
-         *          + .env.dev (file)
-         *          + .env.test (file)
-         *          + .env.prod (file)
-         */
-
-        $dotenv = Dotenv::createImmutable(".ghost/.user/.envBox");
-
-        $dotenv->load();
-
-        $dotenv = Dotenv::createArrayBacked("Partarum/PartarumIntern/Security");
-
-        $this->partarumENV = $dotenv->load();
+        $this->partarumENV = EnvLoader::load(ROOT);
     }
 
     public function loadSecret( string $path) : array {
 
-        $loremPath = ROOT . SLASH . ".ghost/.user/.envBox";
-
-        $dotEnv = Dotenv::createArrayBacked($loremPath . SLASH . $path);
-
-        return $dotEnv->load();
+        return EnvLoader::loadSecret($path, ROOT);
     }
 
     public function createDBConnection( null | array $option = null) : Medoo {
+
+        if($option !== null) {
+            return new Medoo($option);
+        }
 
         $env = $this->loadSecret($_ENV["DB"]);
 
@@ -225,7 +193,7 @@ class Partarum {
             "password" => $env["DB_PW"]
         ];
 
-        return new Medoo($option ?? $dbOptions);
+        return new Medoo($dbOptions);
     }
 
     /*
@@ -233,41 +201,22 @@ class Partarum {
      */
     private function activateRedis(): void {
 
-        try {
-            $this->redis = new Client([
-                "host" => $this->partarumENV["REDIS_IP"],
-                "port" => $this->partarumENV["REDIS_PORT"],
-                "database" => $this->partarumENV["REDIS_DB"],
-                "username" => $this->partarumENV["REDIS_USER"],
-                "password" => $this->partarumENV["REDIS_PASS"]
-            ]);
-        } catch(Exception $ex) {
-
-            echo "<pre>";
-            print_r($ex);
-        }
+        $this->redis = RedisCache::connect($this->partarumENV);
     }
 
     public function setToCache(string $key, string | int $value, int $expires = 0) : Status {
 
-        /*
-         *  Es empfiehlt sich bei Bearer-Token immer ein Expires zu setzen, damit der Cache nicht so überfüllt wird
-         */
-
-        return match($expires){
-            0 => $this->redis->set($this->idKey . ":cache:" . $key, $value),
-            default => $this->redis->set($this->idKey . ":cache:" . $key, $value, "EX", $expires)
-        };
+        return RedisCache::set($this->redis, $this->idKey, $key, $value, $expires);
     }
 
     public function getFromCache(string $key) : null | string {
 
-        return $this->redis->get($this->idKey . ":cache:" . $key);
+        return RedisCache::get($this->redis, $this->idKey, $key);
     }
 
     public function isIntoCache(string $key) : bool {
 
-        return $this->redis->exists($this->idKey . ":cache:" . $key);
+        return RedisCache::has($this->redis, $this->idKey, $key);
     }
 
     /*
@@ -275,36 +224,15 @@ class Partarum {
      *      + Partarum
      *      + User
      */
-    private function initRouting($id, $manifestArray): void {
+    private function initRouting(string $id, array $manifestArray): void {
 
-        // TODO: Auslagern nach  Router
-
-        foreach($manifestArray as $key => $value) {
-
-            $json = file_get_contents($value);
-
-            $config = json_decode($json, true);
-
-            foreach($config as $route => $path){
-
-                $this->redis->set($id . ":routes:" . $route, $path);
-            }
-
-            /*
-            echo "<pre>";
-            var_dump($this->idInfo);
-            */
-
-            $this->idInfo["manifests"][] = $value;
-        }
-
-        $this->redis->set($id . ":initRoutes", true);
+        Router::initRouting($id, $manifestArray, $this->redis, $this->idInfo);
     }
 
     /*
      * Konstanten definieren
      */
-    private function defineConstants($type, $option): void {
+    private function defineConstants(int $type, null | string | array $option): void {
 
         $manifestArray = [];
 
@@ -312,31 +240,30 @@ class Partarum {
 
         if($type !== self::DOCUMENT){
 
-            if(isset($option["manifest"])){
+            if(is_array($option) && isset($option["manifest"])){
 
                 // vorwiegend self::PLUGIN
 
                 try {
                     $manifestArray = json_decode($option["manifest"], TRUE, 512, JSON_THROW_ON_ERROR);
 
-                    $rootPath = $manifestArray["rootPath"] || $manifestArray["proxyPath"];
+                    $rootPath = $manifestArray["rootPath"] ?? $manifestArray["proxyPath"] ?? "";
 
                 } catch(JsonException $je){
 
-                    echo "<pre>";
-                    print_r($je);
+                    error_log("Partarum::defineConstants JsonException: " . $je->getMessage());
                 }
-            } else {
+            } elseif(is_array($option)) {
 
                 // vorwiegend self::PROXY
 
-                $rootPath = $option["rootPath"] ?? $option["proxyPath"];
+                $rootPath = $option["rootPath"] ?? $option["proxyPath"] ?? "";
             }
 
         }
 
 
-        if((self::$inUse === false) && ($type === self::PLUGIN || self::DOCUMENT)) {
+        if((self::$inUse === false) && ($type === self::PLUGIN || $type === self::DOCUMENT)) {
 
             $getRoot = Root::getPath();
 
@@ -353,28 +280,16 @@ class Partarum {
 
             case self::PROXY:
 
-                //define("PARTARUM_PROXY_PATH", $option["proxyPath"]);
-
-                define("PARTARUM_PROXY_PATH", $option["proxyPath"] ?? $rootPath);
+                (!defined("PARTARUM_PROXY_PATH")) && define("PARTARUM_PROXY_PATH", $option["proxyPath"] ?? $rootPath);
 
                 break;
 
             case self::PLUGIN:
 
-                define("PARTARUM_PLUGIN_PATH", ROOT . SLASH . $manifestArray["pluginPath"]);
+                (!defined("PARTARUM_PLUGIN_PATH")) && define("PARTARUM_PLUGIN_PATH", ROOT . SLASH . ($manifestArray["pluginPath"] ?? ""));
 
-                define("PARTARUM_RELATIV_PLUGIN_PATH", SLASH . $manifestArray["rootPath"] . SLASH . $manifestArray["pluginPath"]);
+                (!defined("PARTARUM_RELATIV_PLUGIN_PATH")) && define("PARTARUM_RELATIV_PLUGIN_PATH", SLASH . ($manifestArray["rootPath"] ?? "") . SLASH . ($manifestArray["pluginPath"] ?? ""));
         }
-    }
-
-    /**
-     *
-     */
-    public function addAutoloader($content, $matter): void {
-
-        Autoloader::addUserAutoloader($content, $matter);
-        // Wichtig !!!
-
     }
 
     public function addRouter(string $name, string | array $manifestPath): void {
@@ -396,11 +311,13 @@ class Partarum {
     }
 
     /**
+     * @param array|null $cacheTime
      * @return Router
      */
-    public function goPublic($cacheTime) : Router {
+    public function goPublic(?array $cacheTime = null) : Router {
 
-        $this->router = new Router($this->redis);
+        $this->router = new Router($this->redis, $this->idInfo);
+        $this->router->setType($this->type);
         $this->router->setModus(Router::MODUS_PUBLIC);
         $this->router->setCacheTime($cacheTime);
 

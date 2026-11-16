@@ -1,13 +1,15 @@
 <?php
+declare(strict_types=1);
+
 namespace Partarum\PartarumPHP\Security\Token {
 
     use Exception;
 
     class JWTPayload {
 
-        const ALGO = "aes-256-cbc";
+        public const ALGO = "aes-256-cbc";
 
-        const BYTE_LENGTH = 16;
+        public const BYTE_LENGTH = 16;
 
         private array $cache = [];
 
@@ -16,11 +18,13 @@ namespace Partarum\PartarumPHP\Security\Token {
          */
         private function encryptValue(string $value) : bool|string {
 
-            $secretKey = $_ENV["JWT_CRYPTO_SECRET_KEY"] || "partarumSecret";
+            $secretKey = $_ENV["JWT_CRYPTO_SECRET_KEY"] ?? "partarumSecret";
 
-            $bytes = random_bytes(self::BYTE_LENGTH) ?? openssl_random_pseudo_bytes(16);
+            $iv = random_bytes(self::BYTE_LENGTH);
 
-            return openssl_encrypt($value, self::ALGO, $secretKey, OPENSSL_RAW_DATA, $bytes);
+            $cipher = openssl_encrypt($value, self::ALGO, $secretKey, OPENSSL_RAW_DATA, $iv);
+
+            return ($cipher !== false) ? $iv . $cipher : false;
         }
 
         /**
@@ -28,30 +32,45 @@ namespace Partarum\PartarumPHP\Security\Token {
          */
         private function decryptValue(string $string): bool|string {
 
-            $secretKey = $_ENV["JWT_CRYPTO_SECRET_KEY"] || "partarumSecret";
+            $secretKey = $_ENV["JWT_CRYPTO_SECRET_KEY"] ?? "partarumSecret";
 
-            $bytes = random_bytes(16) ?? openssl_random_pseudo_bytes(16);
+            if(strlen($string) <= self::BYTE_LENGTH) {
+                return false;
+            }
 
-            return openssl_decrypt($string, self::ALGO, $secretKey,OPENSSL_RAW_DATA, $bytes);
+            $iv = substr($string, 0, self::BYTE_LENGTH);
+            $cipher = substr($string, self::BYTE_LENGTH);
+
+            return openssl_decrypt($cipher, self::ALGO, $secretKey, OPENSSL_RAW_DATA, $iv);
         }
 
         /**
          * @throws Exception
          */
-        public function __set($name, $value) {
+        public function __set(int | string $name, mixed $value): void {
 
             if(!isset($this->cache[$name])) {
 
-                $this->cache[$name] = base64_encode($this->encryptValue($value));
+                $encrypted = $this->encryptValue((string)$value);
+
+                if($encrypted !== false) {
+                    $this->cache[$name] = base64_encode($encrypted);
+                }
             }
         }
 
         /**
          * @throws Exception
          */
-        public function __get($name) {
+        public function __get(int | string $name): mixed {
 
-            return $this->decryptValue(($this->cache[$name]));
+            if(!isset($this->cache[$name])) {
+                return null;
+            }
+
+            $decoded = base64_decode((string)$this->cache[$name], true);
+
+            return ($decoded !== false) ? $this->decryptValue($decoded) : false;
         }
 
         public function getAll(): array {
@@ -59,9 +78,9 @@ namespace Partarum\PartarumPHP\Security\Token {
             return $this->cache;
         }
 
-        public function __isset($name) {
+        public function __isset(int | string $name): bool {
 
-            return isset($this->$name);
+            return isset($this->cache[$name]);
         }
     }
 }

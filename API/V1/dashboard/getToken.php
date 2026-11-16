@@ -1,16 +1,17 @@
 <?php
-error_reporting(-1);
-ini_set("display_errors", "1");
+declare(strict_types=1);
 
-session_start();
-
-if (!class_exists(\Partarum\Partarum::class)) {
-    require_once $_SERVER["DOCUMENT_ROOT"] . "/Partarum/Partarum.php";
+if (session_status() === PHP_SESSION_NONE && !headers_sent()) {
+    session_start();
 }
-use Partarum\Partarum;
 
+use Partarum\Partarum;
 use Partarum\PartarumPHP\HTTP\API;
 use Partarum\PartarumPHP\Security\Token\JWT;
+
+if (!class_exists(Partarum::class)) {
+    require_once dirname(__DIR__, 3) . "/Partarum/Partarum.php";
+}
 
 $backend = new Partarum("getToken");
 
@@ -26,64 +27,33 @@ $postKeys = [
     "rhd" => $api->fromPOST("rhd")
 ];
 
-$bearer = explode("Bearer ", $api->fromHeader("Authorization", API::REQUEST));
+$bearerToken = $api->fromBearerToken();
 
-if($backend->isIntoCache("Bearer:" . $bearer[1])){
+if ($bearerToken !== null && $backend->isIntoCache("Bearer:" . $bearerToken)) {
 
     $db = $backend->createDBConnection();
 
     $result = [];
+    $secretKey = (string)($_ENV["JWT_SECRET_KEY"] ?? "");
 
     foreach ($postKeys as $key => $value) {
 
-        if($postKeyCheckALL !== NULL){
-
+        if ($postKeyCheckALL !== null || $value !== null) {
             $jwt = new JWT();
-
-            $jwt->setSecretKey($_ENV["JWT_SECRET_KEY"]);
-
-            $jwt->setPayload($key);
+            $jwt->setSecretKey($secretKey);
+            $jwt->setPayload([$key]);
 
             $result[$key] = $jwt->getToken();
-
-        } else {
-            if($value !== null) {
-
-                $jwt = new JWT();
-
-                $jwt->setSecretKey($_ENV["JWT_SECRET_KEY"]);
-
-                $jwt->setPayload($key);
-
-                $result[$key] = $jwt->getToken();
-
-            }
         }
     }
 
-// TODO: Token zur weiteren Verarbeitung noch entsprechend abspeichern
-    /*
-     * Was wird mit dem Token gemacht?
-     *
-     * Der Token wird genutzt um die Berechtigung zu setzen, auf der jeweiligen Seite sein zu dürfen
-     * Der erste Seitenaufruf erfolgt über einen GET
-     * Bei den darauffolgenden Seitenaufrufen befindet sich der Token nicht mehr im GET, sondern in der $_SESSION des USERS
-     */
-
     $insertArray = [];
-
     $insertArrayResult = [];
-
     $updateArrayResult = [];
-
-    $testInsert = FALSE;
 
     foreach ($result as $key => $value) {
 
-        if($db->has("token", [
-                "name" => $key
-            ]
-        )) {
+        if ($db->has("token", ["name" => $key])) {
 
             $db->update("token", [
                 "value" => $value
@@ -104,11 +74,17 @@ if($backend->isIntoCache("Bearer:" . $bearer[1])){
         }
     }
 
-    (count($insertArray) > 0) && $db->insert("token", $insertArray);
+    if (count($insertArray) > 0) {
+        $db->insert("token", $insertArray);
+    }
 
-    $api->createJSONResponse(["token" => $result, "insert" => $insertArrayResult, "update" => $updateArrayResult])->run();
+    $api->createJSONResponse([
+        "token" => $result,
+        "insert" => $insertArrayResult,
+        "update" => $updateArrayResult
+    ])->run();
 
 } else {
 
-    $api->createJSONResponse(["status" => "Your beer is stale", "beer" => $bearer])->run(403);
+    $api->createJSONResponse(["status" => "Your beer is stale", "beer" => $bearerToken])->run(403);
 }

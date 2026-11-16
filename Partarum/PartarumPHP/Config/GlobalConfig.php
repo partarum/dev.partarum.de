@@ -1,53 +1,55 @@
 <?php
+declare(strict_types=1);
+
 namespace Partarum\PartarumPHP\Config {
 
     class GlobalConfig {
 
-        public static $theme;
+        public static ?string $theme = null;
 
-        public static $ses;
+        public static int $ses = 0;
 
-        public static $style;
+        public static ?string $style = null;
 
-        public static $presentation;
+        public static int $presentation = 1;
 
-        public static $public;
+        public static int $public = 1;
 
-        public static $private;
+        public static int $private = 0;
 
-        public static $wrapper;
+        public static bool $wrapper = false;
 
-        public static function setTheme($theme){
+        public static function setTheme(?string $theme): void {
 
             self::$theme = $theme;
         }
 
-        public static function setSes($ses){
+        public static function setSes(int $ses): void {
 
             self::$ses = $ses;
         }
 
-        public static function setStyle($style){
+        public static function setStyle(?string $style): void {
 
             self::$style = $style;
         }
 
-        public static function setPresentation($presentation){
+        public static function setPresentation(int $presentation): void {
 
             self::$presentation = $presentation;
         }
 
-        public static function setPrivate($private){
+        public static function setPrivate(int $private): void {
 
             self::$private = $private;
         }
 
-        public static function setPublic($public){
+        public static function setPublic(int $public): void {
 
-            self::$public =$public;
+            self::$public = $public;
         }
 
-        public static function setWrapper($wrapper){
+        public static function setWrapper(bool $wrapper): void {
             self::$wrapper = $wrapper;
         }
 

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Partarum\PartarumPHP {
 
     use Partarum\PartarumPHP\Office;
@@ -8,13 +10,13 @@ namespace Partarum\PartarumPHP {
 
     class WebApp {
 
-    	public $theme;
+        public ?string $theme = null;
 
-    	public $ses = 0;
+        public int $ses = 0;
 
-    	public $style;
+        public ?string $style = null;
 
-    	public $wrapper = 0;
+        public int | bool $wrapper = 0;
 
         public int $presentation = 1;
 
@@ -23,21 +25,21 @@ namespace Partarum\PartarumPHP {
         public int $private = 0;
 
 
-        public function create(){
+        public function create(): void {
 
-         	GlobalConfig::setTheme($this->theme);
-         	GlobalConfig::setSes($this->ses ?? 0);
-         	GlobalConfig::setStyle($this->style);
-         	GlobalConfig::setPresentation($this->presentation ?? 1);
-         	GlobalConfig::setPublic($this->public ?? 1);
-         	GlobalConfig::setPrivate($this->private ?? 0);
-         	GlobalConfig::setWrapper(!(($this->wrapper === 0)));
+            GlobalConfig::setTheme($this->theme);
+            GlobalConfig::setSes($this->ses);
+            GlobalConfig::setStyle($this->style);
+            GlobalConfig::setPresentation($this->presentation);
+            GlobalConfig::setPublic($this->public);
+            GlobalConfig::setPrivate($this->private);
+            GlobalConfig::setWrapper(!($this->wrapper === 0 || $this->wrapper === false));
 
             ($this->public === 0) && new SafetyService();
 
             $theme = $this->theme;
 
-        	$html = new Office($theme, "start", TRUE);
+            $html = new Office($theme, "start", true);
 
             $html->page->close();
         }

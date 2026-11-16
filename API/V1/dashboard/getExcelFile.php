@@ -1,33 +1,29 @@
 <?php
-error_reporting(-1);
-ini_set("display_errors", "1");
+declare(strict_types=1);
 
-session_start();
-
-if (!class_exists(\Partarum\Partarum::class)) {
-    require_once $_SERVER["DOCUMENT_ROOT"] . "/Partarum/Partarum.php";
+if (session_status() === PHP_SESSION_NONE && !headers_sent()) {
+    session_start();
 }
-use Partarum\Partarum;
 
+use Partarum\Partarum;
 use Partarum\PartarumPHP\Helper\Date\DateFormatter;
 use Partarum\PartarumPHP\Helper\Spreadsheet\Excel;
 use Partarum\PartarumPHP\HTTP\API;
-
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
-use PhpOffice\PhpSpreadsheet\Style\Border;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-use PhpOffice\PhpSpreadsheet\IOFactory;
 
+if (!class_exists(Partarum::class)) {
+    require_once dirname(__DIR__, 3) . "/Partarum/Partarum.php";
+}
 
-$invalidPostValues =  ["", null];
+$invalidPostValues = ["", null];
 
 $backend = new Partarum("getExcelFile");
 
 $api = new API();
 
 $postKeyCheckALL = $api->fromPOST("all");
-
 $requestType = $api->fromPOST("type");
 
 $surveyContentColumn = "survey_excel_character_content";
@@ -40,115 +36,112 @@ $postKeys = [
     "RHD" => $api->fromPOST("rhd")
 ];
 
+$bearerToken = $api->fromBearerToken();
 
-$bearer = explode("Bearer ", $api->fromHeader("Authorization", API::REQUEST));
-
-if ($backend->isIntoCache("Bearer:" . $bearer[1])) {
+if ($bearerToken !== null && $backend->isIntoCache("Bearer:" . $bearerToken)) {
 
     $db = $backend->createDBConnection();
 
     $resultDate = [];
 
     foreach ($postKeys as $key => $value) {
-
         $resultDate[$key] = $db->get("survey_dashboard", "survey_start", ["topic" => $key]);
     }
 
     $spreadsheet = new Spreadsheet();
 
-    define("START_CELL_COLUMN", "A");
+    if (!defined("START_CELL_COLUMN")) {
+        define("START_CELL_COLUMN", "A");
+    }
 
-    define("START_CELL_ROW", "1");
+    if (!defined("START_CELL_ROW")) {
+        define("START_CELL_ROW", "1");
+    }
 
-    $resultDB = [
-        "KVH" => "",
-        "LSH" => "",
-        "NSH" => "",
-        "RHB" => "",
-        "RHD" => ""
-        ];
+    $resultDB = [];
 
     foreach ($postKeys as $key => $value) {
 
-        if (!in_array($postKeyCheckALL, $invalidPostValues)) {
+        if (!in_array($postKeyCheckALL, $invalidPostValues, true)) {
 
             $dbAllResult = $db->select("survey", $surveyContentColumn, [
                 "topic" => $key
             ]);
 
-            if(count($dbAllResult) > 0){
-
+            if (is_array($dbAllResult) && count($dbAllResult) > 0) {
                 $resultDB[$key] = $dbAllResult;
-
-            } else {
-
-                unset($resultDB[$key]);
             }
 
+        } elseif (!in_array($value, $invalidPostValues, true)) {
 
-        } else {
+            $dbTopicResult = $db->select("survey", $surveyContentColumn, [
+                "topic" => $key
+            ]);
 
-            if ($value !== null) {
-
-                $resultDB[$key] = $db->select("survey", $surveyContentColumn, [
-                    "topic" => $key
-                ]);
-            } else {
-
-                unset($resultDB[$key]);
+            if (is_array($dbTopicResult) && count($dbTopicResult) > 0) {
+                $resultDB[$key] = $dbTopicResult;
             }
         }
     }
 
-    $sheetArray = [];
-
     $sheetCounter = 0;
 
-    foreach($resultDB as $key => $value) {
+    foreach ($resultDB as $key => $value) {
 
-        $testDateArray = explode(" ", DateFormatter::format_DE($resultDate[$key], "yyyy-MM-dd", "MMMM yyyy"));
+        $rawDate = is_string($resultDate[$key] ?? null) && $resultDate[$key] !== ""
+            ? $resultDate[$key]
+            : (string)DateFormatter::format_DE(time(), null, "yyyy-MM-dd");
 
-        $testMonth = $testDateArray[0];
+        $formattedDate = (string)DateFormatter::format_DE($rawDate, "yyyy-MM-dd", "MMMM yyyy");
+        $testDateArray = explode(" ", $formattedDate);
 
-        $testYear = $testDateArray[1];
+        $testMonth = $testDateArray[0] ?? "";
+        $testYear = $testDateArray[1] ?? "";
 
         $sheet = new Worksheet($spreadsheet, $key);
-
         $spreadsheet->addSheet($sheet, $sheetCounter);
 
-        $sheetIndex = $spreadsheet->getIndex($spreadsheet->getSheetByName($key));
-
-        $spreadsheet->setActiveSheetIndex($sheetIndex);
+        $targetSheet = $spreadsheet->getSheetByName($key);
+        if ($targetSheet !== null) {
+            $sheetIndex = $spreadsheet->getIndex($targetSheet);
+            $spreadsheet->setActiveSheetIndex($sheetIndex);
+        }
 
         $activeWorksheet = $spreadsheet->getActiveSheet();
-
         $activeWorksheet->setCellValue("A1", $testMonth);
-
         $activeWorksheet->setCellValue("B1", $testYear);
 
         $surveyResultCounter = 2;
 
-        foreach($value as $surveyResult) {
+        foreach ($value as $surveyResult) {
+            if (!is_string($surveyResult) || $surveyResult === "") {
+                continue;
+            }
 
-            $surveyResultArray = json_decode($surveyResult);
+            $surveyResultArray = json_decode($surveyResult, true);
+
+            if (!is_array($surveyResultArray) || count($surveyResultArray) === 0) {
+                continue;
+            }
 
             $lastKey = array_pop($surveyResultArray);
-
             $newSurveyResultArray = [$lastKey, ...$surveyResultArray];
 
             $columnLetter = Excel::getCharacter($newSurveyResultArray);
 
-            foreach($columnLetter as $columnKey => $columnValue){
+            foreach ($columnLetter as $columnKey => $columnValue) {
 
-                $activeWorksheet->setCellValue($columnKey . $surveyResultCounter, $columnValue);
+                $cellValue = is_scalar($columnValue) || $columnValue === null
+                    ? (string)$columnValue
+                    : (json_encode($columnValue) ?: "");
 
-                if(strlen($columnValue) < 10) {
+                $activeWorksheet->setCellValue($columnKey . $surveyResultCounter, $cellValue);
 
+                if (strlen($cellValue) < 10) {
                     $cell = $sheet->getCell($columnKey . $surveyResultCounter);
-
                     $style = $cell->getStyle();
                     $alignment = $style->getAlignment();
-                    $alignment->setHorizontal('center');
+                    $alignment->setHorizontal("center");
                 }
             }
 
@@ -158,22 +151,14 @@ if ($backend->isIntoCache("Bearer:" . $bearer[1])) {
         $sheetCounter++;
     }
 
-    if($requestType === "test") {
+    if ($requestType === "test") {
 
-        echo "hallo";
-
-        /*
-        echo "<pre>";
-
-        var_dump($postKeys);
-
-        var_dump($resultDate);
-
-        var_dump($resultDB);
-        */
+        $api->createJSONResponse([
+            "status" => "ok",
+            "topics" => array_keys($resultDB)
+        ])->run();
 
     } else {
-
 
         $res = $api->createResponse();
 
@@ -181,10 +166,8 @@ if ($backend->isIntoCache("Bearer:" . $bearer[1])) {
         $res->setHeader('Content-Disposition: attachment;filename="Erhebung.xlsx"');
         $res->setHeader("Cache-Control: max-age=0");
 
-        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
-        // $writer = new Xlsx($spreadsheet);
-
-        $writer->save('php://output');
+        $writer = IOFactory::createWriter($spreadsheet, "Xlsx");
+        $writer->save("php://output");
     }
 
 } else {

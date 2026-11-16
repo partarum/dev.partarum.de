@@ -1,61 +1,74 @@
 <?php
+declare(strict_types=1);
+
 namespace Partarum\PartarumPHP\Traits\Document {
 
+    use Generator;
     use Partarum\PartarumPHP\Filesystem\FilesystemGenerator;
     use ReflectionClass;
+    use Throwable;
 
     trait FeatHTMLgetEtc {
 
-
-        public function getIterator(){
+        public function getIterator(): void {
 
             $path = $this->filterPath();
 
-            $this->iterator = new FilesystemGenerator($path);
-        }
-
-        public function filterPath(){
-
-            $path = ($this->theme == "theOffice") ? $_SERVER["DOCUMENT_ROOT"].self::DASHBOARD_PATH : $_SERVER["DOCUMENT_ROOT"].self::HTML_PATH.$this->theme."/surface/html";
-
-            return $path;
-
-        }
-
-        public function getEtcConst($namespacePath)
-        {
-
-            //echo "<br> namespacePath featHTMLgetEtc = ".$namespacePath;
-
-            try {
-
-                $etc = new ReflectionClass($namespacePath."\\etc");
-                yield $etc->getConstants();
-
-            }catch(\Throwable $throwable){
-                echo "Hier liegt ein Fehler vor!!!!";
-                echo "<pre>";
-                print_r($throwable);
-                //print_r($this->etcPath);
-                //print_r($this->etcPath->$tagName);
-                echo "</pre>";
+            if (is_dir($path)) {
+                $this->iterator = new FilesystemGenerator($path);
+            } else {
+                $this->iterator = null;
             }
         }
 
-        public function setPattern(){
+        public function filterPath(): string {
+
+            $baseRoot = $this->resolveRootPath();
+
+            return ($this->theme === "theOffice")
+                ? $baseRoot . self::DASHBOARD_PATH
+                : $baseRoot . self::HTML_PATH . $this->theme . "/surface/html";
+        }
+
+        protected function resolveRootPath(): string {
+
+            if (defined("ROOT")) {
+                return rtrim((string)ROOT, "/\\");
+            }
+
+            if (!empty($_SERVER["DOCUMENT_ROOT"])) {
+                return rtrim((string)$_SERVER["DOCUMENT_ROOT"], "/\\");
+            }
+
+            return dirname(__DIR__, 4);
+        }
+
+        public function getEtcConst(string $namespacePath): Generator {
+
+            try {
+                $className = $namespacePath . "\\etc";
+                if (class_exists($className)) {
+                    $etc = new ReflectionClass($className);
+                    yield $etc->getConstants();
+                }
+            } catch (Throwable $throwable) {
+                error_log("[Partarum][FeatHTMLgetEtc] Reflection error for {$namespacePath}: " . $throwable->getMessage());
+            }
+        }
+
+        public function setPattern(): void {
 
             $this->pattern = [
-                "head" => "{".preg_quote("head")."$}",
-                "header" => "{".preg_quote("1#header")."}",
-                "main" => "{".preg_quote("2#main")."}",
-                "footer" => "{".preg_quote("3#footer")."}"
+                "head" => "{" . preg_quote("head") . "$}",
+                "header" => "{" . preg_quote("1#header") . "}",
+                "main" => "{" . preg_quote("2#main") . "}",
+                "footer" => "{" . preg_quote("3#footer") . "}"
             ];
         }
 
-        public function setSurfacePath($subPath){
+        public function setSurfacePath(string $subPath): Generator {
 
-            yield "surface\html\\".$subPath;
-
+            yield "surface\\html\\" . $subPath;
         }
     }
 }

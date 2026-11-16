@@ -1,97 +1,49 @@
 <?php
+declare(strict_types=1);
+
 namespace Partarum\PartarumPHP\Filesystem {
 
-    use Partarum\PartarumPHP\Filesystem\DirectoryGenerator;
+    use Generator;
 
     /*
      *  Generator 2
      */
 
-    class FilesystemGenerator{
+    class FilesystemGenerator {
 
-        public $fileGenerator;
+        public mixed $fileGenerator = null;
 
-        public $path;
+        public string $path;
 
-        public function __construct($path){
+        public function __construct(string $path) {
 
-            //echo "<br> Generator2 __construct path = ".$path;
             $this->path = $path;
-
         }
 
-        public function getFile()
-        {
+        public function getFile(): Generator {
+
             $fileGenerator = new DirectoryGenerator($this->path);
-
-            //echo "<br> Generator 2 time: ".microtime();
-
-            $fileObject = $fileGenerator->getFilesystem();    // Generator
-
-            /*
-            echo "<br> start fileObject <pre>";
-            print_r($fileObject);
-            echo "</pre> end fileObject<br>";
-            */
+            $fileObject = $fileGenerator->getFilesystem();
 
             foreach ($fileObject as $file) {
 
-                /*
-                echo "<br> Generator 2 getFile file = ";
-                echo "<pre>";
-                */
-                $fileName = $file->getFilename();   // SPLFileInfo - Object
+                $fileName = $file->getFilename();
 
-                //print_r($fileName);
-
-
-                if($fileName !== "" ){
-                    if($file->isFile()) {
-
-
-                        //echo "<br> Generator 2 file = ".$file;
-
+                if ($fileName !== "") {
+                    if ($file->isFile()) {
                         yield $file;
-
-                    }elseif($file->isDir()) {
-
-                        //echo "<br> Generator 2 getFile() isDir file->getChildren = ";
-                        //print_r($file->getChildren());
-
+                    } elseif ($file->isDir()) {
                         $result = new DirectoryBridgeGenerator($file->getPathname());
                         $resultFile = $result->getFile();
 
-                        /*
-                        echo "<br> Start Ausgabe Generator 2 -> getFile() isDir resultFile->current() = ";
-                        echo "<pre>";
-                        */
-
-                        $closed = $resultFile->valid();
-
-                        if($closed !== FALSE){
-
-                            //print_r($resultFile->valid());
-
+                        if ($resultFile->valid() !== false) {
                             foreach ($resultFile as $nextFile) {
-
-                                /*
-                                echo "<pre>";
-                                print_r($nextFile);
-                                */
-
                                 yield $nextFile;
                             }
-
-                        }elseif($closed === FALSE){
-
-                            $finish = TRUE;
-                            //echo "<br> Generator ist am Ende!!!";
                         }
-                        //echo "<br> Generator 2 Ende Ausgabe!";
                     }
                 }
             }
-
         }
     }
 }

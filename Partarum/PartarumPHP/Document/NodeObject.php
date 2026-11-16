@@ -1,23 +1,27 @@
 <?php
+declare(strict_types=1);
+
 namespace Partarum\PartarumPHP\Document {
 
-	use Partarum\PartarumPHP\Traits\Document\FeatHTMLAttributes;
+    use AllowDynamicProperties;
+    use Partarum\PartarumPHP\Traits\Document\FeatHTMLAttributes;
 
-	class NodeObject
-	{
-		use FeatHTMLAttributes;
+    #[AllowDynamicProperties]
+    class NodeObject {
 
-		public $element;
+        use FeatHTMLAttributes;
 
-		public $event;
+        public ?string $element = null;
 
-		public $text;
+        public mixed $event = null;
 
-		public function __construct($el = NULL)
-		{
+        public ?string $text = null;
 
-			($el !== NULL) && $this->element = $el;
-		}
+        public function __construct(?string $el = null) {
 
-	}
+            if ($el !== null) {
+                $this->element = $el;
+            }
+        }
+    }
 }

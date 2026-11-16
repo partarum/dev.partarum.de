@@ -1,93 +1,85 @@
 <?php
+declare(strict_types=1);
+
 namespace Partarum\PartarumPHP\Document {
 
-    //use Partarum\TheOffice;
     use Partarum\PartarumPHP\Traits\Document\FeatHTMLPage;
-    use Partarum\PartarumPHP\Document\{
-        HTMLgetEtc as HTMLgetEtc,
-        HTMLDocument as HTMLDocument,
-        HTMLSeries as HTMLSeries,
-        HTMLElement as HTMLElement};
-    use stdClass;
 
-    class HTMLPage extends HTMLDocument{
-	    use FeatHTMLPage;
+    class HTMLPage extends HTMLDocument {
 
-        // none, base ; start, finish
-	    public function __construct($theme = NULL, $part = NULL){
+        use FeatHTMLPage;
 
-	        parent::__construct();
+        public function __construct(?string $theme = null, string|bool|null $part = null) {
+
+            parent::__construct();
 
             $this->setWrapperToParentObject();
 
-		    $this->open();
+            $this->open();
 
-		    $this->theme = $theme;
+            $this->theme = $theme;
 
-		    if(($theme !== NULL) && ($part !== NULL)) {
+            if (($theme !== null) && ($part !== null)) {
 
-                (($theme !== "none") || ($theme !== "start") && ($theme === NULL)) && $this->openWithWrapper($part);
+                if (($theme !== "none") && ($theme !== "start")) {
+                    $this->openWithWrapper($part);
+                } else {
+                    $this->openWithoutWrapper($part);
+                }
 
-                (($theme === "none") || ($theme === "start")) && $this->openWithoutWrapper($part);
-
-                $this->etc = (($part !== "finish") && (($theme !== "start") || ($theme !== "none"))) ? new HTMLgetEtc($theme) : false;
+                $this->etc = (($part !== "finish") && ($theme !== "start") && ($theme !== "none"))
+                    ? new HTMLgetEtc($theme)
+                    : false;
 
                 if (($theme !== "start") && ($theme !== "none") && ($part !== "finish")) {
-
-                    echo "------------------->".$theme."----------".$part;
-
                     $this->setPage();
                 }
             }
+        }
 
-            $this->openWithWrapper($part);
+        public function open(): void {
 
-            $this->setPage();
-
-	    }
-
-	    public function open(){
-
-		    parent::setBase();
-		    parent::setStructur();
+            parent::setBase();
+            parent::setStructur();
 
             $path = $this->path;
             $this->head =& $this->dom->{$path["html"]}->{$path["head"]};
             $this->body =& $this->dom->{$path["html"]}->{$path["body"]};
-	    }
-
-	    protected function setDOMReference(){
-
-                $path = $this->path;
-                $this->header =& $this->dom->{$path["body"]}->{$path["header"]};
-                $this->main =& $this->dom->{$path["body"]}->{$path["main"]};
-                $this->footer =& $this->dom->{$path["body"]}->{$path["footer"]};
         }
 
-	    public function openWithWrapper($part = TRUE){
+        protected function setDOMReference(): void {
 
-		    $this->setWrapper($this->theme !== NULL);
+            $path = $this->path;
+            $this->header =& $this->dom->{$path["body"]}->{$path["header"]};
+            $this->main =& $this->dom->{$path["body"]}->{$path["main"]};
+            $this->footer =& $this->dom->{$path["body"]}->{$path["footer"]};
+        }
 
-            ($this->theme === NULL) && $this->setDOMReference();
+        public function openWithWrapper(string|bool|null $part = true): void {
 
-            (($part !== TRUE) && (($part == "finish") || ($part === NULL))) && $this->close();
-	    }
+            $this->setWrapper($this->theme !== null);
 
-	    public function openWithoutWrapper($part){
+            $this->setDOMReference();
 
-            //($this->theme === NULL) && $this->setDOMReference();
+            if (($part !== true) && (($part === "finish") || ($part === null))) {
+                $this->close();
+            }
+        }
 
-	        (($part == "finish") || ($part === NULL)) && $this->close();
-	    }
+        public function openWithoutWrapper(string|bool|null $part = null): void {
 
-        public function setPage(){
+            if (($part === "finish") || ($part === null)) {
+                $this->close();
+            }
+        }
 
+        public function setPage(): void {
 
-	    }
+        }
 
-	    public function close(){
+        public function close(): void {
 
-		    echo $this->dom->dom->saveHTML();
-	    }
+            echo $this->getHTML();
+        }
     }
 }

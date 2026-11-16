@@ -1,24 +1,26 @@
 <?php
+declare(strict_types=1);
+
 namespace Partarum\PartarumPHP\Service\Binary {
 
     class FlagWorker {
 
-        protected ?int $flags = NULL;
-        
+        protected ?int $flags = null;
+
         private array $cache = [];
 
         public function __construct() {
 
         }
 
-        public function isFlagSet($flag) : bool {
-            return (($this->flags & $flag) === $flag);
+        public function isFlagSet(int $flag): bool {
+            return (($this->flags ?? 0) & $flag) === $flag;
         }
 
-        public function setFlags(int $flag, bool $value = FALSE) {
+        public function setFlags(int $flag, bool $value = false): void {
 
-            if($value === TRUE) {
-                if(isset($this->flags)) {
+            if ($value === true) {
+                if (isset($this->flags)) {
 
                     $this->flags |= $flag;
 
@@ -27,8 +29,8 @@ namespace Partarum\PartarumPHP\Service\Binary {
                     $this->flags = $flag;
                 }
             } else {
-                
-                $this->flags &= ~$flag;
+
+                $this->flags = ($this->flags ?? 0) & ~$flag;
             }
         }
     }

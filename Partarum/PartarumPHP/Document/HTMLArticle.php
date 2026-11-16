@@ -1,386 +1,366 @@
 <?php
+declare(strict_types=1);
+
 namespace Partarum\PartarumPHP\Document {
 
-    use Partarum\PartarumPHP\Service\TheOffice;
-    use \SplFileObject;
-    use Partarum\PartarumPHP\Document\HTMLElement as HTMLElement;
+    use DOMElement;
+    use Generator;
+    use SplFileObject;
     use stdClass;
 
     class HTMLArticle {
 
-		public object $file;
+        public SplFileObject $file;
 
-		public object $articleDom;
+        public HTMLElement $articleDom;
 
-		public array $cacheOpenBlockTagNodes = [];
+        public array $cacheOpenBlockTagNodes = [];
 
-		public array $cacheInlineTagNodes = [];
+        public array $cacheInlineTagNodes = [];
 
-		public array $cacheOpenBlockTagNames = [];
+        public array $cacheOpenBlockTagNames = [];
 
-		public bool $list = FALSE;
+        public bool $list = false;
 
-		public array $liCache = [];
+        public array $liCache = [];
 
-		public object $textObject;
+        public stdClass $textObject;
 
-		public array $cache = [];
+        public array $cache = [];
 
-		public int $cacheParentTag;
+        public int $cacheParentTag = 0;
 
-		private static $trash;
+        private static mixed $trash = null;
 
-		public array $inlineTags = [ "big", "b", "i", "small", "tt", "abbr",
+        public array $inlineTags = [
+            "big", "b", "i", "small", "tt", "abbr",
             "acronym", "cite", "code", "dfn", "em", "kbd", "strong",
             "samp", "var", "a", "bdo", "br", "img", "map", "object", "q",
-            "span", "script", "sub", "sup", "button", "input", "label", "select", "textarea" ];
+            "span", "script", "sub", "sup", "button", "input", "label", "select", "textarea"
+        ];
 
-		public array $blockTags = [ "address", "article", "aside", "blockquote", "details",
+        public array $blockTags = [
+            "address", "article", "aside", "blockquote", "details",
             "dialog", "dd", "div", "dl", "dt", "fieldset", "figcaption", "figure",
             "footer", "form", "h1", "h2", "h3", "h4", "h5", "h6", "header", "hgroup",
-            "hr", "li", "main", "nav", "ol", "p", "pre", "section", "table", "ul" ];
+            "hr", "li", "main", "nav", "ol", "p", "pre", "section", "table", "ul"
+        ];
 
-		public array $ownBlockTags = ["list"];
+        public array $ownBlockTags = ["list"];
 
+        public function __construct(string $filePath, object $parentNode) {
 
+            $this->setBase($parentNode);
 
-		public function __construct($filePath, $parentNode){
+            $this->textObject = new stdClass();
 
-		    $this->setBase($parentNode);
+            $this->getFile($filePath);
 
-		    $this->textObject = new stdClass();
+            $counter = 1;
 
-			$this->getFile($filePath);
-			
-			$counter = 1;
+            foreach ($this->file as $line) {
+                if (!is_string($line)) {
+                    continue;
+                }
 
-			foreach($this->file as $line) {
+                $cleaned = $this->cW($line);
+                if ($cleaned === "") {
+                    continue;
+                }
 
-			    //echo "<br> line HTMLArticel = ".$line;
-                $resultLine = $this->getType($this->cW($line));
+                $resultLine = $this->getType($cleaned);
+                $current = $resultLine->current();
 
-                $this->setTextObject($resultLine->current(), $counter);
+                if (is_array($current)) {
+                    $this->setTextObject($current, $counter);
+                }
 
                 $counter++;
             }
-
-			
-		}
-
-		public function setBase($parentNode){
-
-			$this->articleDom = new HTMLElement("article", $parentNode->elements[0]);
-			$this->articleDom->align = "center";
-		}
-
-        private function setList(){
-
-		    $this->list = TRUE;
-
-		    yield "ul";
         }
 
-        public function startBlockTag($line){
+        protected static function ensureUtf8(string $text): string {
+
+            if (mb_check_encoding($text, "UTF-8")) {
+                return $text;
+            }
+
+            return mb_convert_encoding($text, "UTF-8", "ISO-8859-1");
+        }
+
+        public function setBase(object $parentNode): void {
+
+            $target = ($parentNode instanceof DOMElement)
+                ? $parentNode
+                : ($parentNode->elements[0] ?? null);
+
+            $this->articleDom = new HTMLElement("article", $target);
+            $this->articleDom->align = "center";
+        }
+
+        private function setList(): Generator {
+
+            $this->list = true;
+
+            yield "ul";
+        }
+
+        public function startBlockTag(array $line): void {
 
             $attributeStartBlockTag = "class";
 
-            $tagName = ($line[1] == "list") ? $this->setList()->current() : $line[1];
+            $tagName = ($line[1] === "list") ? (string)$this->setList()->current() : (string)$line[1];
 
             $countNodes = count($this->cacheOpenBlockTagNodes);
             $countNames = count($this->cacheOpenBlockTagNames);
 
-            if($countNames == 0){
+            if ($countNames === 0) {
 
                 $node = new HTMLElement($tagName, $this->articleDom);
 
                 $this->cacheParentTag = $countNodes;
 
-            }else{
+            } else {
 
-                $node = new HTMLElement($tagName, (
-                ($countNames == 0) ? end($this->cacheOpenBlockTagNodes) : (
-                (($countNames == 1) && ($countNodes >= 1)) ? $this->cacheOpenBlockTagNodes[$this->cacheParentTag] :(
-                ($countNames > 1) ? $this->cacheOpenBlockTagNodes[$this->cacheParentTag + 1] : false
-                ))));
+                $parent = (($countNames === 1) && ($countNodes >= 1))
+                    ? $this->cacheOpenBlockTagNodes[$this->cacheParentTag]
+                    : (($countNames > 1) ? ($this->cacheOpenBlockTagNodes[$this->cacheParentTag + 1] ?? end($this->cacheOpenBlockTagNodes)) : false);
+
+                $node = new HTMLElement($tagName, $parent);
             }
 
             $this->cacheOpenBlockTagNodes[] = $node;
             $this->cacheOpenBlockTagNames[] = $line[1];
 
-            if(isset($line[2])){
+            if (isset($line[2])) {
                 $this->cacheOpenBlockTagNodes[$countNodes]->$attributeStartBlockTag = $line[2];
             }
         }
 
-        public function createTextElement($line){
+        public function createTextElement(array $line): void {
 
-		    $liCacheLength = count($this->liCache);
+            $liCacheLength = count($this->liCache);
+            $textContent = (string)($line[1] ?? "");
 
-            $tagName = ($this->list === FALSE) ? "p" : (
-            (strpos($line[1], "+") !== FALSE ) ? "li" : (
-            (strpos($line[1], "+") !== TRUE) ? "p" : FALSE ));
+            $tagName = ($this->list === false)
+                ? "p"
+                : (str_contains($textContent, "+") ? "li" : "p");
 
-            $parent = (($tagName == "p") && ($liCacheLength == 0)) ? end($this->cacheOpenBlockTagNodes) : (
-                (($tagName == "li") && ($liCacheLength >= 0)) ? end($this->cacheOpenBlockTagNodes) : (
-                (($tagName == "p") && ($liCacheLength == 1)) ? end($this->liCache) : FALSE));
+            $targetParent = !empty($this->cacheOpenBlockTagNodes)
+                ? end($this->cacheOpenBlockTagNodes)
+                : $this->articleDom;
+
+            $parent = (($tagName === "p") && ($liCacheLength === 0))
+                ? $targetParent
+                : ((($tagName === "li") && ($liCacheLength >= 0))
+                    ? $targetParent
+                    : ((($tagName === "p") && ($liCacheLength === 1)) ? end($this->liCache) : $targetParent));
 
             $textNode = new HTMLElement($tagName, $parent);
 
-            if(($tagName == "li") && ($liCacheLength == 0)){
+            if (($tagName === "li") && ($liCacheLength === 0)) {
 
                 $blockText = new HTMLElement("p", $textNode);
-                $blockText->text = utf8_encode(ltrim($line[1], "+"));
+                $blockText->text = self::ensureUtf8(ltrim($textContent, "+"));
                 $this->liCache[] = $textNode;
 
-            }elseif(($tagName == "li") && ($liCacheLength > 0)){
+            } elseif (($tagName === "li") && ($liCacheLength > 0)) {
 
                 $blockText = new HTMLElement("p", $textNode);
-                $blockText->text = utf8_encode(ltrim($line[1], "+"));
-                $trash = array_pop($this->liCache);
+                $blockText->text = self::ensureUtf8(ltrim($textContent, "+"));
+                array_pop($this->liCache);
 
-            }elseif($tagName == "p"){
+            } elseif ($tagName === "p") {
 
-                $textNode->text = utf8_encode($line[1]);
+                $textNode->text = self::ensureUtf8($textContent);
             }
         }
 
+        public function setTextObject(array $line, int $counter): void {
 
-		public function setTextObject($line, $counter){
+            $type = $line[0] ?? "";
 
-            /*
-		    echo "<pre>";
-		    print_r($line);
-            */
+            if ($type === "startBlockTag") {
 
-		    if($line[0] == "startBlockTag"){
+                $this->startBlockTag($line);
 
-		        $this->startBlockTag($line);
+            } elseif ($type === "endBlockTag") {
 
-            }elseif($line[0] == "endBlockTag"){
+                if (str_replace("/", "", (string)($line[1] ?? "")) === end($this->cacheOpenBlockTagNames)) {
 
-		        if(str_replace("/", "", $line[1]) == end($this->cacheOpenBlockTagNames)){
+                    self::$trash = array_pop($this->cacheOpenBlockTagNames);
 
-		            self::$trash = array_pop($this->cacheOpenBlockTagNames);
-
-		            if($line[1] == "/ul"){$this->list = FALSE;}
+                    if ($line[1] === "/ul") {
+                        $this->list = false;
+                    }
                 }
-            }elseif($line[0] == "text"){
+            } elseif ($type === "text" || $type === "smallText") {
 
-		        $this->createTextElement($line);
+                $this->createTextElement($line);
 
-            }elseif($line[0] == "inline"){
+            } elseif ($type === "inline") {
 
-                if((count($line[1])) == (count($line[2]) - 1)){
+                if (is_array($line[1] ?? null) && is_array($line[2] ?? null) && count($line[1]) === (count($line[2]) - 1)) {
 
                     $restText = $line[2];
                     $result = $line[1];
+                    $targetParent = !empty($this->cacheOpenBlockTagNodes)
+                        ? end($this->cacheOpenBlockTagNodes)
+                        : $this->articleDom;
 
-                    foreach($restText as $key => $textpart){
+                    foreach ($restText as $key => $textpart) {
 
-                        //echo "<br> textpart - Anzahl: ".strlen($textpart)."  Zeichen für : ".$textpart;
-
-                        if(strlen($textpart) > 0) {
-                            $inlineTextNode = new HTMLElement("p", end($this->cacheOpenBlockTagNodes));
-                            $inlineTextNode->text = utf8_encode($textpart);
+                        if (strlen((string)$textpart) > 0) {
+                            $inlineTextNode = new HTMLElement("p", $targetParent);
+                            $inlineTextNode->text = self::ensureUtf8((string)$textpart);
                         }
 
-                        if(isset($result[$key])) {
+                        if (isset($result[$key])) {
 
+                            $inlineEl = new HTMLElement((string)$result[$key][2], $targetParent);
+                            $inlineEl->text = self::ensureUtf8(strip_tags((string)$result[$key][0]));
+                            $this->cacheInlineTagNodes[] = $inlineEl;
 
-                            /*
-                             * Hier muss noch unterschieden werden, das wirklich reine Inlineelemente
-                             * in ein <p>...</p> eingesetzt werden!!!
-                             *
-                             */
-                            $this->cacheInlineTagNodes[] = new HTMLElement($result[$key][2], end($this->cacheOpenBlockTagNodes));
-                            end($this->cacheInlineTagNodes)->text = utf8_encode(strip_tags($result[$key][0]));
+                            if (count($result[$key]) > 5) {
 
-                            if(count($result[$key]) > 5){
+                                preg_match_all("/(.*?)(\"[\w]+\")/", (string)$result[$key][3], $attr, PREG_SET_ORDER);
 
-                                preg_match_all("/(.*?)(\"[\w]+\")/",$result[$key][3] ,$attr, PREG_SET_ORDER);
-
-                                $attribute = str_replace(" = ", "", $attr[0][1]);
-                                $attributeValue = str_replace("\"", "", $attr[0][2]);
-
-                                end($this->cacheInlineTagNodes)->$attribute = $attributeValue;
-
+                                if (isset($attr[0][1], $attr[0][2])) {
+                                    $attribute = trim(str_replace("=", "", $attr[0][1]));
+                                    $attributeValue = str_replace("\"", "", $attr[0][2]);
+                                    $inlineEl->$attribute = $attributeValue;
+                                }
                             }
                         }
-
                     }
                 }
+            }
+        }
 
+        public function getFile(string $filePath): void {
+
+            $this->file = new SplFileObject($filePath);
+        }
+
+        public function cW(string $string): string {
+
+            return trim((string)preg_replace('/\s+/', ' ', $string));
+        }
+
+        public function getMarkupTag(string $string): Generator {
+
+            yield match ($string) {
+                "<->" => "header",
+                "</->" => "/header",
+                "<-->" => "section",
+                "</-->" => "/section",
+                "<--->" => "footer",
+                "</--->" => "/footer",
+                default => false
+            };
+        }
+
+        public function getBlockTag(string $line, string $place): Generator {
+
+            $cleanString = "";
+
+            if ($place === "start") {
+                $cleanString = str_replace(["<", ">"], "", $line);
+            } elseif ($place === "end") {
+                $cleanString = str_replace(["</", ">"], "", $line);
             }
 
-        }
-
-
-		public function getFile($filePath){
-
-		    /*
-		     *  Liefert in einer Schleife jede eingelesene Zeile
-		     */
-
-			$this->file = new SplFileObject($filePath);
-		}
-
-        public function cW($string) {
-
-		    /*
-		     *  alle Leerzeichen am Anfang und am Ende der Linie entfernen
-		     */
-
-            return trim( preg_replace('/\s+/', ' ', $string) );
-        }
-
-
-        public function getMarkupTag($string){
-
-
-            yield ($string == "<->") ? "header" : (
-            ($string == "</->") ? "/header" : (
-            ($string == "<-->") ? "section" : (
-            ($string == "</-->") ? "/section" : (
-            ($string == "<--->") ? "footer" : (
-            ($string == "</--->") ? "/footer" : FALSE)))));
-
-        }
-
-        /*
-        public function getInlineTag(){
-
-
-        }
-        */
-
-        public function getBlockTag($line, $place){
-
-            if($place == "start") {
-                $cleanString = str_replace("<", "", str_replace(">", "", $line));
-            }elseif($place == "end"){
-                $cleanString = str_replace("</", "", str_replace(">", "", $line));
-            }
-
-
-            if((in_array($cleanString, $this->blockTags)) || (in_array($cleanString, $this->ownBlockTags))){
-
-                if($place == "start") {
+            if (in_array($cleanString, $this->blockTags, true) || in_array($cleanString, $this->ownBlockTags, true)) {
+                if ($place === "start") {
                     yield $cleanString;
-                }elseif($place == "end") {
-                    yield "/".$cleanString;
+                } elseif ($place === "end") {
+                    yield "/" . $cleanString;
                 }
             }
-
-
         }
 
-        public function getType($line){
-        
-        	$length = strlen($line);
+        public function getType(string $line): Generator {
 
-        	if ($length <= 10){
+            $length = strlen($line);
 
-        		 
-        		 if((strpos($line, "<") !== FALSE) && (strpos($line, ">") !== FALSE) && (strpos($line, "</") === FALSE)){
+            if ($length <= 10) {
 
-        		    // echo "<br>".$line;
+                if (str_contains($line, "<") && str_contains($line, ">") && !str_contains($line, "</")) {
 
-        		     $tagNameStart = $this->getMarkupTag($line)->current();
+                    $tagNameStart = $this->getMarkupTag($line)->current();
 
-        		     if($tagNameStart === FALSE) {
-                         $tagNameStart = $this->getBlockTag($line, "start")->current();
+                    if ($tagNameStart === false) {
+                        $tagNameStart = $this->getBlockTag($line, "start")->current();
+                    }
 
-                         //echo "<br> tagNameStart = ".$tagNameStart;
-                     }
-        		     
-        		     yield ["startBlockTag", $tagNameStart];
+                    yield ["startBlockTag", $tagNameStart];
 
-        		 }elseif((strpos($line, "<") === FALSE) && (strpos($line, ">") === FALSE) && (strpos($line, "</") === FALSE)){
+                } elseif (!str_contains($line, "<") && !str_contains($line, ">") && !str_contains($line, "</")) {
 
-        		     $smallText = $line;
-
-        		     yield ["smallText", $smallText];
-
-                 }
-
-        		 if (strpos($line, "</") !== FALSE){
-
-        		     $tagNameEnd = $this->getMarkupTag($line)->current();
-
-                     if($tagNameEnd === FALSE) {
-                         $tagNameEnd = $this->getBlockTag($line, "end")->current();
-
-                         //echo "<br> tagNameEnd = ".$tagNameEnd;
-                     }
-
-        		     yield ["endBlockTag", $tagNameEnd];
-                 }
-        		
-        	}elseif((strpos($line, "<") === FALSE) && (strpos($line, ">") === FALSE) && (strpos($line, "</") === FALSE)){
-
-        	    //echo "<br>".$line;
-        	    yield ["text", $line];
-
-            }elseif((strpos($line, "<") !== FALSE) && (strpos($line, "[") !== FALSE)){
-
-                //echo "<br>".$line;
-
-                $style = preg_match("/(<.*?>)(\[.*?])/", $line, $styleArray);
-
-                $tagNameStart = $this->getMarkupTag($styleArray[1])->current();
-
-                if($tagNameStart === FALSE){
-                    $tagNameStart = $this->getBlockTag($styleArray[1], "start")->current();
+                    yield ["smallText", $line];
                 }
 
-                $attributeOpen = str_replace("[", "", $styleArray[2]);
-                $attribute = str_replace("]", "", $attributeOpen);
+                if (str_contains($line, "</")) {
 
-                /*
-                echo "<pre>";
-                print_r($styleArray);
-                */
+                    $tagNameEnd = $this->getMarkupTag($line)->current();
+
+                    if ($tagNameEnd === false) {
+                        $tagNameEnd = $this->getBlockTag($line, "end")->current();
+                    }
+
+                    yield ["endBlockTag", $tagNameEnd];
+                }
+
+            } elseif (!str_contains($line, "<") && !str_contains($line, ">") && !str_contains($line, "</")) {
+
+                yield ["text", $line];
+
+            } elseif (str_contains($line, "<") && str_contains($line, "[")) {
+
+                preg_match("/(<.*?>)(\[.*?])/", $line, $styleArray);
+
+                $tagPart = $styleArray[1] ?? "";
+                $attrPart = $styleArray[2] ?? "";
+
+                $tagNameStart = $this->getMarkupTag($tagPart)->current();
+
+                if ($tagNameStart === false) {
+                    $tagNameStart = $this->getBlockTag($tagPart, "start")->current();
+                }
+
+                $attribute = str_replace(["[", "]"], "", $attrPart);
+
                 yield ["startBlockTag", $tagNameStart, $attribute];
 
-            }else{
+            } else {
 
                 $stringOTag = "/(<([\w]++)[^>](.*?)>)(.*?)(<\/\\2>)/";
-
                 $stringTagWithoutAttribute = "/(<([\w]++)[^>]*>)(.*?)(<\/\\2>)/";
 
                 $result = [];
 
                 preg_match_all($stringOTag, $line, $inlineWithAttribute, PREG_SET_ORDER);
 
-                if(count($inlineWithAttribute) == 0){
+                if (count($inlineWithAttribute) === 0) {
 
                     preg_match_all($stringTagWithoutAttribute, $line, $inline, PREG_SET_ORDER);
-
                     $result = $inline;
 
-                }else{
+                } else {
 
                     preg_match_all($stringTagWithoutAttribute, $line, $inline, PREG_SET_ORDER);
 
-                    if(count($inlineWithAttribute) == count($inline)){
-
+                    if (count($inlineWithAttribute) === count($inline)) {
                         $result = $inlineWithAttribute;
-                    }else{
-
-                        foreach($inlineWithAttribute as $key => $value){
-
+                    } else {
+                        foreach ($inlineWithAttribute as $key => $value) {
                             $result[] = $value;
 
-                            foreach($inline as $inlineKey => $inlineArray) {
-
-                                if($value[0] !== $inlineArray[0]) {
-
-                                    if($key !== $inlineKey) {
-
+                            foreach ($inline as $inlineKey => $inlineArray) {
+                                if ($value[0] !== $inlineArray[0]) {
+                                    if ($key !== $inlineKey) {
                                         $result[] = $inlineArray;
-
-                                    }else{
-
+                                    } else {
                                         array_unshift($result, $inlineArray);
                                     }
                                 }
@@ -390,12 +370,10 @@ namespace Partarum\PartarumPHP\Document {
                 }
 
                 $splitPatternTags = "/(<.*?>.*?<\/.*?>)/";
+                $restText = preg_split($splitPatternTags, $line) ?: [];
 
-                $restText = preg_split($splitPatternTags, $line);
-
-        	    yield ["inline", $result, $restText];
+                yield ["inline", $result, $restText];
             }
-        	
         }
-	}
+    }
 }

@@ -1,15 +1,16 @@
 <?php
-/*
-error_reporting(-1);
-ini_set("display_errors", "1");
-*/
+declare(strict_types=1);
 
-if(!class_exists(\Partarum\Partarum::class)){
-    require_once $_SERVER["DOCUMENT_ROOT"] . "src/Partarum.php";
-}
-
+use Partarum\Partarum;
 use Partarum\PartarumPHP\HTTP\API;
+
+if (!class_exists(Partarum::class)) {
+    require_once dirname(__DIR__, 3) . "/Partarum/Partarum.php";
+}
 
 $api = new API();
 
-$api->createJSONResponse(decbin($api->fromGET("dec")))->run();
+$dec = $api->fromGET("dec");
+$decValue = is_scalar($dec) && is_numeric((string)$dec) ? (int)$dec : 0;
+
+$api->createJSONResponse(decbin($decValue))->run();
