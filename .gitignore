@@ -11,6 +11,9 @@
 /.idea
 /node_modules
 /vendor
+/.ghost
+/.vscode
+/skills/system
 composer.lock
 history.txt
 /Partarum/PartarumLorem
