@@ -35,6 +35,8 @@
     },
     "scripts": {
         "test": "php cli/testKernel.php",
+        "test:kernel": "php cli/testKernel.php",
+        "test:app": "php cli/testApp.php",
         "pre-install-cmd": [
             "echo 'pre-install-cmd'"
         ],

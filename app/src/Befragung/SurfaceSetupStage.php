@@ -1,6 +1,11 @@
 <?php
+declare(strict_types=1);
+
 namespace app\src\Befragung {
-    enum SurfaceSetupStage : string {
+
+    use Partarum\PartarumSurface\Stages\SetupStageInterface;
+
+    enum SurfaceSetupStage: string implements SetupStageInterface {
 
         case KVH = "KVH";
 

@@ -31,11 +31,13 @@ self.onmessage = (event) => {
         return res.json();
     }).then((json) => {
 
-        if((Reflect.has(json[0], "post")) && (Reflect.has(json[0], "token"))) {
+        if ((Reflect.has(json[0], "post")) && (Reflect.has(json[0], "token"))) {
 
-            if(Reflect.has(json[0].token, json[0].post)) {
+            const postKey = Array.isArray(json[0].post) ? json[0].post[0] : json[0].post;
 
-                self.postMessage([json[0].post, json[0].token.beer]);
+            if (postKey && Reflect.has(json[0].token, postKey)) {
+
+                self.postMessage([postKey, json[0].token[postKey]]);
 
             }
         }

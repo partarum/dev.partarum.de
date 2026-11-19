@@ -1,6 +1,11 @@
 <?php
+declare(strict_types=1);
+
 namespace app\src\Befragung {
-    enum SurfaceInitialStage: string
+
+    use Partarum\PartarumSurface\Stages\InitialStageInterface;
+
+    enum SurfaceInitialStage: string implements InitialStageInterface
     {
 
         case KVH = "/KVH";
@@ -26,7 +31,7 @@ namespace app\src\Befragung {
 
         public function getRedirectUrl($date): string {
 
-            $valDate = str_replace(" ", "_", $date);
+            $valDate = str_replace(" ", "_", (string)$date);
 
             return match($this) {
                 SurfaceInitialStage::KVH => "KVH-Befragung?date=" . $valDate,

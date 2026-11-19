@@ -1,7 +1,11 @@
 <?php
+declare(strict_types=1);
+
 namespace app\src\Befragung {
 
-    enum SurfaceExecutionStage {
-        
+    use Partarum\PartarumSurface\Stages\ExecutionStageInterface;
+
+    enum SurfaceExecutionStage implements ExecutionStageInterface {
+
     }
 }

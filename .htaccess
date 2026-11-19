@@ -34,7 +34,7 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 
 # Produktivserver
-RewriteCond %{HTTP_HOST} ^(.+)?partarum.de$
+RewriteCond %{HTTP_HOST} ^(.+)?partarum\.de(:[0-9]+)?$
 
 RewriteCond %{REQUEST_URI} !^/public/
 RewriteCond %{REQUEST_URI} !^/app/
@@ -43,7 +43,7 @@ RewriteCond %{REQUEST_URI} !^/Partarum/PartarumJS/
 RewriteRule  ^(.*)?$ index.php [QSA]
 
 # PArtCreate
-RewriteCond %{HTTP_HOST} ^(.+)?partcreate.de$
+RewriteCond %{HTTP_HOST} ^(.+)?partcreate\.de(:[0-9]+)?$
 
 RewriteCond %{REQUEST_URI} !^/public/
 RewriteCond %{REQUEST_URI} !^/app/
@@ -52,7 +52,7 @@ RewriteCond %{REQUEST_URI} !^/Partarum/PartarumJS/
 RewriteRule  ^(.*)?$ index.php [QSA]
 
 # Devserver
-RewriteCond %{HTTP_HOST} ^(.+)?localhost$
+RewriteCond %{HTTP_HOST} ^(.+)?localhost(:[0-9]+)?$
 
 RewriteCond %{REQUEST_URI} !^/public/
 RewriteCond %{REQUEST_URI} !^/app/

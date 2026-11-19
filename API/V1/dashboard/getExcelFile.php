@@ -153,10 +153,7 @@ if ($bearerToken !== null && $backend->isIntoCache("Bearer:" . $bearerToken)) {
 
     if ($requestType === "test") {
 
-        $api->createJSONResponse([
-            "status" => "ok",
-            "topics" => array_keys($resultDB)
-        ])->run();
+        echo "hallo";
 
     } else {
 
@@ -165,6 +162,7 @@ if ($bearerToken !== null && $backend->isIntoCache("Bearer:" . $bearerToken)) {
         $res->setHeader("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         $res->setHeader('Content-Disposition: attachment;filename="Erhebung.xlsx"');
         $res->setHeader("Cache-Control: max-age=0");
+        $res->run();
 
         $writer = IOFactory::createWriter($spreadsheet, "Xlsx");
         $writer->save("php://output");

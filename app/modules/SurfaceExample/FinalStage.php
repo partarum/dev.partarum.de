@@ -12,13 +12,20 @@ $db = $app->db;
 
 $stringOfCase = $app->caseName;
 
-$getFormListFields = json_decode($db->get("survey_form_list", "survey_fields", ["topic" => $stringOfCase]), true);
+$formListRow = $db->get("survey_form_list", [
+    "survey_fields",
+    "survey_areas",
+    "survey_sections",
+    "survey_content"
+], ["topic" => $stringOfCase]) ?? [];
 
-$getFormListAreas = json_decode($db->get("survey_form_list", "survey_areas", ["topic" => $stringOfCase]), true);
+$getFormListFields = is_string($formListRow["survey_fields"] ?? null) ? (json_decode($formListRow["survey_fields"], true) ?? []) : [];
 
-$getFormListSections = json_decode($db->get("survey_form_list", "survey_sections", ["topic" => $stringOfCase]), true);
+$getFormListAreas = is_string($formListRow["survey_areas"] ?? null) ? (json_decode($formListRow["survey_areas"], true) ?? []) : [];
 
-$getFormListContent = json_decode($db->get("survey_form_list", "survey_content", ["topic" => $stringOfCase]), true);
+$getFormListSections = is_string($formListRow["survey_sections"] ?? null) ? (json_decode($formListRow["survey_sections"], true) ?? []) : [];
+
+$getFormListContent = is_string($formListRow["survey_content"] ?? null) ? (json_decode($formListRow["survey_content"], true) ?? []) : [];
 
 $setupCase = Surface::getCase(Surface::SetupStage, $stringOfCase);
 

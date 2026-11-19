@@ -32,7 +32,12 @@ namespace Partarum\PartarumPHP\HTTP {
 
                 if (is_int($key)) {
 
-                    $this->cache->append((string)$value);
+                    $headerLine = (string)$value;
+                    $this->cache->append($headerLine);
+
+                    if (stripos($headerLine, "Content-Type:") === 0 && !isset($this->contentType)) {
+                        $this->contentType = trim(substr($headerLine, strlen("Content-Type:")));
+                    }
 
                 } elseif (class_exists($key)) {
 

@@ -8,6 +8,26 @@
 error_reporting(-1);
 ini_set("display_errors", "1");
 
+if (PHP_SAPI === "cli-server") {
+    $reqPath = (string)(parse_url($_SERVER["REQUEST_URI"] ?? "/", PHP_URL_PATH) ?: "/");
+
+    if (preg_match('#(^|/)(\.git|\.partarumGhost|\.ghost|app/src|app/log|Partarum/PartarumCLI|Partarum/PartarumConfig|Partarum/PartarumIntern|Partarum/PartarumLorem|Partarum/PartarumPHP|Partarum/PartarumSecura|config)(/|$)#', $reqPath) === 1) {
+        http_response_code(403);
+        exit;
+    }
+
+    if (preg_match('#^/(public|app|Partarum/PartarumCSS|Partarum/PartarumJS)/#', $reqPath) === 1) {
+        $staticFile = __DIR__ . $reqPath;
+        if (is_file($staticFile)) {
+            return false;
+        }
+    }
+
+    if ($reqPath !== "/" && $reqPath !== "/index.php" && is_file(__DIR__ . $reqPath) && pathinfo($reqPath, PATHINFO_EXTENSION) !== "php") {
+        return false;
+    }
+}
+
 require __DIR__ . "/Partarum/Partarum.php";
 
 use Partarum\Partarum;

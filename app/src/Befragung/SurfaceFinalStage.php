@@ -1,6 +1,11 @@
 <?php
+declare(strict_types=1);
+
 namespace app\src\Befragung {
-    enum SurfaceFinalStage: string
+
+    use Partarum\PartarumSurface\Stages\FinalStageInterface;
+
+    enum SurfaceFinalStage: string implements FinalStageInterface
     {
 
         case KVH = "/KVH-Final";

@@ -3,16 +3,6 @@ declare(strict_types=1);
 
 require_once dirname(__DIR__) . "/vendor/autoload.php";
 
-use app\core\SurfaceExample\SurfaceExecutionStage as CoreExecutionStage;
-use app\core\SurfaceExample\SurfaceFinalStage as CoreFinalStage;
-use app\core\SurfaceExample\SurfaceInitialStage as CoreInitialStage;
-use app\core\SurfaceExample\SurfaceSetupStage as CoreSetupStage;
-use app\core\SurfaceExample\SurfaceTransitionStage as CoreTransitionStage;
-use app\src\Befragung\Surface;
-use app\src\Befragung\SurfaceApp;
-use app\src\Befragung\SurfaceFinalStage;
-use app\src\Befragung\SurfaceInitialStage;
-use app\src\Befragung\SurfaceSetupStage;
 use Partarum\Partarum;
 use Partarum\PartarumIntern\Security\LoremLicentiam;
 use Partarum\PartarumPHP\Cache\RedisCache;
@@ -298,8 +288,7 @@ $autoloadClasses = [
     SharedManager::class,
     SharedSemaphore::class,
     typeArray::class,
-    LoremLicentiam::class,
-    SurfaceApp::class
+    LoremLicentiam::class
 ];
 
 foreach ($autoloadClasses as $className) {
@@ -332,22 +321,6 @@ $autoloadInterfaces = [
 
 foreach ($autoloadInterfaces as $interfaceName) {
     $check(interface_exists($interfaceName), "Autoload interface: {$interfaceName}");
-}
-
-$autoloadEnums = [
-    Surface::class,
-    SurfaceInitialStage::class,
-    SurfaceSetupStage::class,
-    SurfaceFinalStage::class,
-    CoreInitialStage::class,
-    CoreSetupStage::class,
-    CoreTransitionStage::class,
-    CoreExecutionStage::class,
-    CoreFinalStage::class
-];
-
-foreach ($autoloadEnums as $enumName) {
-    $check(enum_exists($enumName), "Autoload enum: {$enumName}");
 }
 
 // 2. EnvLoader
@@ -425,13 +398,7 @@ $decodedJson = REST::convertData('{"status":"ok"}');
 $check(is_object($decodedJson) && $decodedJson->status === "ok", "REST::convertData() dekodiert valides JSON");
 $check(REST::convertData("kein-json") === false, "REST::convertData() fängt invalides JSON sauber mit false ab");
 
-// 9. Surface & GlobalConfig
-$check(Surface::getCase(Surface::InitialStage, "/KVH") === SurfaceInitialStage::KVH, "Surface::getCase() löst InitialStage '/KVH' auf KVH auf");
-$check(Surface::getCase(Surface::SetupStage, "/unbekannt") === null, "Surface::getCase() liefert null bei unbekannter Route");
-$dateInfo = Surface::getDate("2026-11-16");
-$check(is_array($dateInfo) && $dateInfo["date"] === "2026-11-16", "Surface::getDate() formatiert gültiges Datum");
-$check(Surface::getDate("ungueltig") === null, "Surface::getDate() liefert null bei ungültigem Datum");
-
+// 9. GlobalConfig
 GlobalConfig::setTheme("partarum");
 GlobalConfig::setWrapper(true);
 $check(GlobalConfig::$theme === "partarum" && GlobalConfig::$wrapper === true, "GlobalConfig speichert typisierte Einstellungen");
