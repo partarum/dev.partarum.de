@@ -1,43 +1,27 @@
-# Dashboard
+# `app/modules/dashboard/` – Dashboard-Modul (Auth, Excel & Stage-Enums)
 
-## Was muss das Dashboard können?
+## Fachliche Aufgaben des Dashboards
 
-1. Token für die Clienten erstellen
-2. Den Monat für die Befragungen festlegen
-3. Die Befragung anstoßen
-4. Die Excel - Datei generieren und zum Download anbieten
-5. Bereinigung der DB
+1. **Token für die Klienten erstellen (`/API/V1/dashboard/getToken` & `getTokenExcel`)**
+   * Erzeugt JWT-Tokens je Befragung (`kvh`, `lsh`, `nsh`, `rhb`, `rhd`), speichert sie in der Tabelle `token` und stellt sie optional als formatierte Excel-Datei (`example.xlsx`) zum Download bereit.
+2. **Monat & Zeitraum für die Befragungen festlegen und Erhebung starten (`/API/V1/dashboard/startSurvey`)**
+   * Setzt das Startdatum (`survey_start`) einzeln oder für alle Befragungen gleichzeitig (`all`).
+   * Berechnet automatisch das Enddatum (`survey_stop` anhand von `survey_max_diff`) sowie den Aktivitätsstatus (`survey_status`).
+   * Solange `survey_start` gesetzt ist, sind die jeweiligen Befragungs-Routen (`/KVH` .. `/RHD`) geöffnet.
+3. **Laufenden Status & Rückläufe überwachen (`/API/V1/dashboard/checkSurvey` & `getExcelData`)**
+   * Prüft Tagesdifferenzen (`survey_diff`), aktualisiert `survey_status` und zählt die eingegangenen Antworten je Befragung (`surveyCount` / `survey_count`).
+4. **Excel-Auswertung generieren und herunterladen (`/API/V1/dashboard/getExcelFile`)**
+   * Erzeugt aus den JSON-Antworten (`survey_excel_character_content`) der Tabelle `survey` via `PhpSpreadsheet` eine mehrblättrige Arbeitsmappe (`Erhebung.xlsx`) mit je einem Worksheet pro ausgewähltem Topic.
+5. **Erhebung beenden & Datenbank bereinigen (`/API/V1/dashboard/stopSurvey`)**
+   * Setzt `survey_start`, `survey_stop` und `survey_status` in `survey_dashboard` zurück, protokolliert `survey_has_been_stopped` und löscht die abgegebenen Antworten des beendeten Zeitraums aus der Tabelle `survey`.
 
-### 1. Token für die Clienten erstellen
+---
 
-+ Gilt als Eintritt ins Routing zur Befragung
-  + wird nach Eintritt im Header als Bearer gesendet
-+ Token wird mithilfe der neuen E-Mail-Adresse und der zuständigen Befragung erstellt
-  + ggf. JWT
-+ Token wird in einem Storage gesammelt
-+ sämtliche schon vorhandenen E-Mail-Adressen benötigen einen Token
-  + Eine Massenproduktion verfügbar machen
-+ API für Token bereitstellen
+## Technische Klassen im Modul
 
-### 2. Den Monat für die Befragungen festlegen
-
-+ ist verbindend mit Punkt 3
-
-### 3. Die Befragung anstoßen
-
-+ Befragung wird angestoßen mit Eingabe / Bestätigung des Monats, 
-auf welchen sie sich beziehen soll
-+ Ab den Moment ist die Route offen
-  + Die Routen für die Befragungen sind ansonsten nicht erreichbar
-  + Der Zeitraum wird durch Franz-Josef definiert und in der DB gespeichert
-    + Zeitraum ist abänderbar
-
-### 4. Die Excel - Datei generieren und zum Download anbieten
-
-+ die Excel wird via PHPSpreadsheet aus den JSON Daten, welche in der DB gespeichert sind, erstellt
-+ Excel wird zum Download angeboten
-
-### 5. Bereinigung der DB
-
-+ die Daten der jeweiligen Befragung werden gelöscht
-+ alle Daten aller Befragungen werden gelöscht
+| Datei / Klasse | Typ | Verantwortung |
+| :--- | :--- | :--- |
+| `DashboardStage.php` | `enum` (`string`) | Definiert die 4 Seiten-Zustände des Dashboards (`Login`, `Authenticate`, `Workspace`, `Logout`) inkl. Seitentitel und CSS-Pfad. |
+| `DashboardApiAction.php` | `enum` (`string`) | Definiert die 7 API-Aktionen (`CheckSurvey`, `StartSurvey`, `StopSurvey`, `GetExcelData`, `GetExcelFile`, `GetToken`, `GetTokenExcel`) inkl. Partarum-App-Namen und 403-Fehlerpayload. |
+| `DashboardAuthService.php` | `class` | Kapselt den 3-stufigen Cookie-/Session-Handshake (`beer`-Cookie auf `/loginPage`, Credential-Prüfung + JWT + `bearer`-Cookie auf `/dashboard`, `arrival`-Verifikation auf `/dashboardPage`). |
+| `DashboardExcelService.php` | `class` | Erstellt die `PhpSpreadsheet\Spreadsheet`-Objekte für die Befragungsauswertung (`buildSurveySpreadsheet()`) und die Token-Tabelle (`buildTokenSpreadsheet()`) und streamt sie über `streamSpreadsheet()` an `php://output`. |

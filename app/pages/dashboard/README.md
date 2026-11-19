@@ -1,43 +1,14 @@
-# Dashboard
+# `app/pages/dashboard/` – Dashboard-Seiten-Entrypoints
 
-## Was muss das Dashboard können?
+## Aufgabe
 
-1. Token für die Clienten erstellen
-2. Den Monat für die Befragungen festlegen
-3. Die Befragung anstoßen
-4. Die Excel - Datei generieren und zum Download anbieten
-5. Bereinigung der DB
+Dieser Ordner enthält die Routing-Entrypoints für die Benutzeroberfläche des Dashboards. Alle Dateien delegieren in einer Zeile an `app\controllers\dashboard\DashboardController`:
 
-### 1. Token für die Clienten erstellen
+| Datei | Route | `DashboardStage`-Case | Beschreibung |
+| :--- | :--- | :--- | :--- |
+| `loginPage.php` | `/loginPage` | `DashboardStage::Login` | Setzt bestehende Sessions zurück, setzt das `beer`-Handshake-Cookie und rendert die `LoginView`. |
+| `../dashboard.php` | `/dashboard` | `DashboardStage::Authenticate` | Prüft `beer`-Cookie und POST-Logindaten (`user`, `password`), erzeugt Session + `bearer`-Cookie und leitet auf `/dashboardPage` (bzw. bei Fehler auf `/loginPage`) weiter. |
+| `dashboardPage.php` | `/dashboardPage` | `DashboardStage::Workspace` | Prüft `bearer`-Cookie gegen die Session, setzt das `arrival`-Cookie und rendert die `DashboardWorkspaceView`. |
+| `logoutPage.php` | `/logoutPage` | `DashboardStage::Logout` | Zerstört die aktive Session, stellt ein frisches `beer`-Cookie aus und zeigt wieder die `LoginView`. |
 
-+ Gilt als Eintritt ins Routing zur Befragung
-  + wird nach Eintritt im Header als Bearer gesendet
-+ Token wird mithilfe der neuen E-Mail-Adresse und der zuständigen Befragung erstellt
-  + ggf. JWT
-+ Token wird in einem Storage gesammelt
-+ sämtliche schon vorhandenen E-Mail-Adressen benötigen einen Token
-  + Eine Massenproduktion verfügbar machen
-+ API für Token bereitstellen
-
-### 2. Den Monat für die Befragungen festlegen
-
-+ ist verbindend mit Punkt 3
-
-### 3. Die Befragung anstoßen
-
-+ Befragung wird angestoßen mit Eingabe / Bestätigung des Monats, 
-auf welchen sie sich beziehen soll
-+ Ab den Moment ist die Route offen
-  + Die Routen für die Befragungen sind ansonsten nicht erreichbar
-  + Der Zeitraum wird durch Franz-Josef definiert und in der DB gespeichert
-    + Zeitraum ist abänderbar
-
-### 4. Die Excel - Datei generieren und zum Download anbieten
-
-+ die Excel wird via PHPSpreadsheet aus den JSON Daten, welche in der DB gespeichert sind, erstellt
-+ Excel wird zum Download angeboten
-
-### 5. Bereinigung der DB
-
-+ die Daten der jeweiligen Befragung werden gelöscht
-+ alle Daten aller Befragungen werden gelöscht
+Die fachliche Beschreibung und die zugehörigen Services (`DashboardAuthService`, `DashboardExcelService`, `DashboardApiAction`) befinden sich unter [`app/modules/dashboard/README.md`](../../modules/dashboard/README.md).

@@ -4,6 +4,7 @@ declare(strict_types=1);
 require_once dirname(__DIR__) . "/vendor/autoload.php";
 
 use app\controllers\Befragung\SurveyStageController;
+use app\controllers\dashboard\DashboardApiController;
 use app\controllers\dashboard\DashboardController;
 use app\core\Contracts\ControllerInterface;
 use app\core\Contracts\ModelInterface;
@@ -21,7 +22,10 @@ use app\layout\OnboardingLayout;
 use app\models\Befragung\SurveyDashboardModel;
 use app\models\Befragung\SurveyFormListModel;
 use app\models\Befragung\SurveySubmissionModel;
+use app\models\Befragung\SurveyTokenModel;
+use app\modules\dashboard\DashboardApiAction;
 use app\modules\dashboard\DashboardAuthService;
+use app\modules\dashboard\DashboardExcelService;
 use app\modules\dashboard\DashboardStage;
 use app\src\Befragung\Surface;
 use app\src\Befragung\SurfaceApp;
@@ -40,11 +44,14 @@ use app\views\Befragung\InitialStageView;
 use app\views\dashboard\DashboardWorkspaceView;
 use app\views\dashboard\LoginView;
 use Medoo\Medoo;
+use Partarum\Partarum;
+use Partarum\PartarumPHP\HTTP\API;
 use Partarum\PartarumSurface\Stages\ExecutionStageInterface;
 use Partarum\PartarumSurface\Stages\FinalStageInterface;
 use Partarum\PartarumSurface\Stages\InitialStageInterface;
 use Partarum\PartarumSurface\Stages\SetupStageInterface;
 use Partarum\PartarumSurface\Stages\TransitionStageInterface;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 $rootDir = rtrim(dirname(__DIR__), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
 
@@ -66,6 +73,20 @@ $check = static function (bool $condition, string $label) use (&$passed, &$faile
 };
 
 /**
+ * PDOStatement-Stub für rowCount()-Prüfungen bei delete/update.
+ */
+final class AppMockPDOStatement extends PDOStatement {
+
+    public function __construct(private readonly int $affectedRows) {
+    }
+
+    public function rowCount(): int {
+
+        return $this->affectedRows;
+    }
+}
+
+/**
  * Leichtgewichtiges In-Memory Medoo-Double für unabhängige Offline-Tests der app-Models & Controller.
  */
 final class AppInMemoryMedoo extends Medoo {
@@ -84,6 +105,11 @@ final class AppInMemoryMedoo extends Medoo {
      * @var array<int, array<string, mixed>>
      */
     public array $insertedSurveys = [];
+
+    /**
+     * @var array<string, array{name: string, value: string}>
+     */
+    public array $tokenRows = [];
 
     public function __construct() {
         foreach (["KVH", "LSH", "NSH", "RHB", "RHD"] as $topic) {
@@ -188,11 +214,105 @@ final class AppInMemoryMedoo extends Medoo {
         return null;
     }
 
+    public function select(string $table, $join, $columns = null, $where = null): ?array {
+        $actualColumns = $join;
+        $actualWhere = is_array($columns) ? $columns : $where;
+
+        if ($table === "survey_dashboard") {
+            $topic = is_array($actualWhere) ? (string)($actualWhere["topic"] ?? "") : "";
+            if ($topic !== "" && isset($this->dashboardRows[$topic])) {
+                $row = $this->dashboardRows[$topic];
+                if (is_array($actualColumns)) {
+                    return [array_intersect_key($row, array_flip($actualColumns))];
+                }
+                return [$row];
+            }
+            return [];
+        }
+
+        if ($table === "survey") {
+            $topic = is_array($actualWhere) ? (string)($actualWhere["topic"] ?? "") : "";
+            $matching = array_values(array_filter(
+                $this->insertedSurveys,
+                static fn(array $row): bool => $topic === "" || ($row["topic"] ?? "") === $topic
+            ));
+
+            if (is_string($actualColumns)) {
+                return array_map(static fn(array $row) => $row[$actualColumns] ?? null, $matching);
+            }
+            return $matching;
+        }
+
+        if ($table === "token") {
+            return array_values($this->tokenRows);
+        }
+
+        return [];
+    }
+
     public function insert(string $table, array $values, ?string $primaryKey = null): ?PDOStatement {
         if ($table === "survey") {
             $this->insertedSurveys[] = $values;
         }
-        return null;
+
+        if ($table === "token") {
+            $rows = isset($values[0]) && is_array($values[0]) ? $values : [$values];
+            foreach ($rows as $row) {
+                $name = (string)($row["name"] ?? "");
+                if ($name !== "") {
+                    $this->tokenRows[$name] = [
+                        "name" => $name,
+                        "value" => (string)($row["value"] ?? "")
+                    ];
+                }
+            }
+        }
+
+        return new AppMockPDOStatement(1);
+    }
+
+    public function update(string $table, $data, $where = null): ?PDOStatement {
+        if ($table === "survey_dashboard" && is_array($data) && is_array($where)) {
+            $topic = (string)($where["topic"] ?? "");
+            if ($topic !== "" && isset($this->dashboardRows[$topic])) {
+                $this->dashboardRows[$topic] = array_merge($this->dashboardRows[$topic], $data);
+                return new AppMockPDOStatement(1);
+            }
+        }
+
+        if ($table === "token" && is_array($data) && is_array($where)) {
+            $name = (string)($where["name"] ?? "");
+            if ($name !== "" && isset($this->tokenRows[$name])) {
+                $this->tokenRows[$name]["value"] = (string)($data["value"] ?? "");
+                return new AppMockPDOStatement(1);
+            }
+        }
+
+        return new AppMockPDOStatement(0);
+    }
+
+    public function delete(string $table, $where): ?PDOStatement {
+        if ($table === "survey" && is_array($where)) {
+            $topic = (string)($where["topic"] ?? "");
+            $before = count($this->insertedSurveys);
+            $this->insertedSurveys = array_values(array_filter(
+                $this->insertedSurveys,
+                static fn(array $row): bool => ($row["topic"] ?? "") !== $topic
+            ));
+            $deleted = $before - count($this->insertedSurveys);
+            return new AppMockPDOStatement($deleted);
+        }
+
+        return new AppMockPDOStatement(0);
+    }
+
+    public function has(string $table, $join, $where = null): bool {
+        $actualWhere = is_array($join) ? $join : $where;
+        if ($table === "token" && is_array($actualWhere)) {
+            $name = (string)($actualWhere["name"] ?? "");
+            return isset($this->tokenRows[$name]);
+        }
+        return false;
     }
 
     public function count(string $table, $join = null, $column = null, $where = null): ?int {
@@ -230,6 +350,7 @@ foreach ($appTraits as $trait) {
 $appEnums = [
     SurveyTopic::class,
     DashboardStage::class,
+    DashboardApiAction::class,
     Surface::class,
     SurfaceInitialStage::class,
     SurfaceSetupStage::class,
@@ -246,7 +367,9 @@ $appClasses = [
     SurveyDashboardModel::class,
     SurveyFormListModel::class,
     SurveySubmissionModel::class,
+    SurveyTokenModel::class,
     DashboardAuthService::class,
+    DashboardExcelService::class,
     HeadComponent::class,
     StageHeaderComponent::class,
     ContactFooterComponent::class,
@@ -264,7 +387,8 @@ $appClasses = [
     LoginView::class,
     DashboardWorkspaceView::class,
     SurveyStageController::class,
-    DashboardController::class
+    DashboardController::class,
+    DashboardApiController::class
 ];
 foreach ($appClasses as $cls) {
     $check(class_exists($cls), "Autoload App-Class: {$cls}");
@@ -304,7 +428,7 @@ foreach (SurveyTopic::cases() as $topicCase) {
     );
 }
 
-// 4. Models & Generator-Pipelines (SurveyDashboardModel, SurveyFormListModel, SurveySubmissionModel)
+// 4. Models & Generator-Pipelines (SurveyDashboardModel, SurveyFormListModel, SurveySubmissionModel, SurveyTokenModel)
 $mockDb = new AppInMemoryMedoo();
 
 $dashboardModel = new SurveyDashboardModel($mockDb);
@@ -440,6 +564,133 @@ $check(
     str_contains($workspaceHtml, 'src="/public/assets/js/dashboardPage.js"')
     && str_contains($workspaceHtml, 'class="prt-area"'),
     "DashboardController rendert WorkspaceStage über DashboardLayout und DashboardWorkspaceView"
+);
+
+// 8. Dashboard API-Layer (SurveyDashboardModel-Lifecycle, SurveyTokenModel, DashboardExcelService & DashboardApiController)
+$countsSummary = $submissionModel->getCountsSummary();
+$check(
+    $countsSummary["KVH"] === 2 && $countsSummary["ALL"] === 2 && $countsSummary["LSH"] === 0,
+    "SurveySubmissionModel::getCountsSummary() summiert Befragungen über yieldCountsByTopic() inkl. 'ALL'"
+);
+
+$yieldedExcelRows = iterator_to_array($submissionModel->yieldExcelRowsByTopic(SurveyTopic::KVH));
+$check(
+    count($yieldedExcelRows) === 2
+    && $yieldedExcelRows[0] === ["test@example.org", "A", 0, "X", "Alles bestens"],
+    "SurveySubmissionModel::yieldExcelRowsByTopic() verschiebt E-Mail an erste Spalte für den Excel-Export"
+);
+
+$evalStatus = $dashboardModel->evaluateSurveyStatuses($submissionModel, "2026-11-19");
+$check(
+    $evalStatus["status"]["KVH"] === true
+    && $evalStatus["surveyCount"]["KVH"] === 2
+    && is_array($evalStatus["displayDate"]["KVH"])
+    && $evalStatus["displayDate"]["KVH"]["datetime"] === "2026-11",
+    "SurveyDashboardModel::evaluateSurveyStatuses() berechnet Erhebungsstatus, Differenz und Zähler für checkSurvey"
+);
+
+$startResult = $dashboardModel->startSurveys(null, ["KVH" => "2026-12-01", "LSH" => "2026-12-01"], "2026-12-02");
+$check(
+    in_array("KVH", $startResult["started"], true)
+    && $startResult["status"]["KVH"] === "2026-12-01"
+    && $startResult["diff"]["KVH"]["survey_stop"] === "2026-12-06",
+    "SurveyDashboardModel::startSurveys() aktualisiert Start-/Stopp-Datum und Status für startSurvey"
+);
+
+$excelService = new DashboardExcelService();
+$surveySpreadsheet = $excelService->buildSurveySpreadsheet($dashboardModel, $submissionModel, "1", [], "2026-12-01");
+$kvhSheet = $surveySpreadsheet->getSheetByName("KVH");
+$check(
+    $surveySpreadsheet instanceof Spreadsheet
+    && $kvhSheet !== null
+    && $kvhSheet->getCell("A2")->getValue() === "test@example.org"
+    && $kvhSheet->getCell("B2")->getValue() === "A",
+    "DashboardExcelService::buildSurveySpreadsheet() erzeugt KVH-Worksheet mit Antworten ab Zeile 2"
+);
+
+$stopResult = $dashboardModel->stopSurveys(null, ["KVH" => "1"], $submissionModel, "2026-12-05");
+$check(
+    in_array("KVH", $stopResult["stopped"], true)
+    && $stopResult["status"]["KVH"] === null
+    && $stopResult["stoppedCount"]["KVH"] === 2
+    && $stopResult["deletedCount"]["KVH"] === 2
+    && $submissionModel->countByTopic(SurveyTopic::KVH) === 0,
+    "SurveyDashboardModel::stopSurveys() setzt Erhebung zurück und löscht zugehörige Antworten über SurveySubmissionModel"
+);
+
+$tokenModel = new SurveyTokenModel($mockDb);
+$upsertInitial = $tokenModel->upsertTokens(null, ["kvh" => "1", "lsh" => "1"], "unit-test-secret");
+$upsertUpdate = $tokenModel->upsertTokens(null, ["kvh" => "1"], "unit-test-secret");
+$check(
+    $upsertInitial["insert"] === ["kvh", "lsh"]
+    && $upsertUpdate["update"] === ["kvh"]
+    && count(iterator_to_array($tokenModel->yieldAllTokens())) === 2,
+    "SurveyTokenModel::upsertTokens() und yieldAllTokens() verwalten JWT-Tokens für Insert und Update"
+);
+
+$tokenSpreadsheet = $excelService->buildTokenSpreadsheet($tokenModel);
+$activeTokenSheet = $tokenSpreadsheet->getActiveSheet();
+$check(
+    $activeTokenSheet->getCell("B2")->getValue() === "Befragung"
+    && $activeTokenSheet->getCell("C2")->getValue() === "Token"
+    && $activeTokenSheet->getCell("B3")->getValue() === "kvh",
+    "DashboardExcelService::buildTokenSpreadsheet() baut formatierte Token-Tabelle ab Zelle B2 auf"
+);
+
+$reflectionPartarum = new ReflectionClass(Partarum::class);
+/** @var Partarum $fakeBackend */
+$fakeBackend = $reflectionPartarum->newInstanceWithoutConstructor();
+
+$_SERVER["HTTP_AUTHORIZATION"] = "Bearer invalid-token";
+ob_start();
+$unauthCtrl = new DashboardApiController(
+    DashboardApiAction::GetExcelData,
+    backend: $fakeBackend,
+    api: new API(),
+    db: $mockDb,
+    excelService: $excelService,
+    authorizedOverride: false
+);
+$unauthCtrl->dispatch();
+$unauthJson = (string)ob_get_clean();
+$check(
+    str_contains($unauthJson, "Your beer is stale") && http_response_code() === 403,
+    "DashboardApiController verweigert unautorisierte Requests mit HTTP 403 und 'Your beer is stale'"
+);
+
+http_response_code(200);
+ob_start();
+$authDataCtrl = new DashboardApiController(
+    DashboardApiAction::GetExcelData,
+    backend: $fakeBackend,
+    api: new API(),
+    db: $mockDb,
+    excelService: $excelService,
+    authorizedOverride: true
+);
+$authDataCtrl->dispatch();
+$authDataJson = (string)ob_get_clean();
+$check(
+    str_contains($authDataJson, '"survey_count"') && str_contains($authDataJson, '"ALL":0'),
+    "DashboardApiController::dispatch(GetExcelData) liefert JSON mit survey_count"
+);
+
+$_POST = ["type" => "test", "all" => "1"];
+ob_start();
+$excelTestCtrl = new DashboardApiController(
+    DashboardApiAction::GetExcelFile,
+    backend: $fakeBackend,
+    api: new API(),
+    db: $mockDb,
+    excelService: $excelService,
+    authorizedOverride: true
+);
+$excelTestCtrl->dispatch();
+$excelTestOut = (string)ob_get_clean();
+$_POST = [];
+$check(
+    $excelTestOut === "hallo",
+    "DashboardApiController::dispatch(GetExcelFile) unterstützt Vorab-Check mit type='test' ('hallo')"
 );
 
 echo str_repeat("-", 35) . PHP_EOL;
